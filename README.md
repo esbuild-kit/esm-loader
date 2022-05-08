@@ -26,7 +26,7 @@ npm install --save-dev @esbuild-kit/esm-loader
 
 Pass `@esbuild/esm-loader` into the [`--loader`](https://nodejs.org/api/cli.html#--experimental-loadermodule) flag.
 ```sh
-node --loader @esbuild/esm-loader ./file.js
+node --loader @esbuild/esm-loader ./file.ts
 ```
 
 ### TypeScript configuration
@@ -40,7 +40,7 @@ Modules transformations are cached in the system cache directory ([`TMPDIR`](htt
 Set environment variable `ESBK_DISABLE_CACHE` to a truthy value to disable the cache:
 
 ```sh
-ESBK_DISABLE_CACHE=1 node --loader @esbuild/esm-loader ./file.js
+ESBK_DISABLE_CACHE=1 node --loader @esbuild/esm-loader ./file.ts
 ```
 
 ## FAQ
@@ -55,7 +55,7 @@ Node.js has built-in support for network imports [behind the `--experimental-net
 You can pass it in with `esm-loader`:
 
 ```sh
-node --loader @esbuild/esm-loader --experimental-network-imports ./file.js
+node --loader @esbuild/esm-loader --experimental-network-imports ./file.ts
 ```
 
 ### Can it resolve files without an extension?
