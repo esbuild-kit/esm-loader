@@ -4,7 +4,7 @@ Node.js `import` hook to instantaneously transform TypeScript to ESM on demand u
 
 ### Features
 - Transforms TypeScript to ESM on demand
-- Supports TS extensions `.cjs` + `.mjs` (and `.cts` & `.mts`)
+- Supports TS extensions `.cjs` & `.mjs` (+ `.cts` & `.mts`)
 - Classic Node.js resolution (extensionless & directory imports)
 - Cached for performance boost
 - Supports Node.js v12.20.0+
