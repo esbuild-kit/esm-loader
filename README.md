@@ -1,14 +1,14 @@
-# esm-loader
+# @esbuild-kit/esm-loader
 
-Node.js `import` hook to transform TypeScript to ESM on demand using [esbuild](https://esbuild.github.io/).
+Node.js `import` hook to instantaneously transform TypeScript to ESM on demand using [esbuild](https://esbuild.github.io/).
 
 ### Features
-- Converts TypeScript to ESM
-- Supports new extensions `.cjs` + `.mjs` (and `.cts` &`.mts`)
-- Supports Node.js 12.20.0 and up
-- Handles `node:` import prefixes
-- Sourcemap support
+- Transforms TypeScript to ESM on demand
+- Supports TS extensions `.cjs` + `.mjs` (and `.cts` & `.mts`)
+- Classic Node.js resolution (extensionless & directory imports)
 - Cached for performance boost
+- Supports Node.js v12.20.0+
+- Handles `node:` import prefixes
 
 > **Tip:**
 >
