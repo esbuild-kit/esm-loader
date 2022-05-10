@@ -1,4 +1,4 @@
-# @esbuild-kit/esm-loader
+# esm-loader
 
 Node.js `import` hook to instantaneously transform TypeScript to ESM on demand using [esbuild](https://esbuild.github.io/).
 
