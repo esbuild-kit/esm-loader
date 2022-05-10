@@ -14,7 +14,7 @@ Node.js `import` hook to instantaneously transform TypeScript to ESM on demand u
 >
 > _esm-loader_ doesn't hook into `require()` calls.
 >
-> Use this with [cjs-loader](https://github.com/esbuild-kit/cjs-loader) for `require()` support. Alternatively, use [esb](https://github.com/esbuild-kit/esb) to handle them both automatically.
+> Use this with [cjs-loader](https://github.com/esbuild-kit/cjs-loader) for `require()` support. Alternatively, use [tsx](https://github.com/esbuild-kit/tsx) to handle them both automatically.
 
 ## Install
 
@@ -71,6 +71,6 @@ import directory from './directory' // -> ./directory/index.js
 
 ## Related
 
-- [@esbuild-kit/esb](https://github.com/esbuild-kit/esb) - Node.js runtime powered by esbuild using `@esbuild-kit/cjs-loader` and `@esbuild-kit/esb-loader`.
+- [tsx](https://github.com/esbuild-kit/tsx) - Node.js runtime powered by esbuild using `@esbuild-kit/cjs-loader` and `@esbuild-kit/esb-loader`.
 
 - [@esbuild-kit/cjs-loader](https://github.com/esbuild-kit/cjs-loader) - TypeScript & ESM to CJS transpiler using the Node.js loader API.
