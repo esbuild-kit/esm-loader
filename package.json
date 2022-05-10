@@ -1,6 +1,9 @@
 {
 	"name": "@esbuild-kit/esm-loader",
 	"version": "0.0.0-semantic-release",
+	"publishConfig": {
+		"access": "public"
+	},
 	"description": "Node.js loader for compiling TypeScript modules to ESM",
 	"keywords": [
 		"esbuild",
