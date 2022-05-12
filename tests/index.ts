@@ -17,7 +17,7 @@ const nodeVersions = [
 
 (async () => {
 	for (const nodeVersion of nodeVersions) {
-		const node = await createNode(nodeVersion, './tests/fixtures');
+		const node = await createNode(nodeVersion, './tests/fixtures/package-module');
 
 		await describe(`Node ${node.version}`, ({ runTestSuite }) => {
 			runTestSuite(
