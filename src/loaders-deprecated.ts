@@ -34,7 +34,7 @@ const _getFormat: getFormat = async function (
 	defaultGetFormat,
 ) {
 	if (url.endsWith('.json')) {
-		return { format: 'json' };
+		return { format: 'module' };
 	}
 
 	if (tsExtensionsPattern.test(url)) {
@@ -92,7 +92,10 @@ const _transformSource: transformSource = async function (
 		});
 	}
 
-	if (tsExtensionsPattern.test(url)) {
+	if (
+		url.endsWith('.json')
+		|| tsExtensionsPattern.test(url)
+	) {
 		const transformed = await transform(source.toString(), url, {
 			format: 'esm',
 			tsconfigRaw,
