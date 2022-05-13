@@ -14,7 +14,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"}}');
+				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
 			});
 		});
 
@@ -29,7 +29,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"}}');
+				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
 			});
 		});
 
@@ -44,7 +44,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"}}');
+				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
 			});
 		});
 	});

@@ -167,7 +167,10 @@ export const load: load = async function (
 
 	const code = loaded.source.toString();
 
-	if (tsExtensionsPattern.test(url)) {
+	if (
+		loaded.format === 'json'
+		|| tsExtensionsPattern.test(url)
+	) {
 		const transformed = await transform(code, url, {
 			format: 'esm',
 			tsconfigRaw,
@@ -178,7 +181,7 @@ export const load: load = async function (
 		}
 
 		return {
-			...context,
+			format: 'module',
 			source: transformed.code,
 		};
 	}
