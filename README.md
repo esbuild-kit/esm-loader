@@ -71,6 +71,6 @@ import directory from './directory' // -> ./directory/index.js
 
 ## Related
 
-- [tsx](https://github.com/esbuild-kit/tsx) - Node.js runtime powered by esbuild using `@esbuild-kit/cjs-loader` and `@esbuild-kit/esb-loader`.
+- [tsx](https://github.com/esbuild-kit/tsx) - Node.js runtime powered by esbuild using [`@esbuild-kit/cjs-loader`](https://github.com/esbuild-kit/cjs-loader) and [`@esbuild-kit/esm-loader`](https://github.com/esbuild-kit/esm-loader).
 
 - [@esbuild-kit/cjs-loader](https://github.com/esbuild-kit/cjs-loader) - TypeScript & ESM to CJS transpiler using the Node.js loader API.
