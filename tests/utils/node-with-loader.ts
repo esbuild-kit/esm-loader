@@ -21,7 +21,6 @@ export const nodeWithLoader = async (
 			ESBK_DISABLE_CACHE: '1',
 		},
 		nodeOptions: [
-			'--experimental-modules',
 			'--loader',
 			pathToFileURL(
 				path.resolve(__dirname, '../../../dist/index.js'),
