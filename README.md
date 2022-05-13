@@ -46,7 +46,7 @@ ESBK_DISABLE_CACHE=1 node --loader @esbuild-kit/esm-loader ./file.ts
 ## FAQ
 
 ### Can it import JSON modules?
-Yes. This loader enables importing native [JSON modules](https://nodejs.org/api/esm.html#json-modules).
+Yes. This loader transpiles JSON modules so it's also compatible with named imports.
 
 ### Can it import ESM modules over network?
 
