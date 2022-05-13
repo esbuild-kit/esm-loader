@@ -16,6 +16,7 @@ import {
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
+import { getPackageType } from './package-json';
 
 const tsconfig = getTsconfig();
 const tsconfigRaw = tsconfig?.config;
@@ -38,7 +39,8 @@ const _getFormat: getFormat = async function (
 	}
 
 	if (tsExtensionsPattern.test(url)) {
-		return { format: 'module' };
+		const format = await getPackageType(url);
+		return { format };
 	}
 
 	const defaultFormat = await defaultGetFormat(url, context, defaultGetFormat);

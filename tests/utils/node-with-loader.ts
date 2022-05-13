@@ -11,9 +11,9 @@ type Options = {
 
 const __dirname = fileURLToPath(import.meta.url);
 
-export const nodeWithLoader = async (
+export const nodeWithLoader = (
 	options: Options,
-) => await execaNode(
+) => execaNode(
 	options.args[0],
 	options.args.slice(1),
 	{
@@ -29,8 +29,9 @@ export const nodeWithLoader = async (
 		],
 		nodePath: options.nodePath,
 		cwd: options.cwd,
+		reject: false,
 	},
-).catch(error => error);
+);
 
 export async function createNode(
 	nodeVersion: string,

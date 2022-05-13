@@ -25,7 +25,7 @@
 	"main": "./dist/index.js",
 	"exports": "./dist/index.js",
 	"scripts": {
-		"build": "pkgroll --minify --target=node12.19",
+		"build": "pkgroll --target=node12.19",
 		"lint": "eslint .",
 		"pretest": "npm run build",
 		"test": "node --loader @esbuild-kit/esm-loader tests"
@@ -45,6 +45,7 @@
 		"manten": "^0.0.3",
 		"pkgroll": "^1.2.2",
 		"semver": "^7.3.7",
+		"type-fest": "^2.12.2",
 		"typescript": "^4.6.4"
 	},
 	"eslintConfig": {
@@ -58,7 +59,8 @@
 				"error",
 				{
 					"allow": [
-						"describe"
+						"describe",
+						"runTestSuite"
 					]
 				}
 			]

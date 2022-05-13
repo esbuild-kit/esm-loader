@@ -9,6 +9,7 @@ import {
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
+import { getPackageType } from './package-json';
 
 const sourcemaps = installSourceMapSupport();
 
@@ -64,9 +65,12 @@ export const resolve: resolve = async function (
 	}
 
 	if (tsExtensionsPattern.test(specifier)) {
+		const resolved = await defaultResolve(specifier, context, defaultResolve);
+		const format = await getPackageType(resolved.url);
+
 		return {
-			...(await defaultResolve(specifier, context, defaultResolve)),
-			format: 'module',
+			...resolved,
+			format,
 		};
 	}
 
@@ -81,11 +85,13 @@ export const resolve: resolve = async function (
 		const resolved = await defaultResolve(specifier, context, defaultResolve);
 
 		/**
-		 * The format depends on package.json type. If it's commonjs,
-		 * the file doesn't get read for it to be deferred to CJS loading.
+		 * When returning 'commonjs' in resolve(), the load() function
+		 * won't even read the file contents, and leave it to the CJS
+		 * loader to do that.
 		 *
-		 * Set it to module so the file gets read, and the loader can
-		 * revert it back to commonjs if it's actually commonjs.
+		 * Since we need to check if the file is actually CJS, we need to
+		 * make it think its a "module", read the file, and confirm
+		 * that it's a cjs file in loader().
 		 */
 		if (
 			specifier.endsWith('.js')
@@ -166,7 +172,6 @@ export const load: load = async function (
 	}
 
 	const code = loaded.source.toString();
-
 	if (tsExtensionsPattern.test(url)) {
 		const transformed = await transform(code, url, {
 			format: 'esm',
@@ -184,6 +189,7 @@ export const load: load = async function (
 	}
 
 	if (!(await isEsm(code))) {
+		// When returning as commonjs, the "source" output is ignored
 		loaded.format = 'commonjs';
 	}
 

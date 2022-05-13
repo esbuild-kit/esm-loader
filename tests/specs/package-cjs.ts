@@ -1,0 +1,19 @@
+import { testSuite, expect } from 'manten';
+import type { NodeApis } from '../utils/node-with-loader';
+
+export default testSuite(async ({ describe }, node: NodeApis) => {
+	describe('Package CJS', async ({ test }) => {
+		test('Loading JS should use CJS loader and succeed', async () => {
+			const nodeProcess = await node.load('./commonjs.js');
+			expect(nodeProcess.exitCode).toBe(0);
+			expect(nodeProcess.stdout).toMatch('/commonjs.js');
+		});
+
+		test('Loading TS should use CJS loader and fail', async () => {
+			const nodeProcess = await node.load('./typescript.ts');
+			expect(nodeProcess.exitCode).toBe(1);
+			expect(nodeProcess.stderr).toMatch('internal/modules/cjs/loader');
+			expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
+		});
+	});
+});

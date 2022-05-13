@@ -17,20 +17,27 @@ const nodeVersions = [
 
 (async () => {
 	for (const nodeVersion of nodeVersions) {
-		const node = await createNode(nodeVersion, './tests/fixtures/package-module');
+		await describe(`Node ${nodeVersion}`, async ({ describe, runTestSuite }) => {
+			describe('Package: module', async ({ runTestSuite }) => {
+				const node = await createNode(nodeVersion, './tests/fixtures/package-module');
 
-		await describe(`Node ${node.version}`, ({ runTestSuite }) => {
+				runTestSuite(
+					import('./specs/javascript'),
+					node,
+				);
+				runTestSuite(
+					import('./specs/typescript'),
+					node,
+				);
+				runTestSuite(
+					import('./specs/json'),
+					node,
+				);
+			});
+
 			runTestSuite(
-				import('./specs/javascript'),
-				node,
-			);
-			runTestSuite(
-				import('./specs/typescript'),
-				node,
-			);
-			runTestSuite(
-				import('./specs/json'),
-				node,
+				import('./specs/package-cjs'),
+				await createNode(nodeVersion, './tests/fixtures/package-commonjs'),
 			);
 		});
 	}
