@@ -60,7 +60,11 @@ export const resolve: resolve = async function (
 	) {
 		try {
 			return await resolve(`${specifier.slice(0, -2)}ts`, context, defaultResolve);
-		} catch {}
+		} catch (error) {
+			if ((error as any).code !== 'ERR_MODULE_NOT_FOUND') {
+				throw error;
+			}
+		}
 	}
 
 	if (tsExtensionsPattern.test(specifier)) {
