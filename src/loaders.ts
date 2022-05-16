@@ -5,7 +5,7 @@ import {
 import getTsconfig from 'get-tsconfig';
 import {
 	tsExtensionsPattern,
-	isEsm,
+	getFormatFromExtension,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
@@ -64,9 +64,10 @@ export const resolve: resolve = async function (
 		specifier = `${specifier.slice(0, -2)}ts`;
 	}
 
+	// TODO: we can remove [cm]js from pattern because we remove it right above
 	if (tsExtensionsPattern.test(specifier)) {
 		const resolved = await defaultResolve(specifier, context, defaultResolve);
-		const format = await getPackageType(resolved.url);
+		const format = getFormatFromExtension(resolved.url) ?? await getPackageType(resolved.url);
 
 		return {
 			...resolved,
@@ -82,25 +83,7 @@ export const resolve: resolve = async function (
 	}
 
 	try {
-		const resolved = await defaultResolve(specifier, context, defaultResolve);
-
-		/**
-		 * When returning 'commonjs' in resolve(), the load() function
-		 * won't even read the file contents, and leave it to the CJS
-		 * loader to do that.
-		 *
-		 * Since we need to check if the file is actually CJS, we need to
-		 * make it think its a "module", read the file, and confirm
-		 * that it's a cjs file in loader().
-		 */
-		if (
-			specifier.endsWith('.js')
-			&& resolved.format === 'commonjs'
-		) {
-			resolved.format = 'module';
-		}
-
-		return resolved;
+		return await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
 		if (error instanceof Error) {
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
@@ -119,10 +102,7 @@ export const resolve: resolve = async function (
 								: suffix
 						);
 
-						return {
-							...(await defaultResolve(trySpecifier, context, defaultResolve)),
-							format: suffix === '.json' ? 'json' : 'module',
-						};
+						return await resolve(trySpecifier, context, defaultResolve);
 					} catch {}
 				}
 			}
@@ -190,11 +170,6 @@ export const load: load = async function (
 			format: 'module',
 			source: transformed.code,
 		};
-	}
-
-	if (!(await isEsm(code))) {
-		// When returning as commonjs, the "source" output is ignored
-		loaded.format = 'commonjs';
 	}
 
 	return loaded;

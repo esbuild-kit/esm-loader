@@ -6,7 +6,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		test('Loading JS should use CJS loader and succeed', async () => {
 			const nodeProcess = await node.load('./commonjs.js');
 			expect(nodeProcess.exitCode).toBe(0);
-			expect(nodeProcess.stdout).toMatch(/[/\\]commonjs\.js/);
+			expect(nodeProcess.stdout).toBe('string');
 		});
 
 		test('Loading TS should use CJS loader and fail', async () => {

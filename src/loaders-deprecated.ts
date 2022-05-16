@@ -3,8 +3,6 @@
  * https://nodejs.org/docs/latest-v12.x/api/esm.html#esm_hooks
  * https://nodejs.org/docs/latest-v14.x/api/esm.html#esm_hooks
  */
-import { fileURLToPath } from 'url';
-import fs from 'fs';
 import {
 	transform,
 	installSourceMapSupport,
@@ -12,7 +10,7 @@ import {
 import getTsconfig from 'get-tsconfig';
 import {
 	tsExtensionsPattern,
-	isEsm,
+	getFormatFromExtension,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
@@ -39,34 +37,11 @@ const _getFormat: getFormat = async function (
 	}
 
 	if (tsExtensionsPattern.test(url)) {
-		const format = await getPackageType(url);
+		const format = getFormatFromExtension(url) ?? await getPackageType(url);
 		return { format };
 	}
 
-	const defaultFormat = await defaultGetFormat(url, context, defaultGetFormat);
-
-	/**
-	 * .js files get set to CJS if package.json type is
-	 * commonjs. In those cases, parse for ESM to verify.
-	 */
-	if (
-		url.endsWith('.js')
-		&& (
-			defaultFormat.format === 'commonjs'
-			|| defaultFormat.format === 'module'
-		)
-	) {
-		const filePath = fileURLToPath(url);
-		const source = await fs.promises.readFile(filePath, 'utf8');
-
-		defaultFormat.format = (
-			!(await isEsm(source))
-				? 'commonjs'
-				: 'module'
-		);
-	}
-
-	return defaultFormat;
+	return await defaultGetFormat(url, context, defaultGetFormat);
 };
 
 type Source = string | SharedArrayBuffer | Uint8Array;

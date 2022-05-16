@@ -1,6 +1,19 @@
+import path from 'path';
 import { init, parse } from 'es-module-lexer';
 
 export const tsExtensionsPattern = /\.([cm]?ts|[tj]sx)$/;
+
+export const getFormatFromExtension = (filePath: string): ModuleFormat | undefined => {
+	const extension = path.extname(filePath);
+
+	if (extension === '.mts') {
+		return 'module';
+	}
+
+	if (extension === '.cts') {
+		return 'commonjs';
+	}
+};
 
 export type ModuleFormat =
 	| 'builtin'

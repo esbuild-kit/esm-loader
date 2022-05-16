@@ -1,1 +1,1 @@
-console.log(__filename);
+console.log(typeof __filename);
