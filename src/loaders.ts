@@ -64,7 +64,6 @@ export const resolve: resolve = async function (
 		} catch {}
 	}
 
-	// TODO: we can remove [cm]js from pattern because we remove it right above
 	if (tsExtensionsPattern.test(specifier)) {
 		const resolved = await defaultResolve(specifier, context, defaultResolve);
 		const format = getFormatFromExtension(resolved.url) ?? await getPackageType(resolved.url);
