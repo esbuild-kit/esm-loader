@@ -53,15 +53,15 @@ export const resolve: resolve = async function (
 	}
 
 	/**
-	 * Typescript 4.6.0 behavior seems to be that if `.mjs` is specified,
-	 * it converts it to mts without testing if it exists, and without
-	 * consideration for whether a file with .mjs exists
+	 * Typescript gives .mts or .cts priority over actual .mjs or .cjs extensions
 	 */
 	if (
 		/\.[cm]js$/.test(specifier)
 		&& tsExtensionsPattern.test(context.parentURL!)
 	) {
-		specifier = `${specifier.slice(0, -2)}ts`;
+		try {
+			return await resolve(`${specifier.slice(0, -2)}ts`, context, defaultResolve);
+		} catch {}
 	}
 
 	// TODO: we can remove [cm]js from pattern because we remove it right above

@@ -30,6 +30,15 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 						expect(nodeProcess.stderr).toMatch('Cannot find module \'node:');
 					}
 				});
+
+				test('TypeScript Import', async () => {
+					const nodeProcess = await node.import(importPath, { typescript: true });
+					if (semver.satisfies(node.version, nodeSupportsNodePrefixRequire)) {
+						expect(nodeProcess.stdout).toBe(`${output}\n{"default":1234}`);
+					} else {
+						expect(nodeProcess.stderr).toMatch('Cannot find module \'node:');
+					}
+				});
 			});
 
 			describe('extensionless - should not work', ({ test }) => {
