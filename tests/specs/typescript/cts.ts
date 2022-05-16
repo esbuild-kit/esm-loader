@@ -3,7 +3,6 @@ import type { NodeApis } from '../../utils/node-with-loader';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.cts extension', ({ describe }) => {
-
 		describe('full path', ({ test }) => {
 			const importPath = './lib/ts-ext-cts/index.cts';
 
