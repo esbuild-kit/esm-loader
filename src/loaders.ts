@@ -1,6 +1,7 @@
 import {
 	transform,
 	installSourceMapSupport,
+	transformDynamicImport,
 } from '@esbuild-kit/core-utils';
 import getTsconfig from 'get-tsconfig';
 import {
@@ -169,6 +170,11 @@ export const load: load = async function (
 			format: 'module',
 			source: transformed.code,
 		};
+	}
+
+	const dynamicImportTransformed = transformDynamicImport(code);
+	if (dynamicImportTransformed) {
+		loaded.source = dynamicImportTransformed.code;
 	}
 
 	return loaded;

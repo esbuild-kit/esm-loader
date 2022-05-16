@@ -6,6 +6,7 @@
 import {
 	transform,
 	installSourceMapSupport,
+	transformDynamicImport,
 } from '@esbuild-kit/core-utils';
 import getTsconfig from 'get-tsconfig';
 import {
@@ -87,7 +88,13 @@ const _transformSource: transformSource = async function (
 		};
 	}
 
-	return defaultTransformSource(source, context, defaultTransformSource);
+	const result = await defaultTransformSource(source, context, defaultTransformSource);
+	const dynamicImportTransformed = transformDynamicImport(result.source);
+	if (dynamicImportTransformed) {
+		result.source = dynamicImportTransformed.code;
+	}
+
+	return result;
 };
 
 const loadersDeprecatedVersion = [16, 12, 0];
