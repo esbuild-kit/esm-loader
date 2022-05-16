@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@esbuild-kit/core-utils': ^1.0.1
+  '@esbuild-kit/core-utils': github:esbuild-kit/core-utils#built/transform-dynamic-import
   '@pvtnbr/eslint-config': ^0.22.0
   '@types/node': ^17.0.33
   '@types/semver': ^7.3.9
@@ -17,7 +17,7 @@ specifiers:
   typescript: ^4.6.4
 
 dependencies:
-  '@esbuild-kit/core-utils': 1.0.1
+  '@esbuild-kit/core-utils': github.com/esbuild-kit/core-utils/84215db24512f75faded02a446bf3ffeb2f8ff3b
   es-module-lexer: 0.10.5
   get-tsconfig: 3.0.1
 
@@ -56,12 +56,6 @@ packages:
       chalk: 2.4.2
       js-tokens: 4.0.0
     dev: true
-
-  /@esbuild-kit/core-utils/1.0.1:
-    resolution: {integrity: sha512-N9fE4afacf4+82Xygmoa5IXASoPHHPL/OF3E5OaDVWtdoi1rk3StLGV6Vl7rqFSJCetghho/O1jvU/VnMf2pLw==}
-    dependencies:
-      esbuild: 0.14.38
-    dev: false
 
   /@eslint/eslintrc/1.2.3:
     resolution: {integrity: sha512-uGo44hIwoLGNyduRpjdEpovcbMdd+Nv7amtmJxnKmI8xj6yd5LncmSwDa5NgX/41lIFJtkjD6YdVfgEzPfJ5UA==}
@@ -3641,3 +3635,11 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
+
+  github.com/esbuild-kit/core-utils/84215db24512f75faded02a446bf3ffeb2f8ff3b:
+    resolution: {tarball: https://codeload.github.com/esbuild-kit/core-utils/tar.gz/84215db24512f75faded02a446bf3ffeb2f8ff3b}
+    name: '@esbuild-kit/core-utils'
+    version: 0.0.0-semantic-release
+    dependencies:
+      esbuild: 0.14.38
+    dev: false

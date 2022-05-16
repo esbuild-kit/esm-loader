@@ -31,7 +31,7 @@
 		"test": "node --loader @esbuild-kit/esm-loader tests"
 	},
 	"dependencies": {
-		"@esbuild-kit/core-utils": "^1.0.1",
+		"@esbuild-kit/core-utils": "github:esbuild-kit/core-utils#built/transform-dynamic-import",
 		"es-module-lexer": "^0.10.5",
 		"get-tsconfig": "^3.0.1"
 	},
