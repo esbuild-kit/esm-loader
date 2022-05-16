@@ -21,7 +21,6 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.exitCode).toBe(0);
 				expect(nodeProcess.stderr).toMatch('SyntaxError: Cannot use import statement outside a module');
 			});
 		});
@@ -36,7 +35,6 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath, { typescript: true });
-				expect(nodeProcess.exitCode).toBe(0);
 				expect(nodeProcess.stderr).toMatch('SyntaxError: Cannot use import statement outside a module');
 			});
 		});
