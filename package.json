@@ -25,7 +25,7 @@
 	"main": "./dist/index.js",
 	"exports": "./dist/index.js",
 	"scripts": {
-		"build": "pkgroll --target=node12.19",
+		"build": "pkgroll --target=node12.19 --minify",
 		"lint": "eslint .",
 		"pretest": "npm run build",
 		"test": "node --loader @esbuild-kit/esm-loader tests"
