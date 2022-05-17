@@ -155,6 +155,9 @@ export const load: load = async function (
 	}
 
 	if (url.endsWith('.json')) {
+		if (!context.importAssertions) {
+			context.importAssertions = {};
+		}
 		context.importAssertions.type = 'json';
 	}
 
