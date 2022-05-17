@@ -172,9 +172,13 @@ export const load: load = async function (
 		};
 	}
 
-	const dynamicImportTransformed = transformDynamicImport(code);
+	const dynamicImportTransformed = transformDynamicImport({ code });
 	if (dynamicImportTransformed) {
 		loaded.source = dynamicImportTransformed.code;
+
+		if (dynamicImportTransformed.map) {
+			sourcemaps!.set(url, dynamicImportTransformed.map);
+		}
 	}
 
 	return loaded;

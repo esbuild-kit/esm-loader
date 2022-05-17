@@ -89,9 +89,13 @@ const _transformSource: transformSource = async function (
 	}
 
 	const result = await defaultTransformSource(source, context, defaultTransformSource);
-	const dynamicImportTransformed = transformDynamicImport(result.source);
+	const dynamicImportTransformed = transformDynamicImport({ code: result.source });
 	if (dynamicImportTransformed) {
 		result.source = dynamicImportTransformed.code;
+
+		if (dynamicImportTransformed.map) {
+			sourcemaps!.set(url, dynamicImportTransformed.map);
+		}
 	}
 
 	return result;
