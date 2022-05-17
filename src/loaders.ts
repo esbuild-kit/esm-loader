@@ -1,14 +1,16 @@
 import {
 	transform,
 	installSourceMapSupport,
+	transformDynamicImport,
 } from '@esbuild-kit/core-utils';
 import getTsconfig from 'get-tsconfig';
 import {
 	tsExtensionsPattern,
-	isEsm,
+	getFormatFromExtension,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
+import { getPackageType } from './package-json';
 
 const sourcemaps = installSourceMapSupport();
 
@@ -68,9 +70,12 @@ export const resolve: resolve = async function (
 	}
 
 	if (tsExtensionsPattern.test(specifier)) {
+		const resolved = await defaultResolve(specifier, context, defaultResolve);
+		const format = getFormatFromExtension(resolved.url) ?? await getPackageType(resolved.url);
+
 		return {
-			...(await defaultResolve(specifier, context, defaultResolve)),
-			format: 'module',
+			...resolved,
+			format,
 		};
 	}
 
@@ -82,23 +87,7 @@ export const resolve: resolve = async function (
 	}
 
 	try {
-		const resolved = await defaultResolve(specifier, context, defaultResolve);
-
-		/**
-		 * The format depends on package.json type. If it's commonjs,
-		 * the file doesn't get read for it to be deferred to CJS loading.
-		 *
-		 * Set it to module so the file gets read, and the loader can
-		 * revert it back to commonjs if it's actually commonjs.
-		 */
-		if (
-			specifier.endsWith('.js')
-			&& resolved.format === 'commonjs'
-		) {
-			resolved.format = 'module';
-		}
-
-		return resolved;
+		return await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
 		if (error instanceof Error) {
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
@@ -117,10 +106,7 @@ export const resolve: resolve = async function (
 								: suffix
 						);
 
-						return {
-							...(await defaultResolve(trySpecifier, context, defaultResolve)),
-							format: suffix === '.json' ? 'json' : 'module',
-						};
+						return await resolve(trySpecifier, context, defaultResolve);
 					} catch {}
 				}
 			}
@@ -193,8 +179,13 @@ export const load: load = async function (
 		};
 	}
 
-	if (!(await isEsm(code))) {
-		loaded.format = 'commonjs';
+	const dynamicImportTransformed = transformDynamicImport({ code });
+	if (dynamicImportTransformed) {
+		loaded.source = dynamicImportTransformed.code;
+
+		if (dynamicImportTransformed.map) {
+			sourcemaps!.set(url, dynamicImportTransformed.map);
+		}
 	}
 
 	return loaded;

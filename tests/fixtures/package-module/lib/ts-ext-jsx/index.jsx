@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 
 console.log(
-	'loaded ts-ext-tsx/index.tsx',
+	'loaded ts-ext-jsx/index.jsx',
 	Boolean(fs),
-	/:6:16/.test((new Error()).stack),
+	Boolean(import('fs')),
+	/:7:16/.test((new Error()).stack),
 );
 
 const React = {

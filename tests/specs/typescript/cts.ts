@@ -3,19 +3,24 @@ import type { NodeApis } from '../../utils/node-with-loader';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.cts extension', ({ describe }) => {
-		const output = 'loaded ts-ext-cts/index.cts true true';
-
 		describe('full path', ({ test }) => {
 			const importPath = './lib/ts-ext-cts/index.cts';
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stdout).toBe(output);
+				expect(nodeProcess.exitCode).toBe(1);
+
+				/**
+				 * Since .cts compiles to CJS and can use features like __dirname,
+				 * it must be compiled by the CJS loader, which is enhanced via
+				 * cjs-loader.
+				 */
+				expect(nodeProcess.stderr).toMatch('SyntaxError: Cannot use import statement outside a module');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stdout).toBe(`${output}\n{"default":1234}`);
+				expect(nodeProcess.stderr).toMatch('SyntaxError: Cannot use import statement outside a module');
 			});
 		});
 
@@ -29,7 +34,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath, { typescript: true });
-				expect(nodeProcess.stdout).toBe(`${output}\n{"default":1234}`);
+				expect(nodeProcess.stderr).toMatch('SyntaxError: Cannot use import statement outside a module');
 			});
 		});
 

@@ -1,9 +1,10 @@
 import fs from 'node:fs';
 
 console.log(
-	'loaded ts-ext-ts/index.ts',
+	'loaded ts-ext-cts/index.cts',
 	Boolean(fs),
-	/:6:16/.test((new Error()).stack),
+	Boolean(import('fs')),
+	/:7:16/.test((new Error()).stack),
 );
 
 function valueNumber(value: number) {
