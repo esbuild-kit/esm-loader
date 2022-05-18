@@ -17,6 +17,11 @@ const sourcemaps = installSourceMapSupport();
 const tsconfig = getTsconfig();
 const tsconfigRaw = tsconfig?.config;
 
+type Resolved = {
+	url: string;
+	format: ModuleFormat;
+};
+
 type resolve = (
 	specifier: string,
 	context: {
@@ -24,10 +29,7 @@ type resolve = (
 		parentURL: string | undefined;
 	},
 	defaultResolve: resolve,
-) => MaybePromise<{
-	url: string;
-	format: ModuleFormat;
-}>;
+) => MaybePromise<Resolved>;
 
 const hasExtensionPattern = /\.\w+$/;
 
@@ -69,25 +71,9 @@ export const resolve: resolve = async function (
 		}
 	}
 
-	if (tsExtensionsPattern.test(specifier)) {
-		const resolved = await defaultResolve(specifier, context, defaultResolve);
-		const format = getFormatFromExtension(resolved.url) ?? await getPackageType(resolved.url);
-
-		return {
-			...resolved,
-			format,
-		};
-	}
-
-	if (specifier.endsWith('.json')) {
-		return {
-			...(await defaultResolve(specifier, context, defaultResolve)),
-			format: 'json',
-		};
-	}
-
+	let resolved: Resolved;
 	try {
-		return await defaultResolve(specifier, context, defaultResolve);
+		resolved = await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
 		if (error instanceof Error) {
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
@@ -114,6 +100,23 @@ export const resolve: resolve = async function (
 
 		throw error;
 	}
+
+	if (resolved.url.endsWith('.json')) {
+		return {
+			...resolved,
+			format: 'json',
+		};
+	}
+
+	if (tsExtensionsPattern.test(resolved.url)) {
+		const format = getFormatFromExtension(resolved.url) ?? await getPackageType(resolved.url);
+		return {
+			...resolved,
+			format,
+		};
+	}
+
+	return resolved;
 };
 
 type load = (
@@ -149,12 +152,7 @@ export const load: load = async function (
 
 	const loaded = await defaultLoad(url, context, defaultLoad);
 
-	if (
-		!loaded.source
-
-		// node_modules don't need to be transformed
-		|| url.includes('/node_modules/')
-	) {
+	if (!loaded.source) {
 		return loaded;
 	}
 
