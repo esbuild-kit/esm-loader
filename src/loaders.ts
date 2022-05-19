@@ -4,6 +4,7 @@ import {
 	transformDynamicImport,
 } from '@esbuild-kit/core-utils';
 import getTsconfig from 'get-tsconfig';
+import { loadConfig, createMatchPath } from 'tsconfig-paths';
 import {
 	tsExtensionsPattern,
 	getFormatFromExtension,
@@ -39,6 +40,17 @@ const possibleSuffixes = [
 	...extensions.map(extension => `/index${extension}` as const),
 ];
 
+const tsconfigLoaded = loadConfig();
+
+const matchPath = tsconfigLoaded.resultType === 'failed'
+	? (v: string) => v
+	: createMatchPath(
+		tsconfigLoaded.absoluteBaseUrl,
+		tsconfigLoaded.paths,
+		tsconfigLoaded.mainFields,
+		tsconfigLoaded.addMatchAll,
+	);
+
 // eslint-disable-next-line complexity, func-names
 export const resolve: resolve = async function (
 	specifier,
@@ -54,6 +66,12 @@ export const resolve: resolve = async function (
 	// If directory, can be index.js, index.ts, etc.
 	if (specifier.endsWith('/')) {
 		return resolve(`${specifier}index`, context, defaultResolve);
+	}
+
+	// If file in tsconfig.paths
+	const replaced = matchPath(specifier);
+	if (replaced) {
+		specifier = replaced;
 	}
 
 	/**

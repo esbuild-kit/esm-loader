@@ -28,12 +28,15 @@
 		"build": "pkgroll --target=node12.19 --minify",
 		"lint": "eslint .",
 		"pretest": "npm run build",
-		"test": "node --loader @esbuild-kit/esm-loader tests"
+		"test": "node --loader @esbuild-kit/esm-loader tests",
+		"test:local": "pnpm build && node --loader ./dist/index.js tests",
+		"test:tspaths": "pnpm build && cd test-tsconfig.paths && node --loader ../dist/index.js index.ts"
 	},
 	"dependencies": {
 		"@esbuild-kit/core-utils": "^1.1.1",
 		"es-module-lexer": "^0.10.5",
-		"get-tsconfig": "^3.0.1"
+		"get-tsconfig": "^3.0.1",
+		"tsconfig-paths": "^4.0.0"
 	},
 	"devDependencies": {
 		"@pvtnbr/eslint-config": "^0.22.0",
