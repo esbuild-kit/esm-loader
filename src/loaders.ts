@@ -39,6 +39,7 @@ const possibleSuffixes = [
 	...extensions.map(extension => `/index${extension}` as const),
 ];
 
+// eslint-disable-next-line complexity, func-names
 export const resolve: resolve = async function (
 	specifier,
 	context,
@@ -60,11 +61,13 @@ export const resolve: resolve = async function (
 	 */
 	if (
 		/\.[cm]js$/.test(specifier)
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		&& tsExtensionsPattern.test(context.parentURL!)
 	) {
 		try {
 			return await resolve(`${specifier.slice(0, -2)}ts`, context, defaultResolve);
 		} catch (error) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			if ((error as any).code !== 'ERR_MODULE_NOT_FOUND') {
 				throw error;
 			}
@@ -76,11 +79,13 @@ export const resolve: resolve = async function (
 		resolved = await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
 		if (error instanceof Error) {
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
 				return resolve(`${specifier}/index`, context, defaultResolve);
 			}
 
 			if (
+				// eslint-disable-next-line @typescript-eslint/no-explicit-any
 				(error as any).code === 'ERR_MODULE_NOT_FOUND'
 				&& !hasExtensionPattern.test(specifier)
 			) {
@@ -131,6 +136,7 @@ type load = (
 	source: string | ArrayBuffer | SharedArrayBuffer | Uint8Array;
 }>;
 
+// eslint-disable-next-line func-names
 export const load: load = async function (
 	url,
 	context,
@@ -168,6 +174,7 @@ export const load: load = async function (
 		});
 
 		if (transformed.map) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			sourcemaps!.set(url, transformed.map);
 		}
 
@@ -182,6 +189,7 @@ export const load: load = async function (
 		loaded.source = dynamicImportTransformed.code;
 
 		if (dynamicImportTransformed.map) {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			sourcemaps!.set(url, dynamicImportTransformed.map);
 		}
 	}
