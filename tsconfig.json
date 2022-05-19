@@ -8,7 +8,11 @@
 		"outDir": "dist",
 
 		"module": "esnext",
-		"target": "esnext"
+		"target": "esnext",
+
+		"paths": {
+			"utils/*": ["./tests/utils/*"]
+		}
 
 		// Prevents mts -> mjs conversion
 		// "moduleResolution": "node",

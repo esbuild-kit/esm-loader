@@ -1,5 +1,5 @@
 import { describe } from 'manten';
-import { createNode } from './utils/node-with-loader';
+import { createNode } from 'utils/node-with-loader';
 
 const nodeVersions = [
 	'12.20.0', // CJS named export detection added
