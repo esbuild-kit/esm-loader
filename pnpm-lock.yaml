@@ -7,7 +7,6 @@ specifiers:
   '@types/semver': ^7.3.9
   es-module-lexer: ^0.10.5
   eslint: ^8.15.0
-  esm-loader-test: 0.0.0-semantic-release
   execa: ^6.1.0
   get-node: ^13.0.1
   get-tsconfig: ^3.0.1
@@ -21,7 +20,6 @@ specifiers:
 dependencies:
   '@esbuild-kit/core-utils': 1.1.1
   es-module-lexer: 0.10.5
-  esm-loader-test: 0.0.0-semantic-release
   get-tsconfig: 3.0.1
   tsconfig-paths: 4.0.0
 
@@ -1739,15 +1737,6 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
-
-  /esm-loader-test/0.0.0-semantic-release:
-    resolution: {integrity: sha512-F3Jf0a11dqQgVNTR4BK/z/5o+t9Pa07W/fnQcvIiGw/Dz2HxpE5UDKG6ie2Y9OKqS3NCeXWAwsZviSoY4iKInA==}
-    dependencies:
-      '@esbuild-kit/core-utils': 1.1.1
-      es-module-lexer: 0.10.5
-      get-tsconfig: 3.0.1
-      tsconfig-paths: 4.0.0
-    dev: false
 
   /espree/9.3.2:
     resolution: {integrity: sha512-D211tC7ZwouTIuY5x9XnS0E9sWNChB7IYKX/Xp5eQj3nFXhqmiUDB9q27y76oFl8jTg3pXcQx/bpxMfs3CIZbA==}
