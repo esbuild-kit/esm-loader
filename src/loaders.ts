@@ -75,26 +75,20 @@ export const resolve: resolve = async function (
 	try {
 		resolved = await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
-		if (error instanceof Error) {
-			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
-				return resolve(`${specifier}/index`, context, defaultResolve);
-			}
-
-			if (
-				(error as any).code === 'ERR_MODULE_NOT_FOUND'
+		if (error instanceof Error
+				&& ['ERR_MODULE_NOT_FOUND', 'ERR_UNSUPPORTED_DIR_IMPORT'].includes((error as any).code)
 				&& !hasExtensionPattern.test(specifier)
-			) {
-				for (const suffix of possibleSuffixes) {
-					try {
-						const trySpecifier = specifier + (
-							specifier.endsWith('/') && suffix.startsWith('/')
-								? suffix.slice(1)
-								: suffix
-						);
+		) {
+			for (const suffix of possibleSuffixes) {
+				try {
+					const trySpecifier = specifier + (
+						specifier.endsWith('/') && suffix.startsWith('/')
+							? suffix.slice(1)
+							: suffix
+					);
 
-						return await resolve(trySpecifier, context, defaultResolve);
-					} catch {}
-				}
+					return await resolve(trySpecifier, context, defaultResolve);
+				} catch {}
 			}
 		}
 
