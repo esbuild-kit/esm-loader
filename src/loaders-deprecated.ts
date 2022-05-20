@@ -37,7 +37,7 @@ const _getFormat: getFormat = async function (
 		return { format: 'module' };
 	}
 
-	if (tsExtensionsPattern.test(url)) {
+	if (url.startsWith('file:')) {
 		const format = getFormatFromExtension(url) ?? await getPackageType(url);
 		return { format };
 	}
@@ -89,7 +89,7 @@ const _transformSource: transformSource = async function (
 	}
 
 	const result = await defaultTransformSource(source, context, defaultTransformSource);
-	const dynamicImportTransformed = transformDynamicImport({ code: result.source });
+	const dynamicImportTransformed = transformDynamicImport({ code: result.source.toString() });
 	if (dynamicImportTransformed) {
 		result.source = dynamicImportTransformed.code;
 
