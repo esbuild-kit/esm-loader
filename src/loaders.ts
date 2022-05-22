@@ -131,15 +131,20 @@ export const resolve: resolve = async function (
 		};
 	}
 
-	if (tsExtensionsPattern.test(resolved.url)) {
-		const format = getFormatFromExtension(resolved.url) ?? await getPackageType(resolved.url);
-		return {
-			...resolved,
-			format,
-		};
+	let { format } = resolved;
+
+	if (resolved.url.startsWith('file:')) {
+		format = getFormatFromExtension(resolved.url) ?? format;
+
+		if (!format) {
+			format = await getPackageType(resolved.url);
+		}
 	}
 
-	return resolved;
+	return {
+		...resolved,
+		format,
+	};
 };
 
 type load = (

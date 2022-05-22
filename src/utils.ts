@@ -6,11 +6,11 @@ export const tsExtensionsPattern = /\.([cm]?ts|[tj]sx)$/;
 export const getFormatFromExtension = (filePath: string): ModuleFormat | undefined => {
 	const extension = path.extname(filePath);
 
-	if (extension === '.mts') {
+	if (extension === '.mjs' || extension === '.mts') {
 		return 'module';
 	}
 
-	if (extension === '.cts') {
+	if (extension === '.cjs' || extension === '.cts') {
 		return 'commonjs';
 	}
 };
