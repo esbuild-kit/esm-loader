@@ -67,7 +67,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stderr).toMatch('Cannot find module');
 				expect(nodeProcess.stderr).toMatch(
 					isWin
-						? '\\lib\\ts-ext-mts\''
+						? '\\lib\\ts-ext-mts\\\''
 						: '/lib/ts-ext-mts/\'',
 				);
 			});
