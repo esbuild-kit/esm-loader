@@ -2,6 +2,7 @@ import {
 	transform,
 	installSourceMapSupport,
 	transformDynamicImport,
+	resolveTsPath,
 } from '@esbuild-kit/core-utils';
 import getTsconfig from 'get-tsconfig';
 import { loadConfig, createMatchPath } from 'tsconfig-paths';
@@ -75,19 +76,18 @@ export const resolve: resolve = async function (
 	}
 
 	/**
-	 * Typescript gives .mts or .cts priority over actual .mjs or .cjs extensions
+	 * Typescript gives .ts, .cts, or .mts priority over actual .js, .cjs, or .mjs extensions
 	 */
-	if (
-		/\.[cm]js$/.test(specifier)
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		&& tsExtensionsPattern.test(context.parentURL!)
-	) {
-		try {
-			return await resolve(`${specifier.slice(0, -2)}ts`, context, defaultResolve);
-		} catch (error) {
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
-			if ((error as any).code !== 'ERR_MODULE_NOT_FOUND') {
-				throw error;
+	if (tsExtensionsPattern.test(context.parentURL!)) {
+		const tsPath = resolveTsPath(specifier);
+
+		if (tsPath) {
+			try {
+				return await resolve(tsPath, context, defaultResolve);
+			} catch (error) {
+				if ((error as any).code !== 'ERR_MODULE_NOT_FOUND') {
+					throw error;
+				}
 			}
 		}
 	}
