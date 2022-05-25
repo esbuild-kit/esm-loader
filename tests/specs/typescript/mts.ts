@@ -1,6 +1,8 @@
 import { testSuite, expect } from 'manten';
 import type { NodeApis } from '../../utils/node-with-loader';
 
+const isWin = process.platform === 'win32';
+
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.mts extension', ({ describe }) => {
 		const output = 'loaded ts-ext-mts/index.mts true true true';
@@ -39,13 +41,16 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
 				expect(nodeProcess.stderr).toMatch('Cannot find module');
-				expect(nodeProcess.stderr).toMatch('/lib/ts-ext-mts/index\'');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
 				expect(nodeProcess.stderr).toMatch('Cannot find module');
-				expect(nodeProcess.stderr).toMatch('/lib/ts-ext-mts/index\'');
+				expect(nodeProcess.stderr).toMatch(
+					isWin
+						? '\\lib\\ts-ext-mts\\index\''
+						: '/lib/ts-ext-mts/index\''
+				);
 			});
 		});
 
@@ -60,7 +65,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
 				expect(nodeProcess.stderr).toMatch('Cannot find module');
-				expect(nodeProcess.stderr).toMatch('/lib/ts-ext-mts/\'');
+				expect(nodeProcess.stderr).toMatch(
+					isWin
+						? '\\lib\\ts-ext-mts\''
+						: '/lib/ts-ext-mts/\''
+				);
 			});
 		});
 	});
