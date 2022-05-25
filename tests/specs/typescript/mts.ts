@@ -39,16 +39,18 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
 				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('/lib/ts-ext-mts/index\'');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
 				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('/lib/ts-ext-mts/index\'');
 			});
 		});
 
 		describe('directory - should not work', ({ test }) => {
-			const importPath = './lib/ts-ext-mts';
+			const importPath = './lib/ts-ext-mts/';
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
@@ -58,6 +60,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
 				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('/lib/ts-ext-mts/\'');
 			});
 		});
 	});
