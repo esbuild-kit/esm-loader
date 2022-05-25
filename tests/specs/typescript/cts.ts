@@ -1,6 +1,8 @@
 import { testSuite, expect } from 'manten';
 import type { NodeApis } from '../../utils/node-with-loader';
 
+const isWin = process.platform === 'win32';
+
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.cts extension', ({ describe }) => {
 		describe('full path', ({ test }) => {
@@ -49,6 +51,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
 				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch(
+					isWin
+						? '\\lib\\ts-ext-cts\\index\''
+						: '/lib/ts-ext-cts/index\'',
+				);
 			});
 		});
 
@@ -63,6 +70,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
 				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch(
+					isWin
+						? '\\lib\\ts-ext-cts\''
+						: '/lib/ts-ext-cts\'',
+				);
 			});
 		});
 	});
