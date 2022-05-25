@@ -49,7 +49,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stderr).toMatch(
 					isWin
 						? '\\lib\\ts-ext-mts\\index\''
-						: '/lib/ts-ext-mts/index\''
+						: '/lib/ts-ext-mts/index\'',
 				);
 			});
 		});
@@ -68,7 +68,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stderr).toMatch(
 					isWin
 						? '\\lib\\ts-ext-mts\''
-						: '/lib/ts-ext-mts/\''
+						: '/lib/ts-ext-mts/\'',
 				);
 			});
 		});
