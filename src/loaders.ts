@@ -127,9 +127,7 @@ export const resolve: resolve = async function (
 				(error as any).code === 'ERR_MODULE_NOT_FOUND'
 				&& !hasExtensionPattern.test(specifier)
 			) {
-				try {
-					return await tryExtensions(specifier, context, defaultResolve);
-				} catch {}
+				return await tryExtensions(specifier, context, defaultResolve);
 			}
 		}
 
