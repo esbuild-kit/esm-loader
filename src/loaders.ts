@@ -1,3 +1,4 @@
+import path from 'path';
 import {
 	transform,
 	installSourceMapSupport,
@@ -24,22 +25,63 @@ type Resolved = {
 	format: ModuleFormat;
 };
 
+type Context = {
+	conditions: string[];
+	parentURL: string | undefined;
+};
+
 type resolve = (
 	specifier: string,
-	context: {
-		conditions: string[];
-		parentURL: string | undefined;
-	},
+	context: Context,
 	defaultResolve: resolve,
 ) => MaybePromise<Resolved>;
 
 const hasExtensionPattern = /\.\w+$/;
 
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
-const possibleSuffixes = [
-	...extensions,
-	...extensions.map(extension => `/index${extension}` as const),
-];
+
+async function tryExtensions(
+	specifier: string,
+	context: Context,
+	defaultResolve: resolve,
+) {
+	let error;
+	for (const extension of extensions) {
+		try {
+			return await resolve(
+				specifier + extension,
+				context,
+				defaultResolve,
+			);
+		} catch (_error: any) {
+			if (error === undefined) {
+				const { message } = _error;
+				_error.message = _error.message.replace(`${extension}'`, "'");
+				_error.stack = _error.stack.replace(message, _error.message);
+				error = _error;
+			}
+		}
+	}
+
+	throw error;
+}
+
+async function tryDirectory(
+	specifier: string,
+	context: Context,
+	defaultResolve: resolve,
+) {
+	const appendIndex = specifier.endsWith('/') ? 'index' : `${path.sep}index`;
+
+	try {
+		return await tryExtensions(specifier + appendIndex, context, defaultResolve);
+	} catch (error: any) {
+		const { message } = error;
+		error.message = error.message.replace(`${appendIndex}'`, "'");
+		error.stack = error.stack.replace(message, error.message);
+		throw error;
+	}
+}
 
 const tsconfigLoaded = loadConfig();
 
@@ -66,7 +108,7 @@ export const resolve: resolve = async function (
 
 	// If directory, can be index.js, index.ts, etc.
 	if (specifier.endsWith('/')) {
-		return resolve(`${specifier}index`, context, defaultResolve);
+		return await tryDirectory(specifier, context, defaultResolve);
 	}
 
 	// If file in tsconfig.paths
@@ -99,7 +141,7 @@ export const resolve: resolve = async function (
 		if (error instanceof Error) {
 			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
-				return resolve(`${specifier}/index`, context, defaultResolve);
+				return await tryDirectory(specifier, context, defaultResolve);
 			}
 
 			if (
@@ -107,17 +149,7 @@ export const resolve: resolve = async function (
 				(error as any).code === 'ERR_MODULE_NOT_FOUND'
 				&& !hasExtensionPattern.test(specifier)
 			) {
-				for (const suffix of possibleSuffixes) {
-					try {
-						const trySpecifier = specifier + (
-							specifier.endsWith('/') && suffix.startsWith('/')
-								? suffix.slice(1)
-								: suffix
-						);
-
-						return await resolve(trySpecifier, context, defaultResolve);
-					} catch {}
-				}
+				return await tryExtensions(specifier, context, defaultResolve);
 			}
 		}
 

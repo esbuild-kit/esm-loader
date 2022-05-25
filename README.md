@@ -68,6 +68,18 @@ import file from './file' // -> ./file.js
 import directory from './directory' // -> ./directory/index.js
 ```
 
+### Can it use Node.js's CommonJS resolution algorithm?
+
+ESM import resolution expects explicit import paths, whereas CommonJS resolution expects implicit imports (eg. extensionless & directory imports).
+
+As a result of this change, Node.js changes how it imports a path that matches both a file and directory. In ESM, the directory would be imported, but in CJS, the file would be imported.
+
+To use to the CommonJS resolution algorithm, use the [`--experimental-specifier-resolution=node`](https://nodejs.org/api/cli.html#--experimental-specifier-resolutionmode) flag.
+
+```sh
+node --loader @esbuild-kit/esm-loader --experimental-specifier-resolution=node ./file.ts
+```
+
 ## Related
 
 - [tsx](https://github.com/esbuild-kit/tsx) - Node.js runtime powered by esbuild using [`@esbuild-kit/cjs-loader`](https://github.com/esbuild-kit/cjs-loader) and [`@esbuild-kit/esm-loader`](https://github.com/esbuild-kit/esm-loader).
