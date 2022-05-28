@@ -7,7 +7,7 @@ const nodeSupportsNodePrefixRequire = '^14.18.0 || > 16.0.0';
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('Load CJS', ({ describe }) => {
 		describe('.cjs extension', ({ describe }) => {
-			const output = 'loaded cjs-ext-cjs/index.cjs true true true';
+			const output = 'loaded cjs-ext-cjs/index.cjs {"nodePrefix":true,"hasDynamicImport":true,"nameInError":true,"sourceMap":true}';
 
 			describe('full path', ({ test }) => {
 				const importPath = './lib/cjs-ext-cjs/index.cjs';
