@@ -5,7 +5,7 @@ const isWin = process.platform === 'win32';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.mts extension', ({ describe }) => {
-		const output = 'loaded ts-ext-mts/index.mts true true true';
+		const output = 'loaded ts-ext-mts/index.mts {"nodePrefix":true,"hasDynamicImport":true,"nameInError":true,"sourceMap":true}';
 
 		describe('full path', ({ test }) => {
 			const importPath = './lib/ts-ext-mts/index.mts';

@@ -4,7 +4,7 @@ import type { NodeApis } from '../../utils/node-with-loader';
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('Load ESM', ({ describe }) => {
 		describe('.mjs extension', ({ describe }) => {
-			const output = 'loaded esm-ext-mjs/index.mjs true true true';
+			const output = 'loaded esm-ext-mjs/index.mjs {"nodePrefix":true,"hasDynamicImport":true,"nameInError":true,"sourceMap":true}';
 
 			describe('full path', ({ test }) => {
 				const importPath = './lib/esm-ext-mjs/index.mjs';
@@ -56,7 +56,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		});
 
 		describe('.js extension', ({ describe }) => {
-			const output = 'loaded esm-ext-js/index.js true true true';
+			const output = 'loaded esm-ext-js/index.js {"nodePrefix":true,"hasDynamicImport":true,"nameInError":true,"sourceMap":true}';
 
 			describe('full path', ({ test }) => {
 				const importPath = './lib/esm-ext-js/index.js';
