@@ -31,7 +31,7 @@
 		"test": "node --loader @esbuild-kit/esm-loader tests"
 	},
 	"dependencies": {
-		"@esbuild-kit/core-utils": "github:esbuild-kit/core-utils#built/source-maps-names",
+		"@esbuild-kit/core-utils": "^1.2.1",
 		"es-module-lexer": "^0.10.5",
 		"get-tsconfig": "^3.0.1"
 	},
