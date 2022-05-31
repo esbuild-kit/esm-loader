@@ -33,9 +33,8 @@ type resolve = (
 	specifier: string,
 	context: Context,
 	defaultResolve: resolve,
+	recursiveCall?: boolean,
 ) => MaybePromise<Resolved>;
-
-const hasExtensionPattern = /\.\w+$/;
 
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
 
@@ -51,6 +50,7 @@ async function tryExtensions(
 				specifier + extension,
 				context,
 				defaultResolve,
+				true,
 			);
 		} catch (_error: any) {
 			if (error === undefined) {
@@ -86,6 +86,7 @@ export const resolve: resolve = async function (
 	specifier,
 	context,
 	defaultResolve,
+	resursiveCall,
 ) {
 	// Added in v12.20.0
 	// https://nodejs.org/api/esm.html#esm_node_imports
@@ -106,7 +107,7 @@ export const resolve: resolve = async function (
 
 		if (tsPath) {
 			try {
-				return await resolve(tsPath, context, defaultResolve);
+				return await resolve(tsPath, context, defaultResolve, true);
 			} catch (error) {
 				if ((error as any).code !== 'ERR_MODULE_NOT_FOUND') {
 					throw error;
@@ -119,15 +120,15 @@ export const resolve: resolve = async function (
 	try {
 		resolved = await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
-		if (error instanceof Error) {
+		if (
+			(error instanceof Error)
+			&& !resursiveCall
+		) {
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
 				return await tryDirectory(specifier, context, defaultResolve);
 			}
 
-			if (
-				(error as any).code === 'ERR_MODULE_NOT_FOUND'
-				&& !hasExtensionPattern.test(specifier)
-			) {
+			if ((error as any).code === 'ERR_MODULE_NOT_FOUND') {
 				return await tryExtensions(specifier, context, defaultResolve);
 			}
 		}
