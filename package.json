@@ -32,7 +32,6 @@
 	},
 	"dependencies": {
 		"@esbuild-kit/core-utils": "^1.2.1",
-		"es-module-lexer": "^0.10.5",
 		"get-tsconfig": "^3.0.1"
 	},
 	"devDependencies": {
