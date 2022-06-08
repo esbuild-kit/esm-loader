@@ -6,6 +6,7 @@ import {
 	resolveTsPath,
 } from '@esbuild-kit/core-utils';
 import getTsconfig from 'get-tsconfig';
+import { createPathsMatcher } from 'get-tsconfig/paths';
 import {
 	tsExtensionsPattern,
 	getFormatFromExtension,
@@ -18,6 +19,7 @@ const sourcemaps = installSourceMapSupport();
 
 const tsconfig = getTsconfig();
 const tsconfigRaw = tsconfig?.config;
+const tsconfigPathsMatcher = createPathsMatcher(tsconfig);
 
 type Resolved = {
 	url: string;
@@ -82,6 +84,9 @@ async function tryDirectory(
 	}
 }
 
+const fileProtocol = 'file://';
+const isPathPattern = /^\.{0,2}\//;
+
 export const resolve: resolve = async function (
 	specifier,
 	context,
@@ -97,6 +102,24 @@ export const resolve: resolve = async function (
 	// If directory, can be index.js, index.ts, etc.
 	if (specifier.endsWith('/')) {
 		return await tryDirectory(specifier, context, defaultResolve);
+	}
+
+	const isPath = (
+		specifier.startsWith(fileProtocol)
+		|| isPathPattern.test(specifier)
+	);
+
+	if (
+		tsconfigPathsMatcher
+		// bare specifier
+		&& !isPath
+	) {
+		const possiblePaths = tsconfigPathsMatcher(specifier);
+		for (const possiblePath of possiblePaths) {
+			try {
+				return await resolve(possiblePath, context, defaultResolve);
+			} catch {}
+		}
 	}
 
 	/**
@@ -122,6 +145,7 @@ export const resolve: resolve = async function (
 	} catch (error) {
 		if (
 			(error instanceof Error)
+			&& isPath
 			&& !resursiveCall
 		) {
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
@@ -145,7 +169,7 @@ export const resolve: resolve = async function (
 
 	let { format } = resolved;
 
-	if (resolved.url.startsWith('file:')) {
+	if (resolved.url.startsWith(fileProtocol)) {
 		format = getFormatFromExtension(resolved.url) ?? format;
 
 		if (!format) {
