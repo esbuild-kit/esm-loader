@@ -113,7 +113,7 @@ export const resolve: resolve = async function (
 			cwd: process.cwd(),
 			specifier,
 			context,
-			possiblePaths: JSON.stringify(possiblePaths),
+			possiblePaths,
 		});
 		for (const possiblePath of possiblePaths) {
 			try {
@@ -143,6 +143,13 @@ export const resolve: resolve = async function (
 	try {
 		resolved = await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
+
+		console.log(error);
+		console.log({
+			specifier,
+			isPath,
+			resursiveCall,
+		});
 		if (
 			(error instanceof Error)
 			&& isPath
