@@ -2,7 +2,7 @@ import { testSuite, expect } from 'manten';
 import type { NodeApis } from '../../utils/node-with-loader';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
-	describe('tsconfig', ({ describe, test }) => {
+	describe('tsconfig', ({ test, describe }) => {
 		test('jsxFactory & jsxFragmentFactory', async () => {
 			const nodeProcess = await node.load('./src/tsx.tsx', {
 				cwd: './tsconfig',
@@ -10,7 +10,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			expect(nodeProcess.stdout).toBe('div null hello world\nnull null goodbye world');
 		});
 
-		describe('paths', () => {
+		describe('paths', ({ test }) => {
 			test('resolves baseUrl', async () => {
 				const nodeProcess = await node.load('./src/base-url.ts', {
 					cwd: './tsconfig',

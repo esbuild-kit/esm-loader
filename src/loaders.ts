@@ -5,8 +5,7 @@ import {
 	transformDynamicImport,
 	resolveTsPath,
 } from '@esbuild-kit/core-utils';
-import getTsconfig from 'get-tsconfig';
-import { createPathsMatcher } from 'get-tsconfig/paths';
+import { getTsconfig, createPathsMatcher } from 'get-tsconfig';
 import {
 	tsExtensionsPattern,
 	getFormatFromExtension,

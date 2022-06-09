@@ -8,7 +8,7 @@ import {
 	installSourceMapSupport,
 	transformDynamicImport,
 } from '@esbuild-kit/core-utils';
-import getTsconfig from 'get-tsconfig';
+import { getTsconfig } from 'get-tsconfig';
 import {
 	tsExtensionsPattern,
 	getFormatFromExtension,
