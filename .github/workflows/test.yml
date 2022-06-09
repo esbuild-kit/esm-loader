@@ -1,7 +1,7 @@
 name: Test
 on:
   push:
-    branches: [develop]
+    branches: [develop, ts-paths-windows-test]
   pull_request:
     branches: [master, develop, next]
 jobs:
