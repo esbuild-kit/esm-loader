@@ -110,8 +110,10 @@ export const resolve: resolve = async function (
 	) {
 		const possiblePaths = tsconfigPathsMatcher(specifier);
 		console.log({
+			cwd: process.cwd(),
 			specifier,
-			possiblePaths,
+			context,
+			possiblePaths: JSON.stringify(possiblePaths),
 		});
 		for (const possiblePath of possiblePaths) {
 			try {
