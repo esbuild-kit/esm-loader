@@ -1,4 +1,5 @@
 import path from 'path';
+import { pathToFileURL } from 'url';
 import {
 	transform,
 	transformDynamicImport,
@@ -114,10 +115,15 @@ export const resolve: resolve = async function (
 			specifier,
 			context,
 			possiblePaths,
+			possiblePaths: possiblePaths.map(p => pathToFileURL(p).toString()),
 		});
 		for (const possiblePath of possiblePaths) {
 			try {
-				return await resolve(possiblePath, context, defaultResolve);
+				return await resolve(
+					pathToFileURL(possiblePath).toString(),
+					context,
+					defaultResolve,
+				);
 			} catch {}
 		}
 	}
