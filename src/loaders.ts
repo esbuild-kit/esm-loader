@@ -86,7 +86,7 @@ export const resolve: resolve = async function (
 	specifier,
 	context,
 	defaultResolve,
-	resursiveCall,
+	recursiveCall,
 ) {
 	// Added in v12.20.0
 	// https://nodejs.org/api/esm.html#esm_node_imports
@@ -144,7 +144,7 @@ export const resolve: resolve = async function (
 		if (
 			(error instanceof Error)
 			&& isPath
-			&& !resursiveCall
+			&& !recursiveCall
 		) {
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
 				return await tryDirectory(specifier, context, defaultResolve);
