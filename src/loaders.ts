@@ -1,4 +1,5 @@
 import path from 'path';
+import { pathToFileURL } from 'url';
 import {
 	transform,
 	transformDynamicImport,
@@ -79,7 +80,7 @@ async function tryDirectory(
 }
 
 const fileProtocol = 'file://';
-const isPathPattern = /^\.{0,2}\//;
+const isPathPattern = /^\.{0,2}\/|[a-zA-Z]:[\\/]/;
 
 export const resolve: resolve = async function (
 	specifier,
@@ -105,13 +106,16 @@ export const resolve: resolve = async function (
 
 	if (
 		tsconfigPathsMatcher
-		// bare specifier
-		&& !isPath
+		&& !isPath // bare specifier
 	) {
 		const possiblePaths = tsconfigPathsMatcher(specifier);
 		for (const possiblePath of possiblePaths) {
 			try {
-				return await resolve(possiblePath, context, defaultResolve);
+				return await resolve(
+					pathToFileURL(possiblePath).toString(),
+					context,
+					defaultResolve,
+				);
 			} catch {}
 		}
 	}
