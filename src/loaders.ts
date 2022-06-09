@@ -1,24 +1,19 @@
 import path from 'path';
 import {
 	transform,
-	installSourceMapSupport,
 	transformDynamicImport,
 	resolveTsPath,
 } from '@esbuild-kit/core-utils';
-import { getTsconfig, createPathsMatcher } from 'get-tsconfig';
 import {
+	sourcemaps,
+	tsconfigRaw,
+	tsconfigPathsMatcher,
 	tsExtensionsPattern,
 	getFormatFromExtension,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
 import { getPackageType } from './package-json';
-
-const sourcemaps = installSourceMapSupport();
-
-const tsconfig = getTsconfig();
-const tsconfigRaw = tsconfig?.config;
-const tsconfigPathsMatcher = createPathsMatcher(tsconfig);
 
 type Resolved = {
 	url: string;
