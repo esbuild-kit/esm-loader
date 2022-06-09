@@ -98,6 +98,7 @@ export const resolve: resolve = async function (
 		return await tryDirectory(specifier, context, defaultResolve);
 	}
 
+	console.log({ specifier });
 	const isPath = (
 		specifier.startsWith(fileProtocol)
 		|| isPathPattern.test(specifier)
