@@ -5,22 +5,17 @@
  */
 import {
 	transform,
-	installSourceMapSupport,
 	transformDynamicImport,
 } from '@esbuild-kit/core-utils';
-import getTsconfig from 'get-tsconfig';
 import {
+	tsconfigRaw,
+	sourcemaps,
 	tsExtensionsPattern,
 	getFormatFromExtension,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
 import { getPackageType } from './package-json';
-
-const tsconfig = getTsconfig();
-const tsconfigRaw = tsconfig?.config;
-
-const sourcemaps = installSourceMapSupport();
 
 type getFormat = (
 	url: string,
