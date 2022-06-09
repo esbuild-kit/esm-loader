@@ -98,7 +98,6 @@ export const resolve: resolve = async function (
 		return await tryDirectory(specifier, context, defaultResolve);
 	}
 
-	console.log({ specifier });
 	const isPath = (
 		specifier.startsWith(fileProtocol)
 		|| isPathPattern.test(specifier)
@@ -110,6 +109,10 @@ export const resolve: resolve = async function (
 		&& !isPath
 	) {
 		const possiblePaths = tsconfigPathsMatcher(specifier);
+		console.log({
+			specifier,
+			possiblePaths,
+		});
 		for (const possiblePath of possiblePaths) {
 			try {
 				return await resolve(possiblePath, context, defaultResolve);
