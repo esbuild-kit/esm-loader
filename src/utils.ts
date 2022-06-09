@@ -1,4 +1,11 @@
 import path from 'path';
+import { installSourceMapSupport } from '@esbuild-kit/core-utils';
+import getTsconfig from 'get-tsconfig';
+
+const tsconfig = getTsconfig();
+export const tsconfigRaw = tsconfig?.config;
+
+export const sourcemaps = installSourceMapSupport();
 
 export const tsExtensionsPattern = /\.([cm]?ts|[tj]sx)$/;
 
