@@ -7,7 +7,7 @@ export const sourcemaps = installSourceMapSupport();
 const tsconfig = getTsconfig();
 
 export const tsconfigRaw = tsconfig?.config;
-export const tsconfigPathsMatcher = createPathsMatcher(tsconfig);
+export const tsconfigPathsMatcher = tsconfig && createPathsMatcher(tsconfig);
 
 export const tsExtensionsPattern = /\.([cm]?ts|[tj]sx)$/;
 
