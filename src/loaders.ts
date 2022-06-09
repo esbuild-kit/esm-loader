@@ -80,7 +80,7 @@ async function tryDirectory(
 }
 
 const fileProtocol = 'file://';
-const isPathPattern = /^\.{0,2}\/|[a-zA-Z]:[\\/]/;
+const isPathPattern = /^\.{0,2}\//;
 
 export const resolve: resolve = async function (
 	specifier,
