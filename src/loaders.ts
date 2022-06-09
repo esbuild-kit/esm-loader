@@ -115,7 +115,7 @@ export const resolve: resolve = async function (
 			specifier,
 			context,
 			possiblePaths,
-			possiblePaths: possiblePaths.map(p => pathToFileURL(p).toString()),
+			possiblePathsMapped: possiblePaths.map(p => pathToFileURL(p).toString()),
 		});
 		for (const possiblePath of possiblePaths) {
 			try {
