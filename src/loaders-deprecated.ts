@@ -8,8 +8,8 @@ import {
 	transformDynamicImport,
 } from '@esbuild-kit/core-utils';
 import {
-	tsconfigRaw,
 	sourcemaps,
+	tsconfigRaw,
 	tsExtensionsPattern,
 	getFormatFromExtension,
 	type ModuleFormat,

@@ -8,6 +8,7 @@ Node.js `import` hook to instantaneously transform TypeScript to ESM on demand u
 - Cached for performance boost
 - Supports Node.js v12.20.0+
 - Handles `node:` import prefixes
+- Resolves `tsconfig.json` [`paths`](https://www.typescriptlang.org/tsconfig#paths)
 
 > **Tip:**
 >

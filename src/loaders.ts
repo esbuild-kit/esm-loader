@@ -1,12 +1,14 @@
 import path from 'path';
+import { pathToFileURL } from 'url';
 import {
 	transform,
 	transformDynamicImport,
 	resolveTsPath,
 } from '@esbuild-kit/core-utils';
 import {
-	tsconfigRaw,
 	sourcemaps,
+	tsconfigRaw,
+	tsconfigPathsMatcher,
 	tsExtensionsPattern,
 	getFormatFromExtension,
 	type ModuleFormat,
@@ -77,11 +79,14 @@ async function tryDirectory(
 	}
 }
 
+const fileProtocol = 'file://';
+const isPathPattern = /^\.{0,2}\//;
+
 export const resolve: resolve = async function (
 	specifier,
 	context,
 	defaultResolve,
-	resursiveCall,
+	recursiveCall,
 ) {
 	// Added in v12.20.0
 	// https://nodejs.org/api/esm.html#esm_node_imports
@@ -92,6 +97,27 @@ export const resolve: resolve = async function (
 	// If directory, can be index.js, index.ts, etc.
 	if (specifier.endsWith('/')) {
 		return await tryDirectory(specifier, context, defaultResolve);
+	}
+
+	const isPath = (
+		specifier.startsWith(fileProtocol)
+		|| isPathPattern.test(specifier)
+	);
+
+	if (
+		tsconfigPathsMatcher
+		&& !isPath // bare specifier
+	) {
+		const possiblePaths = tsconfigPathsMatcher(specifier);
+		for (const possiblePath of possiblePaths) {
+			try {
+				return await resolve(
+					pathToFileURL(possiblePath).toString(),
+					context,
+					defaultResolve,
+				);
+			} catch {}
+		}
 	}
 
 	/**
@@ -117,7 +143,8 @@ export const resolve: resolve = async function (
 	} catch (error) {
 		if (
 			(error instanceof Error)
-			&& !resursiveCall
+			&& isPath
+			&& !recursiveCall
 		) {
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
 				return await tryDirectory(specifier, context, defaultResolve);
@@ -140,7 +167,7 @@ export const resolve: resolve = async function (
 
 	let { format } = resolved;
 
-	if (resolved.url.startsWith('file:')) {
+	if (resolved.url.startsWith(fileProtocol)) {
 		format = getFormatFromExtension(resolved.url) ?? format;
 
 		if (!format) {

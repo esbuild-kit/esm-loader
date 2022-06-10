@@ -8,7 +8,7 @@ specifiers:
   eslint: ^8.15.0
   execa: ^6.1.0
   get-node: ^13.0.1
-  get-tsconfig: ^3.0.1
+  get-tsconfig: ^4.0.0
   manten: ^0.1.0
   pkgroll: ^1.3.0
   semver: ^7.3.7
@@ -17,7 +17,7 @@ specifiers:
 
 dependencies:
   '@esbuild-kit/core-utils': 1.3.1
-  get-tsconfig: 3.0.1
+  get-tsconfig: 4.0.0
 
 devDependencies:
   '@pvtnbr/eslint-config': 0.22.0_hcfsmds2fshutdssjqluwm76uu
@@ -2002,8 +2002,8 @@ packages:
       get-intrinsic: 1.1.1
     dev: true
 
-  /get-tsconfig/3.0.1:
-    resolution: {integrity: sha512-+m30eQjbcf3xMNdnacXH5IDAKUMbI7Mhbf3e1BHif1FzBlUhBzBlmOVc7kL4+kB035l8OCyBdI3dNXZ3of9HqA==}
+  /get-tsconfig/4.0.0:
+    resolution: {integrity: sha512-WvnskjM5QJbSjuZrJkG3CeIE/ywYjL9/UMYu5dpOa3iD6GjefbQq7J/nrZY4yo6QSYuYwmj7G7Xd9qzCjMMKUw==}
     dev: false
 
   /glob-parent/5.1.2:
