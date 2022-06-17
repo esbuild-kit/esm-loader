@@ -11,6 +11,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stdout).toBe(output);
 			});
 
+			test('Import extensionless', async () => {
+				const nodeProcess = await node.import('package-module/ts');
+				expect(nodeProcess.stdout).toBe(output);
+			});
+
 			test('Import', async () => {
 				const nodeProcess = await node.import('package-typescript-export');
 				expect(nodeProcess.stdout).toBe(output);
