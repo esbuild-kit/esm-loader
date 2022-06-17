@@ -1,5 +1,8 @@
 import { testSuite, expect } from 'manten';
+import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
+
+const nodeSupportsSourceMap = '^14.18.0 || >=16.6.0';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.ts extension', ({ describe }) => {
@@ -12,6 +15,15 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const nodeProcess = await node.load(importPath);
 				expect(nodeProcess.stdout).toBe(output);
 			});
+
+			if (semver.satisfies(node.version, nodeSupportsSourceMap)) {
+				test('Disables native source map if Error.prepareStackTrace is customized', async () => {
+					const nodeProcess = await node.load(importPath, {
+						nodeOptions: ['-r', 'source-map-support/register'],
+					});
+					expect(nodeProcess.stdout).toBe(output);
+				});
+			}
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
