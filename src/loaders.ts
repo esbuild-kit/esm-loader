@@ -143,7 +143,6 @@ export const resolve: resolve = async function (
 	} catch (error) {
 		if (
 			(error instanceof Error)
-			&& isPath
 			&& !recursiveCall
 		) {
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
