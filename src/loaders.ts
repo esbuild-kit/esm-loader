@@ -3,6 +3,7 @@ import { pathToFileURL } from 'url';
 import {
 	transform,
 	transformDynamicImport,
+	applySourceMap,
 	resolveTsPath,
 } from '@esbuild-kit/core-utils';
 import {
@@ -223,28 +224,28 @@ export const load: load = async function (
 		loaded.format === 'json'
 		|| tsExtensionsPattern.test(url)
 	) {
-		const transformed = await transform(code, url, {
-			format: 'esm',
-			tsconfigRaw,
-		});
-
-		if (transformed.map) {
-			sourcemaps!.set(url, transformed.map);
-		}
+		const transformed = await transform(
+			code,
+			url,
+			{
+				tsconfigRaw,
+			},
+			sourcemaps,
+		);
 
 		return {
 			format: 'module',
-			source: transformed.code,
+			source: transformed,
 		};
 	}
 
-	const dynamicImportTransformed = transformDynamicImport({ code });
+	const dynamicImportTransformed = transformDynamicImport(code);
 	if (dynamicImportTransformed) {
-		loaded.source = dynamicImportTransformed.code;
-
-		if (dynamicImportTransformed.map) {
-			sourcemaps!.set(url, dynamicImportTransformed.map);
-		}
+		loaded.source = applySourceMap(
+			dynamicImportTransformed,
+			url,
+			sourcemaps,
+		);
 	}
 
 	return loaded;
