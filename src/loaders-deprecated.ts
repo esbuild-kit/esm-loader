@@ -6,6 +6,7 @@
 import {
 	transform,
 	transformDynamicImport,
+	applySourceMap,
 } from '@esbuild-kit/core-utils';
 import {
 	sourcemaps,
@@ -69,28 +70,27 @@ const _transformSource: transformSource = async function (
 		url.endsWith('.json')
 		|| tsExtensionsPattern.test(url)
 	) {
-		const transformed = await transform(source.toString(), url, {
-			format: 'esm',
-			tsconfigRaw,
-		});
-
-		if (transformed.map) {
-			sourcemaps!.set(url, transformed.map);
-		}
+		const transformed = await transform(
+			source.toString(),
+			url,
+			{
+				tsconfigRaw,
+			},
+		);
 
 		return {
-			source: transformed.code,
+			source: applySourceMap(transformed, url, sourcemaps),
 		};
 	}
 
 	const result = await defaultTransformSource(source, context, defaultTransformSource);
-	const dynamicImportTransformed = transformDynamicImport({ code: result.source.toString() });
+	const dynamicImportTransformed = transformDynamicImport(result.source.toString());
 	if (dynamicImportTransformed) {
-		result.source = dynamicImportTransformed.code;
-
-		if (dynamicImportTransformed.map) {
-			sourcemaps!.set(url, dynamicImportTransformed.map);
-		}
+		result.source = applySourceMap(
+			dynamicImportTransformed,
+			url,
+			sourcemaps,
+		);
 	}
 
 	return result;
