@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@esbuild-kit/core-utils': ^1.3.3
+  '@esbuild-kit/core-utils': ^1.3.4
   '@pvtnbr/eslint-config': ^0.22.0
   '@types/node': ^17.0.33
   '@types/semver': ^7.3.9
@@ -17,7 +17,7 @@ specifiers:
   typescript: ^4.6.4
 
 dependencies:
-  '@esbuild-kit/core-utils': 1.3.3
+  '@esbuild-kit/core-utils': 1.3.4
   get-tsconfig: 4.0.0
 
 devDependencies:
@@ -57,8 +57,8 @@ packages:
       js-tokens: 4.0.0
     dev: true
 
-  /@esbuild-kit/core-utils/1.3.3:
-    resolution: {integrity: sha512-LBpZunrStkP3N1qA+cTx+M4K1lpmJw9f0kqS1mauItjFqUbajCDON1ZXKm/kFYxR1/whsNvtU9Ohv8qhtrFR9w==}
+  /@esbuild-kit/core-utils/1.3.4:
+    resolution: {integrity: sha512-zp0KKtevRIA1qzCiuNaxhMEVntNGlSVQploSJ9SqkG5GPPXW0CDBYNpJg7gbOh9fJ3EoCunaK68J2IIGEn8yKg==}
     dependencies:
       esbuild: 0.14.38
       source-map-support: 0.5.21
