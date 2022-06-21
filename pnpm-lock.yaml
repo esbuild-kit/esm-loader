@@ -17,7 +17,7 @@ specifiers:
   typescript: ^4.7.4
 
 dependencies:
-  '@esbuild-kit/core-utils': github.com/esbuild-kit/core-utils/378a6e342d690dbba46dc47e9d3c8898a89656a1
+  '@esbuild-kit/core-utils': github.com/esbuild-kit/core-utils/77cb1a4d3c826ad9d9e331bb9cbc37b4d6bababe
   get-tsconfig: 4.0.0
 
 devDependencies:
@@ -3645,8 +3645,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  github.com/esbuild-kit/core-utils/378a6e342d690dbba46dc47e9d3c8898a89656a1:
-    resolution: {tarball: https://codeload.github.com/esbuild-kit/core-utils/tar.gz/378a6e342d690dbba46dc47e9d3c8898a89656a1}
+  github.com/esbuild-kit/core-utils/77cb1a4d3c826ad9d9e331bb9cbc37b4d6bababe:
+    resolution: {tarball: https://codeload.github.com/esbuild-kit/core-utils/tar.gz/77cb1a4d3c826ad9d9e331bb9cbc37b4d6bababe}
     name: '@esbuild-kit/core-utils'
     version: 0.0.0-semantic-release
     dependencies:

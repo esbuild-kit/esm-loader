@@ -76,11 +76,10 @@ const _transformSource: transformSource = async function (
 			{
 				tsconfigRaw,
 			},
-			sourcemaps,
 		);
 
 		return {
-			source: transformed,
+			source: applySourceMap(transformed, url, sourcemaps),
 		};
 	}
 

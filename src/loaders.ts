@@ -230,12 +230,11 @@ export const load: load = async function (
 			{
 				tsconfigRaw,
 			},
-			sourcemaps,
 		);
 
 		return {
 			format: 'module',
-			source: transformed,
+			source: applySourceMap(transformed, url, sourcemaps),
 		};
 	}
 
