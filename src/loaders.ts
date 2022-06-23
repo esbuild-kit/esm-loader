@@ -69,6 +69,10 @@ async function tryDirectory(
 	defaultResolve: resolve,
 ) {
 	const appendIndex = specifier.endsWith('/') ? 'index' : '/index';
+	console.log({
+		specifier,
+		appendIndex,
+	});
 
 	try {
 		return await tryExtensions(specifier + appendIndex, context, defaultResolve);
