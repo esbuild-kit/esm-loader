@@ -68,13 +68,13 @@ async function tryDirectory(
 	context: Context,
 	defaultResolve: resolve,
 ) {
-	const appendIndex = specifier.endsWith('/') ? 'index' : `${path.sep}index`;
+	const appendIndex = specifier.endsWith('/') ? 'index' : '/index';
 
 	try {
 		return await tryExtensions(specifier + appendIndex, context, defaultResolve);
 	} catch (error: any) {
 		const { message } = error;
-		error.message = error.message.replace(`${appendIndex}'`, "'");
+		error.message = error.message.replace(`${appendIndex.replace('/', path.sep)}'`, "'");
 		error.stack = error.stack.replace(message, error.message);
 		throw error;
 	}
@@ -108,6 +108,7 @@ export const resolve: resolve = async function (
 	if (
 		tsconfigPathsMatcher
 		&& !isPath // bare specifier
+		&& !context.parentURL?.includes('/node_modules/')
 	) {
 		const possiblePaths = tsconfigPathsMatcher(specifier);
 		for (const possiblePath of possiblePaths) {
