@@ -89,10 +89,6 @@ export const resolve: resolve = async function (
 	defaultResolve,
 	recursiveCall,
 ) {
-	console.log('resolve', {
-		specifier,
-		context,
-	});
 	// Added in v12.20.0
 	// https://nodejs.org/api/esm.html#esm_node_imports
 	if (specifier.startsWith('node:')) {
@@ -147,7 +143,6 @@ export const resolve: resolve = async function (
 	try {
 		resolved = await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
-		console.log('error', error);
 		if (
 			(error instanceof Error)
 			&& !recursiveCall
