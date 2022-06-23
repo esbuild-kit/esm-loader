@@ -15,28 +15,28 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const nodeProcess = await node.load('./src/base-url.ts', {
 					cwd: './tsconfig',
 				});
-				expect(nodeProcess.stdout).toBe('resolved');
+				expect(nodeProcess.stdout).toBe('resolve-target');
 			});
 
 			test('resolves paths exact match', async () => {
 				const nodeProcess = await node.load('./src/paths-exact-match.ts', {
 					cwd: './tsconfig',
 				});
-				expect(nodeProcess.stdout).toBe('resolved');
+				expect(nodeProcess.stdout).toBe('resolve-target');
 			});
 
 			test('resolves paths prefix', async () => {
 				const nodeProcess = await node.load('./src/paths-prefix-match.ts', {
 					cwd: './tsconfig',
 				});
-				expect(nodeProcess.stdout).toBe('resolved');
+				expect(nodeProcess.stdout).toBe('nested-resolve-target');
 			});
 
 			test('resolves paths suffix', async () => {
 				const nodeProcess = await node.load('./src/paths-suffix-match.ts', {
 					cwd: './tsconfig',
 				});
-				expect(nodeProcess.stdout).toBe('resolved');
+				expect(nodeProcess.stdout).toBe('nested-resolve-target');
 			});
 
 			describe('dependency', ({ test }) => {
