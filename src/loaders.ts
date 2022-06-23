@@ -69,16 +69,12 @@ async function tryDirectory(
 	defaultResolve: resolve,
 ) {
 	const appendIndex = specifier.endsWith('/') ? 'index' : '/index';
-	console.log({
-		specifier,
-		appendIndex,
-	});
 
 	try {
 		return await tryExtensions(specifier + appendIndex, context, defaultResolve);
 	} catch (error: any) {
 		const { message } = error;
-		error.message = error.message.replace(`${appendIndex}'`, "'");
+		error.message = error.message.replace(`${appendIndex.replace('/', path.sep)}'`, "'");
 		error.stack = error.stack.replace(message, error.message);
 		throw error;
 	}
