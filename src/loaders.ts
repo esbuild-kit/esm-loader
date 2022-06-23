@@ -89,7 +89,7 @@ export const resolve: resolve = async function (
 	defaultResolve,
 	recursiveCall,
 ) {
-	console.log({
+	console.log('resolve', {
 		specifier,
 		context,
 	});
@@ -112,7 +112,7 @@ export const resolve: resolve = async function (
 	if (
 		tsconfigPathsMatcher
 		&& !isPath // bare specifier
-		// && !context.parentURL?.includes('/node_modules/')
+		&& !context.parentURL?.includes('/node_modules/')
 	) {
 		const possiblePaths = tsconfigPathsMatcher(specifier);
 		for (const possiblePath of possiblePaths) {
@@ -147,6 +147,7 @@ export const resolve: resolve = async function (
 	try {
 		resolved = await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
+		console.log('error', error);
 		if (
 			(error instanceof Error)
 			&& !recursiveCall
