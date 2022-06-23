@@ -44,6 +44,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					const nodeProcess = await node.load('./dependency-resolve-current-directory', {
 						cwd: './tsconfig',
 					});
+					console.log(nodeProcess);
 					expect(nodeProcess.stdout).toBe('resolved');
 				});
 
