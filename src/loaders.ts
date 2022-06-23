@@ -89,6 +89,10 @@ export const resolve: resolve = async function (
 	defaultResolve,
 	recursiveCall,
 ) {
+	console.log({
+		specifier,
+		context,
+	});
 	// Added in v12.20.0
 	// https://nodejs.org/api/esm.html#esm_node_imports
 	if (specifier.startsWith('node:')) {
@@ -108,7 +112,7 @@ export const resolve: resolve = async function (
 	if (
 		tsconfigPathsMatcher
 		&& !isPath // bare specifier
-		&& !context.parentURL?.includes('/node_modules/')
+		// && !context.parentURL?.includes('/node_modules/')
 	) {
 		const possiblePaths = tsconfigPathsMatcher(specifier);
 		for (const possiblePath of possiblePaths) {
