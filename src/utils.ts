@@ -4,7 +4,7 @@ import { getTsconfig, createPathsMatcher } from 'get-tsconfig';
 
 export const sourcemaps = installSourceMapSupport();
 
-const tsconfig = getTsconfig();
+const tsconfig = getTsconfig(undefined, process.env.ESBK_TSCONFIG_NAME);
 
 export const tsconfigRaw = tsconfig?.config;
 export const tsconfigPathsMatcher = tsconfig && createPathsMatcher(tsconfig);
