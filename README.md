@@ -34,6 +34,15 @@ The following properties are used from `tsconfig.json` in the working directory:
 - `jsxFactory`
 - `jsxFragmentFactory`
 
+### Custom `tsconfig.json`
+By default, `tsconfig.json` in CWD will be used for TypeScript-related configuration.
+
+To override, use:
+
+```sh
+ESBK_TSCONFIG_NAME=tsconfig.custom.json node --loader @esbuild/esm-loader ./file.ts
+```
+
 ### Cache
 Modules transformations are cached in the system cache directory ([`TMPDIR`](https://en.wikipedia.org/wiki/TMPDIR)). Transforms are cached by content hash so duplicate dependencies are not re-transformed.
 
