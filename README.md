@@ -34,13 +34,13 @@ The following properties are used from `tsconfig.json` in the working directory:
 - `jsxFactory`
 - `jsxFragmentFactory`
 
-### Custom `tsconfig.json`
-By default, `tsconfig.json` in CWD will be used for TypeScript-related configuration.
+#### Custom `tsconfig.json` path
+By default, `tsconfig.json` will be detected from the current working directory.
 
-To override, use:
+To set a custom path, use the `ESBK_TSCONFIG_PATH` environment variable:
 
 ```sh
-ESBK_TSCONFIG_NAME=tsconfig.custom.json node --loader @esbuild/esm-loader ./file.ts
+ESBK_TSCONFIG_PATH=./path/to/tsconfig.custom.json node --loader @esbuild/esm-loader ./file.ts
 ```
 
 ### Cache

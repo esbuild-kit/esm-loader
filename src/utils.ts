@@ -1,10 +1,21 @@
 import path from 'path';
 import { installSourceMapSupport } from '@esbuild-kit/core-utils';
-import { getTsconfig, createPathsMatcher } from 'get-tsconfig';
+import {
+	getTsconfig,
+	parseTsconfig,
+	createPathsMatcher,
+} from 'get-tsconfig';
 
 export const sourcemaps = installSourceMapSupport();
 
-const tsconfig = getTsconfig(undefined, process.env.ESBK_TSCONFIG_NAME);
+const tsconfig = (
+	process.env.ESBK_TSCONFIG_PATH
+		? {
+			path: process.env.ESBK_TSCONFIG_PATH,
+			config: parseTsconfig(process.env.ESBK_TSCONFIG_PATH),
+		}
+		: getTsconfig()
+);
 
 export const tsconfigRaw = tsconfig?.config;
 export const tsconfigPathsMatcher = tsconfig && createPathsMatcher(tsconfig);
