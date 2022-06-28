@@ -7,7 +7,7 @@ type Options = {
 	args: string[];
 	nodePath: string;
 	cwd?: string;
-	env?: typeof process.env;
+	env?: NodeJS.ProcessEnv;
 	nodeOptions?: string[];
 };
 
