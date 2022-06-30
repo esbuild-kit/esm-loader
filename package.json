@@ -31,7 +31,7 @@
 		"test": "node --loader @esbuild-kit/esm-loader tests"
 	},
 	"dependencies": {
-		"@esbuild-kit/core-utils": "^2.0.0",
+		"@esbuild-kit/core-utils": "^2.0.2",
 		"get-tsconfig": "^4.1.0"
 	},
 	"devDependencies": {
