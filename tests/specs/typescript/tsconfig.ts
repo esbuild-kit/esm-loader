@@ -10,6 +10,17 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			expect(nodeProcess.stdout).toBe('div null hello world\nnull null goodbye world');
 		});
 
+		test('Custom tsconfig.json path', async () => {
+			const nodeProcess = await node.load('./src/tsx.tsx', {
+				cwd: './tsconfig',
+				env: {
+					ESBK_TSCONFIG_PATH: './tsconfig-custom/tsconfig.custom-name.json',
+				},
+			});
+			expect(nodeProcess.stdout).toBe('');
+			expect(nodeProcess.stderr).toMatch('div null hello world\nnull null goodbye world');
+		});
+
 		describe('paths', ({ test, describe }) => {
 			test('resolves baseUrl', async () => {
 				const nodeProcess = await node.load('./src/base-url.ts', {
