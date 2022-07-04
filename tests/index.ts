@@ -26,10 +26,10 @@ const nodeVersions = [
 					import('./specs/javascript'),
 					node,
 				);
-				// runTestSuite(
-				// 	import('./specs/typescript'),
-				// 	node,
-				// );
+				runTestSuite(
+					import('./specs/typescript'),
+					node,
+				);
 				// runTestSuite(
 				// 	import('./specs/json'),
 				// 	node,

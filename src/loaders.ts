@@ -84,7 +84,10 @@ async function tryDirectory(
 const fileProtocol = 'file://';
 const isPathPattern = /^\.{0,2}\//;
 
-const supportsNodePrefix = compareNodeVersion([14, 13, 1]) >= 0 || compareNodeVersion([12, 20, 0]) >= 0;
+const supportsNodePrefix = (
+	compareNodeVersion([14, 13, 1]) >= 0
+	|| compareNodeVersion([12, 20, 0]) >= 0
+);
 
 export const resolve: resolve = async function (
 	specifier,

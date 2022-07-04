@@ -42,5 +42,4 @@ test(
 	() => import('node:test').then(Boolean),
 );
 
-
 export default 1234;
