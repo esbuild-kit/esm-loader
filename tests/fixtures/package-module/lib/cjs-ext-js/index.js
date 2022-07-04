@@ -1,9 +1,7 @@
-const fs = require('node:fs');
-
 console.log(
 	'loaded cjs-ext-js/index.js',
 	JSON.stringify({
-		nodePrefix: Boolean(fs),
+		nodePrefix: Boolean(require('node:fs')),
 		hasDynamicImport: Boolean(import('fs')),
 		...(() => {
 			let nameInError;
@@ -12,7 +10,7 @@ console.log(
 			} catch (error) {
 				return {
 					nameInError: error.message.includes('nameInError'),
-					sourceMap: error.stack.includes(':11:5'),
+					sourceMap: error.stack.includes(':9:5'),
 				};
 			}
 		})(),
