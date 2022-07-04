@@ -12,6 +12,7 @@ import {
 	tsconfigPathsMatcher,
 	tsExtensionsPattern,
 	getFormatFromExtension,
+	compareNodeVersion,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
@@ -83,6 +84,8 @@ async function tryDirectory(
 const fileProtocol = 'file://';
 const isPathPattern = /^\.{0,2}\//;
 
+const supportsNodePrefix = compareNodeVersion([14, 13, 1]) >= 0 || compareNodeVersion([12, 20, 0]) >= 0;
+
 export const resolve: resolve = async function (
 	specifier,
 	context,
@@ -91,7 +94,7 @@ export const resolve: resolve = async function (
 ) {
 	// Added in v12.20.0
 	// https://nodejs.org/api/esm.html#esm_node_imports
-	if (specifier.startsWith('node:')) {
+	if (!supportsNodePrefix && specifier.startsWith('node:')) {
 		specifier = specifier.slice(5);
 	}
 

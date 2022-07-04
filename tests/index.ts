@@ -10,6 +10,7 @@ const nodeVersions = [
 				'14.19.1',
 				'16.13.2',
 				'17.8.0',
+				'18.4.0',
 			]
 			: []
 	),
@@ -25,20 +26,20 @@ const nodeVersions = [
 					import('./specs/javascript'),
 					node,
 				);
-				runTestSuite(
-					import('./specs/typescript'),
-					node,
-				);
-				runTestSuite(
-					import('./specs/json'),
-					node,
-				);
+				// runTestSuite(
+				// 	import('./specs/typescript'),
+				// 	node,
+				// );
+				// runTestSuite(
+				// 	import('./specs/json'),
+				// 	node,
+				// );
 			});
 
-			runTestSuite(
-				import('./specs/package-cjs'),
-				await createNode(nodeVersion, './tests/fixtures/package-commonjs'),
-			);
+			// runTestSuite(
+			// 	import('./specs/package-cjs'),
+			// 	await createNode(nodeVersion, './tests/fixtures/package-commonjs'),
+			// );
 		});
 	}
 })();
