@@ -1,8 +1,7 @@
 import { testSuite, expect } from 'manten';
 import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
-
-const nodeSupportsTestRunner = '> 18.0.0';
+import nodeSupports from '../../utils/node-supports';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.jsx extension', ({ describe }) => {
@@ -13,7 +12,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			expect(stdout).toMatch('✔ sourcemaps');
 			expect(stdout).toMatch('✔ resolves optional node prefix');
 			expect(stdout).toMatch(
-				semver.satisfies(node.version, nodeSupportsTestRunner)
+				semver.satisfies(node.version, nodeSupports.testRunner)
 					? '✔ resolves required node prefix'
 					: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]',
 			);

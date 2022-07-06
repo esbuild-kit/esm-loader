@@ -1,9 +1,7 @@
 import { testSuite, expect } from 'manten';
 import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
-
-const nodeSupportsSourceMap = '^14.18.0 || >=16.6.0';
-const nodeSupportsTestRunner = '> 18.0.0';
+import nodeSupports from '../../utils/node-supports';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.ts extension', ({ describe }) => {
@@ -15,7 +13,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			expect(stdout).toMatch('✔ has dynamic import');
 			expect(stdout).toMatch('✔ resolves optional node prefix');
 			expect(stdout).toMatch(
-				semver.satisfies(node.version, nodeSupportsTestRunner)
+				semver.satisfies(node.version, nodeSupports.testRunner)
 					? '✔ resolves required node prefix'
 					: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]',
 			);
@@ -29,7 +27,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				assertResults(nodeProcess.stdout);
 			});
 
-			if (semver.satisfies(node.version, nodeSupportsSourceMap)) {
+			if (semver.satisfies(node.version, nodeSupports.nodePrefixRequire)) {
 				test('Disables native source map if Error.prepareStackTrace is customized', async () => {
 					const nodeProcess = await node.load(importPath, {
 						nodeOptions: ['-r', 'source-map-support/register'],
