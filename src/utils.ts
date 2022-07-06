@@ -34,7 +34,7 @@ export const getFormatFromExtension = (filePath: string): ModuleFormat | undefin
 	}
 };
 
-export type Version = [number, number, number];
+type Version = [number, number, number];
 const nodeVersion = process.version.slice(1).split('.').map(Number) as Version;
 
 export const compareNodeVersion = (version: Version) => (

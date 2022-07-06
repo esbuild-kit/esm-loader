@@ -16,7 +16,6 @@ import {
 	compareNodeVersion,
 	type ModuleFormat,
 	type MaybePromise,
-	type Version,
 } from './utils';
 import { getPackageType } from './package-json';
 

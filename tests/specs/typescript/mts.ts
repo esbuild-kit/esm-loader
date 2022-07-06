@@ -7,7 +7,6 @@ const nodeSupportsTestRunner = '> 18.0.0';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.mts extension', ({ describe }) => {
-
 		function assertResults(stdout: string) {
 			expect(stdout).toMatch('loaded ts-ext-mts/index.mts');
 			expect(stdout).toMatch('✖ has CJS context');
@@ -17,7 +16,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			expect(stdout).toMatch(
 				semver.satisfies(node.version, nodeSupportsTestRunner)
 					? '✔ resolves required node prefix'
-					: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]'
+					: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]',
 			);
 		}
 

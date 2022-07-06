@@ -7,7 +7,7 @@ const nodeSupportsTestRunner = '> 18.0.0';
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('Load ESM', ({ describe }) => {
 		describe('.mjs extension', ({ describe }) => {
-			function assertResults({ stdout, stderr }: { stdout: string; stderr: string; }) {
+			function assertResults({ stdout, stderr }: { stdout: string; stderr: string }) {
 				expect(stdout).toMatch('loaded esm-ext-mjs/index.mjs');
 				expect(stdout).toMatch('✖ has CJS context: false');
 				expect(stdout).toMatch('✔ name in error');
@@ -16,7 +16,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(stdout).toMatch(
 					semver.satisfies(node.version, nodeSupportsTestRunner)
 						? '✔ resolves required node prefix'
-						: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]'
+						: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]',
 				);
 				expect(stderr).not.toMatch('Obsolete loader hook');
 			}
@@ -72,7 +72,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		});
 
 		describe('.js extension', ({ describe }) => {
-			function assertResults({ stdout, stderr }: { stdout: string; stderr: string; }) {
+			function assertResults({ stdout, stderr }: { stdout: string; stderr: string }) {
 				expect(stdout).toMatch('loaded esm-ext-js/index.js');
 				expect(stdout).toMatch('✖ has CJS context: false');
 				expect(stdout).toMatch('✔ name in error');
@@ -81,7 +81,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(stdout).toMatch(
 					semver.satisfies(node.version, nodeSupportsTestRunner)
 						? '✔ resolves required node prefix'
-						: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]'
+						: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]',
 				);
 				expect(stderr).not.toMatch('Obsolete loader hook');
 			}

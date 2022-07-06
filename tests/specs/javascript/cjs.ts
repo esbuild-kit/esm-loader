@@ -20,12 +20,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					expect(stdout).toMatch(
 						semver.satisfies(node.version, nodeSupportsNodePrefixRequire)
 							? '✔ resolves optional node prefix'
-							: '✖ resolves optional node prefix: Error:'
+							: '✖ resolves optional node prefix: Error:',
 					);
 					expect(stdout).toMatch(
 						semver.satisfies(node.version, nodeSupportsTestRunner)
 							? '✔ resolves required node prefix'
-							: '✖ resolves required node prefix: Error'
+							: '✖ resolves required node prefix: Error',
 					);
 				}
 
