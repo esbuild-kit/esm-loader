@@ -16,16 +16,6 @@ test(
 );
 
 test(
-	'resolves optional node prefix',
-	() => Boolean(require('node:fs')),
-);
-
-test(
-	'resolves required node prefix',
-	() => Boolean(require('node:test')),
-);
-
-test(
 	'name in error',
 	() => {
 		let nameInError;
@@ -39,7 +29,17 @@ test(
 
 test(
 	'sourcemaps',
-	() => new Error().stack.includes(':42:'),
+	() => new Error().stack.includes(':32:'),
+);
+
+test(
+	'resolves optional node prefix',
+	() => Boolean(require('node:fs')),
+);
+
+test(
+	'resolves required node prefix',
+	() => Boolean(require('node:test')),
 );
 
 test(

@@ -16,16 +16,6 @@ test(
 );
 
 test(
-	'resolves optional node prefix',
-	() => import('node:fs').then(Boolean),
-);
-
-test(
-	'resolves required node prefix',
-	() => import('node:test').then(Boolean),
-);
-
-test(
 	'name in error',
 	() => {
 		let nameInError;
@@ -39,12 +29,22 @@ test(
 
 test(
 	'sourcemaps',
-	() => new Error().stack!.includes(':42:'),
+	() => new Error().stack!.includes(':32:'),
 );
 
 test(
 	'has dynamic import',
 	() => import('fs').then(Boolean),
+);
+
+test(
+	'resolves optional node prefix',
+	() => import('node:fs').then(Boolean),
+);
+
+test(
+	'resolves required node prefix',
+	() => import('node:test').then(Boolean),
 );
 
 function valueNumber(value: number) {
