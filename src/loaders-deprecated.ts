@@ -7,13 +7,13 @@ import {
 	transform,
 	transformDynamicImport,
 	applySourceMap,
+	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
 import {
 	sourcemaps,
 	tsconfigRaw,
 	tsExtensionsPattern,
 	getFormatFromExtension,
-	compareNodeVersion,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';

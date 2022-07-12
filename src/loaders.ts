@@ -5,6 +5,7 @@ import {
 	transformDynamicImport,
 	applySourceMap,
 	resolveTsPath,
+	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
 import {
 	sourcemaps,
@@ -12,7 +13,6 @@ import {
 	tsconfigPathsMatcher,
 	tsExtensionsPattern,
 	getFormatFromExtension,
-	compareNodeVersion,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
