@@ -17,12 +17,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				 * it must be compiled by the CJS loader, which is enhanced via
 				 * cjs-loader.
 				 */
-				expect(nodeProcess.stderr).toMatch('SyntaxError: Cannot use import statement outside a module');
+				expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stderr).toMatch('SyntaxError: Cannot use import statement outside a module');
+				expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
 			});
 		});
 
@@ -36,7 +36,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath, { typescript: true });
-				expect(nodeProcess.stderr).toMatch('SyntaxError: Cannot use import statement outside a module');
+				expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
 			});
 		});
 

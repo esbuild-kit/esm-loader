@@ -1,26 +1,45 @@
-import fs from 'node:fs';
-
-console.log(
-	'loaded ts-ext-cts/index.cts',
-	JSON.stringify({
-		nodePrefix: Boolean(fs),
-		hasDynamicImport: Boolean(import('fs')),
-		...(() => {
-			let nameInError;
-			try {
-				nameInError();
-			} catch (error) {
-				return {
-					nameInError: error.message.includes('nameInError'),
-					sourceMap: error.stack.includes(':11:5'),
-				};
-			}
-		})(),
-	}),
-);
-
-function valueNumber(value: number) {
-	return value;
+async function test(description: string, testFunction: () => any | Promise<any>) {
+	try {
+		const result = await testFunction();
+		if (!result) { throw result; }
+		console.log(`✔ ${description}`);
+	} catch (error) {
+		console.log(`✖ ${description}: ${error.toString().split('\n').shift()}`);
+	}
 }
 
-export default valueNumber(1234);
+console.log('loaded ts-ext-cts/index.cts');
+
+test(
+	'has CJS context',
+	() => typeof require !== 'undefined' || typeof module !== 'undefined',
+);
+
+test(
+	'name in error',
+	() => {
+		let nameInError;
+		try {
+			nameInError();
+		} catch (error) {
+			return error.message.includes('nameInError');
+		}
+	},
+);
+
+test(
+	'sourcemaps',
+	() => new Error().stack!.includes(':32:'),
+);
+
+test(
+	'resolves optional node prefix',
+	() => import('node:fs').then(Boolean),
+);
+
+test(
+	'resolves required node prefix',
+	() => import('node:test').then(Boolean),
+);
+
+export default 1234;

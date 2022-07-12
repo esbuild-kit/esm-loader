@@ -7,6 +7,7 @@ import {
 	transform,
 	transformDynamicImport,
 	applySourceMap,
+	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
 import {
 	sourcemaps,
@@ -96,14 +97,7 @@ const _transformSource: transformSource = async function (
 	return result;
 };
 
-const loadersDeprecatedVersion = [16, 12, 0];
-const nodeVersion = process.version.slice(1).split('.').map(Number);
-
-const nodeSupportsDeprecatedLoaders = (
-	nodeVersion[0] - loadersDeprecatedVersion[0]
-	|| nodeVersion[1] - loadersDeprecatedVersion[1]
-	|| nodeVersion[2] - loadersDeprecatedVersion[2]
-) < 0;
+const nodeSupportsDeprecatedLoaders = compareNodeVersion([16, 12, 0]) < 0;
 
 export const getFormat = nodeSupportsDeprecatedLoaders ? _getFormat : undefined;
 export const transformSource = nodeSupportsDeprecatedLoaders ? _transformSource : undefined;

@@ -1,28 +1,43 @@
 import { testSuite, expect } from 'manten';
+import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
+import nodeSupports from '../../utils/node-supports';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('Load ESM', ({ describe }) => {
 		describe('.mjs extension', ({ describe }) => {
-			const output = 'loaded esm-ext-mjs/index.mjs {"nodePrefix":true,"hasDynamicImport":true,"nameInError":true,"sourceMap":true}';
+			function assertResults({ stdout, stderr }: { stdout: string; stderr: string }) {
+				expect(stdout).toMatch('loaded esm-ext-mjs/index.mjs');
+				expect(stdout).toMatch('✖ has CJS context: false');
+				expect(stdout).toMatch('✔ name in error');
+				expect(stdout).toMatch('✔ sourcemaps');
+				expect(stdout).toMatch('✔ resolves optional node prefix');
+				expect(stdout).toMatch(
+					semver.satisfies(node.version, nodeSupports.testRunner)
+						? '✔ resolves required node prefix'
+						: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]',
+				);
+				expect(stderr).not.toMatch('Obsolete loader hook');
+			}
 
 			describe('full path', ({ test }) => {
 				const importPath = './lib/esm-ext-mjs/index.mjs';
 
 				test('Load', async () => {
 					const nodeProcess = await node.load(importPath);
-					expect(nodeProcess.stdout).toBe(output);
-					expect(nodeProcess.stderr).not.toMatch('Obsolete loader hook');
+					assertResults(nodeProcess);
 				});
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
-					expect(nodeProcess.stdout).toBe(`${output}\n{"default":1234}`);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});
 
 				test('TypeScript Import', async () => {
 					const nodeProcess = await node.import(importPath, { typescript: true });
-					expect(nodeProcess.stdout).toBe(`${output}\n{"default":1234}`);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});
 			});
 
@@ -56,20 +71,32 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		});
 
 		describe('.js extension', ({ describe }) => {
-			const output = 'loaded esm-ext-js/index.js {"nodePrefix":true,"hasDynamicImport":true,"nameInError":true,"sourceMap":true}';
+			function assertResults({ stdout, stderr }: { stdout: string; stderr: string }) {
+				expect(stdout).toMatch('loaded esm-ext-js/index.js');
+				expect(stdout).toMatch('✖ has CJS context: false');
+				expect(stdout).toMatch('✔ name in error');
+				expect(stdout).toMatch('✔ sourcemaps');
+				expect(stdout).toMatch('✔ resolves optional node prefix');
+				expect(stdout).toMatch(
+					semver.satisfies(node.version, nodeSupports.testRunner)
+						? '✔ resolves required node prefix'
+						: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]',
+				);
+				expect(stderr).not.toMatch('Obsolete loader hook');
+			}
 
 			describe('full path', ({ test }) => {
 				const importPath = './lib/esm-ext-js/index.js';
 
 				test('Load', async () => {
 					const nodeProcess = await node.load(importPath);
-					expect(nodeProcess.stdout).toBe(output);
+					assertResults(nodeProcess);
 				});
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
-
-					expect(nodeProcess.stdout).toBe(`${output}\n{"default":1234}`);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});
 			});
 
@@ -78,12 +105,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Load', async () => {
 					const nodeProcess = await node.load(importPath);
-					expect(nodeProcess.stdout).toBe(output);
+					assertResults(nodeProcess);
 				});
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
-					expect(nodeProcess.stdout).toBe(`${output}\n{"default":1234}`);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});
 			});
 
@@ -92,13 +120,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Load', async () => {
 					const nodeProcess = await node.load(importPath);
-					expect(nodeProcess.stdout).toBe(output);
+					assertResults(nodeProcess);
 				});
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
-
-					expect(nodeProcess.stdout).toBe(`${output}\n{"default":1234}`);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});
 			});
 		});
