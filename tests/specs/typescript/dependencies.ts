@@ -21,5 +21,16 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stdout).toBe(output);
 			});
 		});
+
+		describe('Export map', ({ test }) => {
+			const output = '{"default":"default export","namedExport":"named export"}';
+
+			test('Import', async () => {
+				const nodeProcess = await node.import('package-exports/index.js', {
+					typescript: true,
+				});
+				expect(nodeProcess.stdout).toBe(output);
+			});
+		});
 	});
 });
