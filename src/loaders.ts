@@ -138,7 +138,11 @@ export const resolve: resolve = async function (
 			try {
 				return await resolve(tsPath, context, defaultResolve, true);
 			} catch (error) {
-				if ((error as any).code !== 'ERR_MODULE_NOT_FOUND') {
+				const { code } = error as any;
+				if (
+					code !== 'ERR_MODULE_NOT_FOUND'
+					&& code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+				) {
 					throw error;
 				}
 			}
@@ -150,7 +154,7 @@ export const resolve: resolve = async function (
 		resolved = await defaultResolve(specifier, context, defaultResolve);
 	} catch (error) {
 		if (
-			(error instanceof Error)
+			error instanceof Error
 			&& !recursiveCall
 		) {
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
