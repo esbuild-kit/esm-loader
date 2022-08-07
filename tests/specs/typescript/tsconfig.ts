@@ -50,6 +50,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stdout).toBe('nested-resolve-target');
 			});
 
+			test('resolves paths via .js', async () => {
+				const nodeProcess = await node.load('./src/paths-prefix-match-js.ts', {
+					cwd: './tsconfig',
+				});
+				expect(nodeProcess.stdout).toBe('nested-resolve-target');
+			});
+
 			describe('dependency', ({ test }) => {
 				test('resolve current directory', async () => {
 					const nodeProcess = await node.load('./dependency-resolve-current-directory', {
