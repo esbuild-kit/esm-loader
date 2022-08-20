@@ -47,6 +47,11 @@ test(
 	() => import('node:test').then(Boolean),
 );
 
+test(
+	'preserves names',
+	() => (function functionName() {}).name === 'functionName',
+);
+
 function valueNumber(value: number) {
 	return value;
 }

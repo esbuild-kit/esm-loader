@@ -14,8 +14,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				/**
 				 * Since .cts compiles to CJS and can use features like __dirname,
-				 * it must be compiled by the CJS loader, which is enhanced via
-				 * cjs-loader.
+				 * it must be compiled by the CJS loader
 				 */
 				expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
 			});
