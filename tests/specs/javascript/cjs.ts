@@ -15,6 +15,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					expect(stdout).toMatch('✔ name in error');
 					expect(stdout).toMatch('✔ sourcemaps');
 					expect(stdout).toMatch('✔ has dynamic import');
+					expect(stdout).toMatch('✔ preserves names');
 					expect(stdout).toMatch(
 						semver.satisfies(node.version, nodeSupports.nodePrefixRequire)
 							? '✔ resolves optional node prefix'
@@ -88,6 +89,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(stdout).toMatch('✔ name in error');
 				expect(stdout).toMatch('✔ sourcemaps');
 				expect(stdout).toMatch('✔ has dynamic import');
+				expect(stdout).toMatch('✔ preserves names');
 			}
 
 			describe('full path', ({ test }) => {

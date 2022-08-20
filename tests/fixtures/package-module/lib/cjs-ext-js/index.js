@@ -36,3 +36,8 @@ test(
 	'has dynamic import',
 	() => import('fs').then(Boolean),
 );
+
+test(
+	'preserves names',
+	() => (function functionName() {}).name === 'functionName',
+);
