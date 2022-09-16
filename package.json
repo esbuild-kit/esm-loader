@@ -28,8 +28,7 @@
 		"build": "pkgroll --target=node12.19 --minify",
 		"lint": "eslint .",
 		"type-check": "tsc --noEmit",
-		"pretest": "npm run build",
-		"test": "node --loader @esbuild-kit/esm-loader tests"
+		"test": "pnpm build && node --loader @esbuild-kit/esm-loader tests"
 	},
 	"dependencies": {
 		"@esbuild-kit/core-utils": "^2.3.1",
