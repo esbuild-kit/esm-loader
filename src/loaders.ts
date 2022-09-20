@@ -154,11 +154,11 @@ export const resolve: resolve = async function (
 		try {
 			resolved = await defaultResolve(specifier, context, defaultResolve);
 		} catch (error) {
-			if ((error as any).code === "ERR_UNSUPPORTED_ESM_URL_SCHEME" && path.isAbsolute(specifier)) {
-				resolved =  await defaultResolve(
+			if ((error as any).code === 'ERR_UNSUPPORTED_ESM_URL_SCHEME' && path.isAbsolute(specifier)) {
+				resolved = await defaultResolve(
 					pathToFileURL(specifier).toString(),
 					context,
-					defaultResolve
+					defaultResolve,
 				);
 			} else {
 				throw error;
