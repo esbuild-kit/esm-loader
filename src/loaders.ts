@@ -151,7 +151,19 @@ export const resolve: resolve = async function (
 
 	let resolved: Resolved;
 	try {
-		resolved = await defaultResolve(specifier, context, defaultResolve);
+		try {
+			resolved = await defaultResolve(specifier, context, defaultResolve);
+		} catch (error) {
+			if ((error as any).code === "ERR_UNSUPPORTED_ESM_URL_SCHEME" && path.isAbsolute(specifier)) {
+				resolved =  await defaultResolve(
+					pathToFileURL(specifier).toString(),
+					context,
+					defaultResolve
+				);
+			} else {
+				throw error;
+			}
+		}
 	} catch (error) {
 		if (
 			error instanceof Error
