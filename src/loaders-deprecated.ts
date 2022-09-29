@@ -85,7 +85,7 @@ const _transformSource: transformSource = async function (
 	}
 
 	const result = await defaultTransformSource(source, context, defaultTransformSource);
-	const dynamicImportTransformed = transformDynamicImport(result.source.toString());
+	const dynamicImportTransformed = transformDynamicImport(url, result.source.toString());
 	if (dynamicImportTransformed) {
 		result.source = applySourceMap(
 			dynamicImportTransformed,

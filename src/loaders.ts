@@ -249,7 +249,7 @@ export const load: load = async function (
 		};
 	}
 
-	const dynamicImportTransformed = transformDynamicImport(code);
+	const dynamicImportTransformed = transformDynamicImport(url, code);
 	if (dynamicImportTransformed) {
 		loaded.source = applySourceMap(
 			dynamicImportTransformed,
