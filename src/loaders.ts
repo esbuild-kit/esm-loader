@@ -1,5 +1,5 @@
 import path from 'path';
-import { pathToFileURL } from 'url';
+import { pathToFileURL, fileURLToPath } from 'url';
 import {
 	transform,
 	transformDynamicImport,
@@ -229,6 +229,7 @@ export const load: load = async function (
 		return loaded;
 	}
 
+	const filePath = fileURLToPath(url);
 	const code = loaded.source.toString();
 
 	if (
@@ -237,7 +238,7 @@ export const load: load = async function (
 	) {
 		const transformed = await transform(
 			code,
-			url,
+			filePath,
 			{
 				tsconfigRaw,
 			},
@@ -249,7 +250,7 @@ export const load: load = async function (
 		};
 	}
 
-	const dynamicImportTransformed = transformDynamicImport(url, code);
+	const dynamicImportTransformed = transformDynamicImport(filePath, code);
 	if (dynamicImportTransformed) {
 		loaded.source = applySourceMap(
 			dynamicImportTransformed,

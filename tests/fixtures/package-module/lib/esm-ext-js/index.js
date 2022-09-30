@@ -29,7 +29,12 @@ test(
 
 test(
 	'sourcemaps',
-	() => new Error().stack.includes(':32:'),
+	() => {
+		const { stack } = new Error();
+		const pathIndex = stack.indexOf((new URL(import.meta.url)).pathname + ':33:');
+		const previousCharacter = stack[pathIndex - 1];
+		return pathIndex > -1 && previousCharacter !== ':';
+	},
 );
 
 test(
