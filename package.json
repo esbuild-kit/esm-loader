@@ -28,7 +28,8 @@
 		"build": "pkgroll --target=node12.19 --minify",
 		"lint": "eslint .",
 		"type-check": "tsc --noEmit",
-		"test": "pnpm build && node --loader @esbuild-kit/esm-loader tests"
+		"test": "pnpm build && node --loader @esbuild-kit/esm-loader tests",
+		"prepack": "clean-pkg-json"
 	},
 	"dependencies": {
 		"@esbuild-kit/core-utils": "^2.3.2",
@@ -38,6 +39,7 @@
 		"@pvtnbr/eslint-config": "^0.30.1",
 		"@types/node": "^18.7.21",
 		"@types/semver": "^7.3.12",
+		"clean-pkg-json": "^1.2.0",
 		"eslint": "^8.24.0",
 		"execa": "^6.1.0",
 		"get-node": "^13.2.0",

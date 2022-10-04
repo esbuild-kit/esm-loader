@@ -5,6 +5,7 @@ specifiers:
   '@pvtnbr/eslint-config': ^0.30.1
   '@types/node': ^18.7.21
   '@types/semver': ^7.3.12
+  clean-pkg-json: ^1.2.0
   eslint: ^8.24.0
   execa: ^6.1.0
   get-node: ^13.2.0
@@ -24,6 +25,7 @@ devDependencies:
   '@pvtnbr/eslint-config': 0.30.1_7ilbxdl5iguzcjriqqcg2m5cku
   '@types/node': 18.7.21
   '@types/semver': 7.3.12
+  clean-pkg-json: 1.2.0
   eslint: 8.24.0
   execa: 6.1.0
   get-node: 13.2.0
@@ -816,6 +818,11 @@ packages:
 
   /ci-info/3.4.0:
     resolution: {integrity: sha512-t5QdPT5jq3o262DOQ8zA6E1tlH2upmUc4Hlvrbx1pGYJuiiHl7O7rvVNI+l8HTVhd/q3Qc9vqimkNk5yiXsAug==}
+    dev: true
+
+  /clean-pkg-json/1.2.0:
+    resolution: {integrity: sha512-QHBWWOtpSCv5nfMFKwyxn4WMvkYE0msxj5xiqejYGqYepWVrK7O/om1Vn6nSl/WPtYn8ge9YmSCbTi1Hp8k+Hg==}
+    hasBin: true
     dev: true
 
   /clean-regexp/1.0.0:
