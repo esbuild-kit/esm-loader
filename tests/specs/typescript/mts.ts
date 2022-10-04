@@ -39,9 +39,9 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		describe('full path via .mjs', ({ test }) => {
 			const importPath = './lib/ts-ext-mts/index.mjs';
 
-			test('Load - should not work', async () => {
+			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				assertResults(nodeProcess.stdout);
 			});
 
 			test('Import', async () => {
