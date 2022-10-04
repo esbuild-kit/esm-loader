@@ -3,12 +3,11 @@ import { pathToFileURL, fileURLToPath } from 'url';
 import {
 	transform,
 	transformDynamicImport,
-	applySourceMap,
 	resolveTsPath,
 	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
 import {
-	sourcemaps,
+	applySourceMap,
 	tsconfigRaw,
 	tsconfigPathsMatcher,
 	tsExtensionsPattern,
@@ -17,6 +16,7 @@ import {
 	type MaybePromise,
 } from './utils';
 import { getPackageType } from './package-json';
+import type { TransformOptions } from 'esbuild';
 
 type Resolved = {
 	url: string;
@@ -240,13 +240,13 @@ export const load: load = async function (
 			code,
 			filePath,
 			{
-				tsconfigRaw,
+				tsconfigRaw: tsconfigRaw as TransformOptions['tsconfigRaw'],
 			},
 		);
 
 		return {
 			format: 'module',
-			source: applySourceMap(transformed, url, sourcemaps),
+			source: applySourceMap(transformed, url),
 		};
 	}
 
@@ -255,7 +255,6 @@ export const load: load = async function (
 		loaded.source = applySourceMap(
 			dynamicImportTransformed,
 			url,
-			sourcemaps,
 		);
 	}
 

@@ -7,11 +7,10 @@ import { fileURLToPath } from 'url';
 import {
 	transform,
 	transformDynamicImport,
-	applySourceMap,
 	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
 import {
-	sourcemaps,
+	applySourceMap,
 	tsconfigRaw,
 	tsExtensionsPattern,
 	getFormatFromExtension,
@@ -19,6 +18,7 @@ import {
 	type MaybePromise,
 } from './utils';
 import { getPackageType } from './package-json';
+import type { TransformOptions } from 'esbuild';
 
 type getFormat = (
 	url: string,
@@ -77,12 +77,12 @@ const _transformSource: transformSource = async function (
 			source.toString(),
 			filePath,
 			{
-				tsconfigRaw,
+				tsconfigRaw: tsconfigRaw as TransformOptions['tsconfigRaw'],
 			},
 		);
 
 		return {
-			source: applySourceMap(transformed, url, sourcemaps),
+			source: applySourceMap(transformed, url),
 		};
 	}
 
@@ -92,7 +92,6 @@ const _transformSource: transformSource = async function (
 		result.source = applySourceMap(
 			dynamicImportTransformed,
 			url,
-			sourcemaps,
 		);
 	}
 
