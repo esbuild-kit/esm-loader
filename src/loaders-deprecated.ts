@@ -9,6 +9,7 @@ import {
 	transformDynamicImport,
 	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
+import type { TransformOptions } from 'esbuild';
 import {
 	applySourceMap,
 	tsconfigRaw,
@@ -18,7 +19,6 @@ import {
 	type MaybePromise,
 } from './utils';
 import { getPackageType } from './package-json';
-import type { TransformOptions } from 'esbuild';
 
 type getFormat = (
 	url: string,
