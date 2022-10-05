@@ -31,6 +31,9 @@ test(
 	'sourcemaps',
 	() => {
 		const stack = (new Error()).stack!;
+		console.log({
+			stack,
+		});
 		let { pathname } = new URL(import.meta.url);
 		if (process.platform === 'win32') {
 			pathname = pathname.slice(1);
