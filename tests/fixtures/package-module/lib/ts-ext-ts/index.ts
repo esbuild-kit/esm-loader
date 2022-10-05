@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 async function test(description, testFunction) {
 	try {
 		const result = await testFunction();
@@ -36,15 +38,20 @@ test(
 		});
 		let { pathname } = new URL(import.meta.url);
 		console.log({ pathname });
-		if (process.platform === 'win32') {
+		const isWin = process.platform === 'win32';
+		if (isWin) {
 			pathname = pathname.slice(1);
 		}
 		console.log({ pathname });
-		let pathIndex = stack.indexOf(pathname + ':33:');
+		let pathIndex = stack.indexOf(pathname + ':35:');
 		if (pathIndex === -1) {
-			pathIndex = stack.indexOf(pathname.toLowerCase() + ':33:');
+			pathIndex = stack.indexOf(pathname.toLowerCase() + ':35:');
 		}
-		console.log({ pathname });
+		console.log({ pathIndex });
+		if (pathIndex === -1 && isWin) {
+			pathIndex = stack.indexOf(fileURLToPath(import.meta.url).toLowerCase() + ':35:');
+		}
+		console.log({ pathIndex });
 		const previousCharacter = stack[pathIndex - 1];
 		return pathIndex > -1 && previousCharacter !== ':';
 	},
