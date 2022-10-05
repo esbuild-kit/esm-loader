@@ -32,7 +32,7 @@
 		"prepack": "clean-pkg-json"
 	},
 	"dependencies": {
-		"@esbuild-kit/core-utils": "github:esbuild-kit/core-utils#npm/next",
+		"@esbuild-kit/core-utils": "github:esbuild-kit/core-utils#npm/develop",
 		"get-tsconfig": "^4.2.0"
 	},
 	"devDependencies": {
