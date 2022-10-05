@@ -1,5 +1,3 @@
-// import { fileURLToPath } from 'node:url';
-
 async function test(description, testFunction) {
 	try {
 		const result = await testFunction();
@@ -37,22 +35,10 @@ test(
 		if (process.platform === 'win32') {
 			pathname = pathname.slice(1);
 		}
-
-		console.log({
-			stack,
-			importMetaUrl: import.meta.url,
-			importMetaAsUrl: new URL(import.meta.url),
-			pathname,
-			pathnameMatch: stack.includes(pathname),
-			pathnameFormatted: (new URL(import.meta.url)).pathname.slice(1).toLowerCase(),
-			pathnameFormattedMatch: stack.includes((new URL(import.meta.url)).pathname.slice(1).toLowerCase()),
-		});
-
-		let pathIndex = stack.indexOf(pathname + ':35:');
+		let pathIndex = stack.indexOf(pathname + ':33:');
 		if (pathIndex === -1) {
-			pathIndex = stack.indexOf(pathname.toLowerCase() + ':35:');
+			pathIndex = stack.indexOf(pathname.toLowerCase() + ':33:');
 		}
-
 		const previousCharacter = stack[pathIndex - 1];
 		return pathIndex > -1 && previousCharacter !== ':';
 	},
