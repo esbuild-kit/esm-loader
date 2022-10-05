@@ -26,112 +26,111 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Load', async () => {
 					const nodeProcess = await node.load(importPath);
-					console.log(nodeProcess.stdout);
 					assertResults(nodeProcess);
 				});
 
-				// test('Import', async () => {
-				// 	const nodeProcess = await node.import(importPath);
-				// 	assertResults(nodeProcess);
-				// 	expect(nodeProcess.stdout).toMatch('{"default":1234}');
-				// });
+				test('Import', async () => {
+					const nodeProcess = await node.import(importPath);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
 
-				// test('TypeScript Import', async () => {
-				// 	const nodeProcess = await node.import(importPath, { typescript: true });
-				// 	assertResults(nodeProcess);
-				// 	expect(nodeProcess.stdout).toMatch('{"default":1234}');
-				// });
+				test('TypeScript Import', async () => {
+					const nodeProcess = await node.import(importPath, { typescript: true });
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
 			});
 
-			// describe('extensionless - should not work', ({ test }) => {
-			// 	const importPath = './lib/esm-ext-mjs/index';
+			describe('extensionless - should not work', ({ test }) => {
+				const importPath = './lib/esm-ext-mjs/index';
 
-			// 	test('Load', async () => {
-			// 		const nodeProcess = await node.load(importPath);
-			// 		expect(nodeProcess.stderr).toMatch('Cannot find module');
-			// 	});
+				test('Load', async () => {
+					const nodeProcess = await node.load(importPath);
+					expect(nodeProcess.stderr).toMatch('Cannot find module');
+				});
 
-			// 	test('Import', async () => {
-			// 		const nodeProcess = await node.import(importPath);
-			// 		expect(nodeProcess.stderr).toMatch('Cannot find module');
-			// 	});
-			// });
+				test('Import', async () => {
+					const nodeProcess = await node.import(importPath);
+					expect(nodeProcess.stderr).toMatch('Cannot find module');
+				});
+			});
 
-			// describe('directory - should not work', ({ test }) => {
-			// 	const importPath = './lib/esm-ext-mjs';
+			describe('directory - should not work', ({ test }) => {
+				const importPath = './lib/esm-ext-mjs';
 
-			// 	test('Load', async () => {
-			// 		const nodeProcess = await node.load(importPath);
-			// 		expect(nodeProcess.stderr).toMatch('Cannot find module');
-			// 	});
+				test('Load', async () => {
+					const nodeProcess = await node.load(importPath);
+					expect(nodeProcess.stderr).toMatch('Cannot find module');
+				});
 
-			// 	test('Import', async () => {
-			// 		const nodeProcess = await node.import(importPath);
-			// 		expect(nodeProcess.stderr).toMatch('Cannot find module');
-			// 	});
-			// });
+				test('Import', async () => {
+					const nodeProcess = await node.import(importPath);
+					expect(nodeProcess.stderr).toMatch('Cannot find module');
+				});
+			});
 		});
 
-		// describe('.js extension', ({ describe }) => {
-		// 	function assertResults({ stdout, stderr }: { stdout: string; stderr: string }) {
-		// 		expect(stdout).toMatch('loaded esm-ext-js/index.js');
-		// 		expect(stdout).toMatch('✖ has CJS context: false');
-		// 		expect(stdout).toMatch('✔ name in error');
-		// 		expect(stdout).toMatch('✔ sourcemaps');
-		// 		expect(stdout).toMatch('✔ resolves optional node prefix');
-		// 		expect(stdout).toMatch('✔ preserves names');
-		// 		expect(stdout).toMatch(
-		// 			semver.satisfies(node.version, nodeSupports.testRunner)
-		// 				? '✔ resolves required node prefix'
-		// 				: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]',
-		// 		);
-		// 		expect(stderr).not.toMatch('Obsolete loader hook');
-		// 	}
+		describe('.js extension', ({ describe }) => {
+			function assertResults({ stdout, stderr }: { stdout: string; stderr: string }) {
+				expect(stdout).toMatch('loaded esm-ext-js/index.js');
+				expect(stdout).toMatch('✖ has CJS context: false');
+				expect(stdout).toMatch('✔ name in error');
+				expect(stdout).toMatch('✔ sourcemaps');
+				expect(stdout).toMatch('✔ resolves optional node prefix');
+				expect(stdout).toMatch('✔ preserves names');
+				expect(stdout).toMatch(
+					semver.satisfies(node.version, nodeSupports.testRunner)
+						? '✔ resolves required node prefix'
+						: '✖ resolves required node prefix: Error [ERR_UNKNOWN_BUILTIN_MODULE]',
+				);
+				expect(stderr).not.toMatch('Obsolete loader hook');
+			}
 
-		// 	describe('full path', ({ test }) => {
-		// 		const importPath = './lib/esm-ext-js/index.js';
+			describe('full path', ({ test }) => {
+				const importPath = './lib/esm-ext-js/index.js';
 
-		// 		test('Load', async () => {
-		// 			const nodeProcess = await node.load(importPath);
-		// 			assertResults(nodeProcess);
-		// 		});
+				test('Load', async () => {
+					const nodeProcess = await node.load(importPath);
+					assertResults(nodeProcess);
+				});
 
-		// 		test('Import', async () => {
-		// 			const nodeProcess = await node.import(importPath);
-		// 			assertResults(nodeProcess);
-		// 			expect(nodeProcess.stdout).toMatch('{"default":1234}');
-		// 		});
-		// 	});
+				test('Import', async () => {
+					const nodeProcess = await node.import(importPath);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
+			});
 
-		// 	describe('extensionless', ({ test }) => {
-		// 		const importPath = './lib/esm-ext-js/index';
+			describe('extensionless', ({ test }) => {
+				const importPath = './lib/esm-ext-js/index';
 
-		// 		test('Load', async () => {
-		// 			const nodeProcess = await node.load(importPath);
-		// 			assertResults(nodeProcess);
-		// 		});
+				test('Load', async () => {
+					const nodeProcess = await node.load(importPath);
+					assertResults(nodeProcess);
+				});
 
-		// 		test('Import', async () => {
-		// 			const nodeProcess = await node.import(importPath);
-		// 			assertResults(nodeProcess);
-		// 			expect(nodeProcess.stdout).toMatch('{"default":1234}');
-		// 		});
-		// 	});
+				test('Import', async () => {
+					const nodeProcess = await node.import(importPath);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
+			});
 
-		// 	describe('directory', ({ test }) => {
-		// 		const importPath = './lib/esm-ext-js';
+			describe('directory', ({ test }) => {
+				const importPath = './lib/esm-ext-js';
 
-		// 		test('Load', async () => {
-		// 			const nodeProcess = await node.load(importPath);
-		// 			assertResults(nodeProcess);
-		// 		});
+				test('Load', async () => {
+					const nodeProcess = await node.load(importPath);
+					assertResults(nodeProcess);
+				});
 
-		// 		test('Import', async () => {
-		// 			const nodeProcess = await node.import(importPath);
-		// 			assertResults(nodeProcess);
-		// 			expect(nodeProcess.stdout).toMatch('{"default":1234}');
-		// 		});
-		// 	});
-		// });
+				test('Import', async () => {
+					const nodeProcess = await node.import(importPath);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
+			});
+		});
 	});
 });

@@ -26,20 +26,20 @@ const nodeVersions = [
 					import('./specs/javascript'),
 					node,
 				);
-				// runTestSuite(
-				// 	import('./specs/typescript'),
-				// 	node,
-				// );
-				// runTestSuite(
-				// 	import('./specs/json'),
-				// 	node,
-				// );
+				runTestSuite(
+					import('./specs/typescript'),
+					node,
+				);
+				runTestSuite(
+					import('./specs/json'),
+					node,
+				);
 			});
 
-			// runTestSuite(
-			// 	import('./specs/package-cjs'),
-			// 	await createNode(nodeVersion, './tests/fixtures/package-commonjs'),
-			// );
+			runTestSuite(
+				import('./specs/package-cjs'),
+				await createNode(nodeVersion, './tests/fixtures/package-commonjs'),
+			);
 		});
 	}
 })();
