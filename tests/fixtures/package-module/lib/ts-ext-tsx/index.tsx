@@ -31,7 +31,14 @@ test(
 	'sourcemaps',
 	() => {
 		const stack = (new Error()).stack!;
-		const pathIndex = stack.indexOf((new URL(import.meta.url)).pathname + ':33:');
+		let { pathname } = new URL(import.meta.url);
+		if (process.platform === 'win32') {
+			pathname = pathname.slice(1);
+		}
+		let pathIndex = stack.indexOf(pathname + ':33:');
+		if (pathIndex === -1) {
+			pathIndex = stack.indexOf(pathname.toLowerCase() + ':33:');
+		}
 		const previousCharacter = stack[pathIndex - 1];
 		return pathIndex > -1 && previousCharacter !== ':';
 	},
