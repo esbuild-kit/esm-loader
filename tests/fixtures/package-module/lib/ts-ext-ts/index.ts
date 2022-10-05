@@ -33,25 +33,17 @@ test(
 	'sourcemaps',
 	() => {
 		const stack = (new Error()).stack!;
-		console.log({
-			stack,
-		});
 		let { pathname } = new URL(import.meta.url);
-		console.log({ pathname });
-		const isWin = process.platform === 'win32';
-		if (isWin) {
+		if (process.platform === 'win32') {
 			pathname = pathname.slice(1);
 		}
-		console.log({ pathname });
 		let pathIndex = stack.indexOf(pathname + ':35:');
 		if (pathIndex === -1) {
 			pathIndex = stack.indexOf(pathname.toLowerCase() + ':35:');
 		}
-		console.log({ pathIndex });
-		if (pathIndex === -1 && isWin) {
+		if (pathIndex === -1) {
 			pathIndex = stack.indexOf(fileURLToPath(import.meta.url).toLowerCase() + ':35:');
 		}
-		console.log({ pathIndex });
 		const previousCharacter = stack[pathIndex - 1];
 		return pathIndex > -1 && previousCharacter !== ':';
 	},
