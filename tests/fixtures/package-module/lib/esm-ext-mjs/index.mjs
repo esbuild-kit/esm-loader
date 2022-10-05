@@ -31,6 +31,11 @@ test(
 	'sourcemaps',
 	() => {
 		const { stack } = new Error();
+		console.log({
+			stack,
+			path: (new URL(import.meta.url)).pathname,
+			match: stack.includes((new URL(import.meta.url)).pathname),
+		});
 		const pathIndex = stack.indexOf((new URL(import.meta.url)).pathname + ':33:');
 		const previousCharacter = stack[pathIndex - 1];
 		return pathIndex > -1 && previousCharacter !== ':';
