@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 async function test(description, testFunction) {
 	try {
 		const result = await testFunction();
@@ -33,10 +35,12 @@ test(
 		const { stack } = new Error();
 		console.log({
 			stack,
-			path: (new URL(import.meta.url)).pathname,
-			match: stack.includes((new URL(import.meta.url)).pathname),
+			path: fileURLToPath(import.meta.url),
+			pathMatch: stack.includes(fileURLToPath(import.meta.url) + ':35:'),
+			pathname: (new URL(import.meta.url)).pathname,
+			pathnameMatch: stack.includes((new URL(import.meta.url)).pathname),
 		});
-		const pathIndex = stack.indexOf((new URL(import.meta.url)).pathname + ':33:');
+		const pathIndex = stack.indexOf((new URL(import.meta.url)).pathname + ':35:');
 		const previousCharacter = stack[pathIndex - 1];
 		return pathIndex > -1 && previousCharacter !== ':';
 	},
