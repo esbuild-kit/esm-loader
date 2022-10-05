@@ -3,7 +3,7 @@ import { createNode } from './utils/node-with-loader';
 
 const nodeVersions = [
 	// '12.20.0', // CJS named export detection added
-	// '12.22.11',
+	'12.22.11',
 	...(
 		process.env.CI
 			? [
