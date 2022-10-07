@@ -29,7 +29,19 @@ test(
 
 test(
 	'sourcemaps',
-	() => new Error().stack.includes(':32:'),
+	() => {
+		const { stack } = new Error();
+		let { pathname } = new URL(import.meta.url);
+		if (process.platform === 'win32') {
+			pathname = pathname.slice(1);
+		}
+		let pathIndex = stack.indexOf(pathname + ':33:');
+		if (pathIndex === -1) {
+			pathIndex = stack.indexOf(pathname.toLowerCase() + ':33:');
+		}
+		const previousCharacter = stack[pathIndex - 1];
+		return pathIndex > -1 && previousCharacter !== ':';
+	},
 );
 
 test(

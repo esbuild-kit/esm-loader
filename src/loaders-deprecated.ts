@@ -3,14 +3,15 @@
  * https://nodejs.org/docs/latest-v12.x/api/esm.html#esm_hooks
  * https://nodejs.org/docs/latest-v14.x/api/esm.html#esm_hooks
  */
+import { fileURLToPath } from 'url';
 import {
 	transform,
 	transformDynamicImport,
-	applySourceMap,
 	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
+import type { TransformOptions } from 'esbuild';
 import {
-	sourcemaps,
+	applySourceMap,
 	tsconfigRaw,
 	tsExtensionsPattern,
 	getFormatFromExtension,
@@ -59,6 +60,7 @@ const _transformSource: transformSource = async function (
 	defaultTransformSource,
 ) {
 	const { url } = context;
+	const filePath = fileURLToPath(url);
 
 	if (process.send) {
 		process.send({
@@ -73,24 +75,23 @@ const _transformSource: transformSource = async function (
 	) {
 		const transformed = await transform(
 			source.toString(),
-			url,
+			filePath,
 			{
-				tsconfigRaw,
+				tsconfigRaw: tsconfigRaw as TransformOptions['tsconfigRaw'],
 			},
 		);
 
 		return {
-			source: applySourceMap(transformed, url, sourcemaps),
+			source: applySourceMap(transformed, url),
 		};
 	}
 
 	const result = await defaultTransformSource(source, context, defaultTransformSource);
-	const dynamicImportTransformed = transformDynamicImport(result.source.toString());
+	const dynamicImportTransformed = transformDynamicImport(filePath, result.source.toString());
 	if (dynamicImportTransformed) {
 		result.source = applySourceMap(
 			dynamicImportTransformed,
 			url,
-			sourcemaps,
 		);
 	}
 

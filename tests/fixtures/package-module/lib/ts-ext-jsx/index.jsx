@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 async function test(description, testFunction) {
 	try {
 		const result = await testFunction();
@@ -29,7 +31,22 @@ test(
 
 test(
 	'sourcemaps',
-	() => new Error().stack.includes(':32:'),
+	() => {
+		const { stack } = new Error();
+		let { pathname } = new URL(import.meta.url);
+		if (process.platform === 'win32') {
+			pathname = pathname.slice(1);
+		}
+		let pathIndex = stack.indexOf(pathname + ':35:');
+		if (pathIndex === -1) {
+			pathIndex = stack.indexOf(pathname.toLowerCase() + ':35:');
+		}
+		if (pathIndex === -1) {
+			pathIndex = stack.indexOf(fileURLToPath(import.meta.url).toLowerCase() + ':35:');
+		}
+		const previousCharacter = stack[pathIndex - 1];
+		return pathIndex > -1 && previousCharacter !== ':';
+	},
 );
 
 test(

@@ -32,7 +32,7 @@
 		"prepack": "pnpm build && clean-pkg-json"
 	},
 	"dependencies": {
-		"@esbuild-kit/core-utils": "^2.3.2",
+		"@esbuild-kit/core-utils": "^3.0.0",
 		"get-tsconfig": "^4.2.0"
 	},
 	"devDependencies": {
@@ -40,6 +40,7 @@
 		"@types/node": "^18.7.21",
 		"@types/semver": "^7.3.12",
 		"clean-pkg-json": "^1.2.0",
+		"esbuild": "^0.15.10",
 		"eslint": "^8.24.0",
 		"execa": "^6.1.0",
 		"get-node": "^13.2.0",

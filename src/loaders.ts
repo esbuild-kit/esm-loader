@@ -1,14 +1,14 @@
 import path from 'path';
-import { pathToFileURL } from 'url';
+import { pathToFileURL, fileURLToPath } from 'url';
 import {
 	transform,
 	transformDynamicImport,
-	applySourceMap,
 	resolveTsPath,
 	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
+import type { TransformOptions } from 'esbuild';
 import {
-	sourcemaps,
+	applySourceMap,
 	tsconfigRaw,
 	tsconfigPathsMatcher,
 	tsExtensionsPattern,
@@ -229,6 +229,7 @@ export const load: load = async function (
 		return loaded;
 	}
 
+	const filePath = fileURLToPath(url);
 	const code = loaded.source.toString();
 
 	if (
@@ -237,24 +238,23 @@ export const load: load = async function (
 	) {
 		const transformed = await transform(
 			code,
-			url,
+			filePath,
 			{
-				tsconfigRaw,
+				tsconfigRaw: tsconfigRaw as TransformOptions['tsconfigRaw'],
 			},
 		);
 
 		return {
 			format: 'module',
-			source: applySourceMap(transformed, url, sourcemaps),
+			source: applySourceMap(transformed, url),
 		};
 	}
 
-	const dynamicImportTransformed = transformDynamicImport(code);
+	const dynamicImportTransformed = transformDynamicImport(filePath, code);
 	if (dynamicImportTransformed) {
 		loaded.source = applySourceMap(
 			dynamicImportTransformed,
 			url,
-			sourcemaps,
 		);
 	}
 
