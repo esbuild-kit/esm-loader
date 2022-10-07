@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@esbuild-kit/core-utils': github:esbuild-kit/core-utils#npm/develop
+  '@esbuild-kit/core-utils': ^3.0.0
   '@pvtnbr/eslint-config': ^0.30.1
   '@types/node': ^18.7.21
   '@types/semver': ^7.3.12
@@ -19,7 +19,7 @@ specifiers:
   typescript: ^4.8.3
 
 dependencies:
-  '@esbuild-kit/core-utils': github.com/esbuild-kit/core-utils/1c791fb256bf8d9a489e4c96797873a3e70a6063
+  '@esbuild-kit/core-utils': 3.0.0
   get-tsconfig: 4.2.0
 
 devDependencies:
@@ -65,6 +65,13 @@ packages:
       chalk: 2.4.2
       js-tokens: 4.0.0
     dev: true
+
+  /@esbuild-kit/core-utils/3.0.0:
+    resolution: {integrity: sha512-TXmwH9EFS3DC2sI2YJWJBgHGhlteK0Xyu1VabwetMULfm3oYhbrsWV5yaSr2NTWZIgDGVLHbRf0inxbjXqAcmQ==}
+    dependencies:
+      esbuild: 0.15.10
+      source-map-support: 0.5.21
+    dev: false
 
   /@esbuild/android-arm/0.15.10:
     resolution: {integrity: sha512-FNONeQPy/ox+5NBkcSbYJxoXj9GWu8gVGJTVmUyoOCKQFDTrHVKgNSzChdNt0I8Aj/iKcsDf2r9BFwv+FSNUXg==}
@@ -3871,12 +3878,3 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
-
-  github.com/esbuild-kit/core-utils/1c791fb256bf8d9a489e4c96797873a3e70a6063:
-    resolution: {tarball: https://codeload.github.com/esbuild-kit/core-utils/tar.gz/1c791fb256bf8d9a489e4c96797873a3e70a6063}
-    name: '@esbuild-kit/core-utils'
-    version: 0.0.0-semantic-release
-    dependencies:
-      esbuild: 0.15.10
-      source-map-support: 0.5.21
-    dev: false
