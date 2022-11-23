@@ -14,12 +14,11 @@ import {
 	applySourceMap,
 	tsconfigRaw,
 	tsExtensionsPattern,
-	getFormatFromExtension,
+	getFormatFromFileUrl,
 	fileProtocol,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
-import { getPackageType } from './package-json';
 
 type getFormat = (
 	url: string,
@@ -43,15 +42,7 @@ const _getFormat: getFormat = async function (
 			(error as any).code === 'ERR_UNKNOWN_FILE_EXTENSION'
 			&& url.startsWith(fileProtocol)
 		) {
-			let format = getFormatFromExtension(url);
-
-			if (
-				!format
-				&& tsExtensionsPattern.test(url) // ts, tsx, jsx
-			) {
-				format = await getPackageType(url);
-			}
-
+			const format = await getFormatFromFileUrl(url);
 			if (format) {
 				return { format };
 			}

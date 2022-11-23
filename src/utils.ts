@@ -5,6 +5,7 @@ import {
 	parseTsconfig,
 	createPathsMatcher,
 } from 'get-tsconfig';
+import { getPackageType } from './package-json';
 
 export const applySourceMap = installSourceMapSupport();
 
@@ -24,8 +25,12 @@ export const fileProtocol = 'file://';
 
 export const tsExtensionsPattern = /\.([cm]?ts|[tj]sx)$/;
 
-export const getFormatFromExtension = (filePath: string): ModuleFormat | undefined => {
-	const extension = path.extname(filePath);
+const getFormatFromExtension = (fileUrl: string): ModuleFormat | undefined => {
+	const extension = path.extname(fileUrl);
+
+	if (extension === '.json') {
+		return 'json';
+	}
 
 	if (extension === '.mjs' || extension === '.mts') {
 		return 'module';
@@ -33,6 +38,19 @@ export const getFormatFromExtension = (filePath: string): ModuleFormat | undefin
 
 	if (extension === '.cjs' || extension === '.cts') {
 		return 'commonjs';
+	}
+};
+
+export const getFormatFromFileUrl = (fileUrl: string) => {
+	const format = getFormatFromExtension(fileUrl);
+
+	if (format) {
+		return format;
+	}
+
+	// ts, tsx, jsx
+	if (tsExtensionsPattern.test(fileUrl)) {
+		return getPackageType(fileUrl);
 	}
 };
 

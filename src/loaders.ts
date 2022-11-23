@@ -12,12 +12,11 @@ import {
 	tsconfigRaw,
 	tsconfigPathsMatcher,
 	tsExtensionsPattern,
-	getFormatFromExtension,
+	getFormatFromFileUrl,
 	fileProtocol,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
-import { getPackageType } from './package-json';
 
 type Resolved = {
 	url: string;
@@ -169,33 +168,14 @@ export const resolve: resolve = async function (
 		throw error;
 	}
 
-	if (resolved.url.endsWith('.json')) {
-		return {
-			...resolved,
-			format: 'json',
-		};
-	}
-
-	let { format } = resolved;
-
 	if (
-		!format
+		!resolved.format
 		&& resolved.url.startsWith(fileProtocol)
 	) {
-		format = getFormatFromExtension(resolved.url);
-
-		if (
-			!format
-			&& tsExtensionsPattern.test(resolved.url) // ts, tsx, jsx
-		) {
-			format = await getPackageType(resolved.url);
-		}
+		resolved.format = await getFormatFromFileUrl(resolved.url);
 	}
 
-	return {
-		...resolved,
-		format,
-	};
+	return resolved;
 };
 
 type load = (
