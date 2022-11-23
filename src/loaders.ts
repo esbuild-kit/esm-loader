@@ -13,6 +13,7 @@ import {
 	tsconfigPathsMatcher,
 	tsExtensionsPattern,
 	getFormatFromExtension,
+	fileProtocol,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
@@ -81,7 +82,6 @@ async function tryDirectory(
 	}
 }
 
-const fileProtocol = 'file://';
 const isPathPattern = /^\.{0,2}\//;
 
 const supportsNodePrefix = (
@@ -250,12 +250,14 @@ export const load: load = async function (
 		};
 	}
 
-	const dynamicImportTransformed = transformDynamicImport(filePath, code);
-	if (dynamicImportTransformed) {
-		loaded.source = applySourceMap(
-			dynamicImportTransformed,
-			url,
-		);
+	if (loaded.format === 'module') {
+		const dynamicImportTransformed = transformDynamicImport(filePath, code);
+		if (dynamicImportTransformed) {
+			loaded.source = applySourceMap(
+				dynamicImportTransformed,
+				url,
+			);
+		}
 	}
 
 	return loaded;

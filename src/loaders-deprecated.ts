@@ -15,6 +15,7 @@ import {
 	tsconfigRaw,
 	tsExtensionsPattern,
 	getFormatFromExtension,
+	fileProtocol,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
@@ -35,12 +36,29 @@ const _getFormat: getFormat = async function (
 		return { format: 'module' };
 	}
 
-	if (url.startsWith('file:')) {
-		const format = getFormatFromExtension(url) ?? await getPackageType(url);
-		return { format };
-	}
+	try {
+		return await defaultGetFormat(url, context, defaultGetFormat);
+	} catch (error) {
+		if (
+			(error as any).code === 'ERR_UNKNOWN_FILE_EXTENSION'
+			&& url.startsWith(fileProtocol)
+		) {
+			let format = getFormatFromExtension(url);
 
-	return await defaultGetFormat(url, context, defaultGetFormat);
+			if (
+				!format
+				&& tsExtensionsPattern.test(url) // ts, tsx, jsx
+			) {
+				format = await getPackageType(url);
+			}
+
+			if (format) {
+				return { format };
+			}
+		}
+
+		throw error;
+	}
 };
 
 type Source = string | SharedArrayBuffer | Uint8Array;
@@ -87,12 +105,15 @@ const _transformSource: transformSource = async function (
 	}
 
 	const result = await defaultTransformSource(source, context, defaultTransformSource);
-	const dynamicImportTransformed = transformDynamicImport(filePath, result.source.toString());
-	if (dynamicImportTransformed) {
-		result.source = applySourceMap(
-			dynamicImportTransformed,
-			url,
-		);
+
+	if (context.format === 'module') {
+		const dynamicImportTransformed = transformDynamicImport(filePath, result.source.toString());
+		if (dynamicImportTransformed) {
+			result.source = applySourceMap(
+				dynamicImportTransformed,
+				url,
+			);
+		}
 	}
 
 	return result;

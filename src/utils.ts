@@ -20,6 +20,8 @@ const tsconfig = (
 export const tsconfigRaw = tsconfig?.config;
 export const tsconfigPathsMatcher = tsconfig && createPathsMatcher(tsconfig);
 
+export const fileProtocol = 'file://';
+
 export const tsExtensionsPattern = /\.([cm]?ts|[tj]sx)$/;
 
 export const getFormatFromExtension = (filePath: string): ModuleFormat | undefined => {
