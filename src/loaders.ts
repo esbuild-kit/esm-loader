@@ -21,7 +21,7 @@ import { getPackageType } from './package-json';
 
 type Resolved = {
 	url: string;
-	format: ModuleFormat;
+	format: ModuleFormat | undefined;
 };
 
 type Context = {
@@ -178,10 +178,16 @@ export const resolve: resolve = async function (
 
 	let { format } = resolved;
 
-	if (resolved.url.startsWith(fileProtocol)) {
-		format = getFormatFromExtension(resolved.url) ?? format;
+	if (
+		!format
+		&& resolved.url.startsWith(fileProtocol)
+	) {
+		format = getFormatFromExtension(resolved.url);
 
-		if (!format) {
+		if (
+			!format
+			&& tsExtensionsPattern.test(resolved.url) // ts, tsx, jsx
+		) {
 			format = await getPackageType(resolved.url);
 		}
 	}
