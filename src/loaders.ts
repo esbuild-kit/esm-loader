@@ -12,15 +12,15 @@ import {
 	tsconfigRaw,
 	tsconfigPathsMatcher,
 	tsExtensionsPattern,
-	getFormatFromExtension,
+	getFormatFromFileUrl,
+	fileProtocol,
 	type ModuleFormat,
 	type MaybePromise,
 } from './utils';
-import { getPackageType } from './package-json';
 
 type Resolved = {
 	url: string;
-	format: ModuleFormat;
+	format: ModuleFormat | undefined;
 };
 
 type Context = {
@@ -81,7 +81,6 @@ async function tryDirectory(
 	}
 }
 
-const fileProtocol = 'file://';
 const isPathPattern = /^\.{0,2}\//;
 
 const supportsNodePrefix = (
@@ -169,27 +168,14 @@ export const resolve: resolve = async function (
 		throw error;
 	}
 
-	if (resolved.url.endsWith('.json')) {
-		return {
-			...resolved,
-			format: 'json',
-		};
+	if (
+		!resolved.format
+		&& resolved.url.startsWith(fileProtocol)
+	) {
+		resolved.format = await getFormatFromFileUrl(resolved.url);
 	}
 
-	let { format } = resolved;
-
-	if (resolved.url.startsWith(fileProtocol)) {
-		format = getFormatFromExtension(resolved.url) ?? format;
-
-		if (!format) {
-			format = await getPackageType(resolved.url);
-		}
-	}
-
-	return {
-		...resolved,
-		format,
-	};
+	return resolved;
 };
 
 type load = (
@@ -250,12 +236,14 @@ export const load: load = async function (
 		};
 	}
 
-	const dynamicImportTransformed = transformDynamicImport(filePath, code);
-	if (dynamicImportTransformed) {
-		loaded.source = applySourceMap(
-			dynamicImportTransformed,
-			url,
-		);
+	if (loaded.format === 'module') {
+		const dynamicImportTransformed = transformDynamicImport(filePath, code);
+		if (dynamicImportTransformed) {
+			loaded.source = applySourceMap(
+				dynamicImportTransformed,
+				url,
+			);
+		}
 	}
 
 	return loaded;
