@@ -69,11 +69,18 @@ async function tryDirectory(
 	context: Context,
 	defaultResolve: resolve,
 ) {
-	const appendIndex = specifier.endsWith('/') ? 'index' : '/index';
+	const isExplicitDirectory = specifier.endsWith('/');
+	const appendIndex = isExplicitDirectory ? 'index' : '/index';
 
 	try {
 		return await tryExtensions(specifier + appendIndex, context, defaultResolve);
 	} catch (error: any) {
+		if (!isExplicitDirectory) {
+			try {
+				return await tryExtensions(specifier, context, defaultResolve);
+			} catch {}
+		}
+
 		const { message } = error;
 		error.message = error.message.replace(`${appendIndex.replace('/', path.sep)}'`, "'");
 		error.stack = error.stack.replace(message, error.message);

@@ -131,6 +131,21 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});
 			});
+
+			describe('directory should fallback to file', ({ test }) => {
+				const importPath = './lib/esm-ext-js/index';
+
+				test('Load', async () => {
+					const nodeProcess = await node.load(importPath);
+					assertResults(nodeProcess);
+				});
+
+				test('Import', async () => {
+					const nodeProcess = await node.import(importPath);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
+			});
 		});
 	});
 });
