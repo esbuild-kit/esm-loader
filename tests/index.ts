@@ -38,6 +38,10 @@ const nodeVersions = [
 					import('./specs/wasm'),
 					node,
 				);
+				runTestSuite(
+					import('./specs/data'),
+					node,
+				);
 			});
 
 			runTestSuite(

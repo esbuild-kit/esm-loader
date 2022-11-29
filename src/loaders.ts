@@ -215,7 +215,7 @@ export const load: load = async function (
 		return loaded;
 	}
 
-	const filePath = fileURLToPath(url);
+	const filePath = url.startsWith('file://') ? fileURLToPath(url) : url;
 	const code = loaded.source.toString();
 
 	if (
