@@ -69,7 +69,7 @@ const _transformSource: transformSource = async function (
 	defaultTransformSource,
 ) {
 	const { url } = context;
-	const filePath = fileURLToPath(url);
+	const filePath = url.startsWith('file://') ? fileURLToPath(url) : url;
 
 	if (process.send) {
 		process.send({
