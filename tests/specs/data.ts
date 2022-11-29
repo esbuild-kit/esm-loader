@@ -11,6 +11,5 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			expect(nodeProcess.exitCode).toBe(0);
 			expect(nodeProcess.stdout).toMatch('123');
 		});
-
 	});
 });
