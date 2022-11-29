@@ -47,9 +47,9 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		describe('full path via .js', ({ test }) => {
 			const importPath = './lib/ts-ext-ts/index.js';
 
-			test('Load - should not work', async () => {
+			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				assertResults(nodeProcess.stdout, 'ts-ext-ts/index.ts');
 			});
 
 			test('Import', async () => {

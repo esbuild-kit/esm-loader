@@ -35,7 +35,36 @@ type resolve = (
 	recursiveCall?: boolean,
 ) => MaybePromise<Resolved>;
 
-const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
+const mappedExtensions: Record<string, string[]> = {
+	'.js': ['.ts', '.tsx'],
+	'.jsx': ['.ts', '.tsx'],
+	'.cjs': ['.cts'],
+	'.mjs': ['.mts'],
+	'': ['.ts', '.js', '.json', '.tsx', '.jsx'],
+};
+
+function resolveTsAlternativeSpecifiers(specifier: string) {
+	const alternativePaths = mappedExtensions[''].map(alternativeExtension => ({
+		specifier,
+		specifierExtension: '',
+		alternativeExtension,
+	}));
+	const specifierExtension = path.extname(specifier);
+	if (!specifierExtension) {
+		return alternativePaths;
+	}
+	const extensionsToTry = mappedExtensions[specifierExtension] ?? [];
+	specifier = specifier.slice(0, specifier.length - specifierExtension.length);
+	return [
+		// Try using subextension first
+		...alternativePaths,
+		...extensionsToTry.map(alternativeExtension => ({
+			specifier,
+			specifierExtension,
+			alternativeExtension,
+		})),
+	];
+}
 
 async function tryExtensions(
 	specifier: string,
@@ -43,10 +72,15 @@ async function tryExtensions(
 	defaultResolve: resolve,
 ) {
 	let error;
-	for (const extension of extensions) {
+	for (const alternativePath of resolveTsAlternativeSpecifiers(specifier)) {
+		const {
+			specifier: alternativeSpecifier,
+			specifierExtension,
+			alternativeExtension,
+		} = alternativePath;
 		try {
 			return await resolve(
-				specifier + extension,
+				`${alternativeSpecifier}${alternativeExtension}`,
 				context,
 				defaultResolve,
 				true,
@@ -54,7 +88,7 @@ async function tryExtensions(
 		} catch (_error: any) {
 			if (error === undefined) {
 				const { message } = _error;
-				_error.message = _error.message.replace(`${extension}'`, "'");
+				_error.message = _error.message.replace(`${alternativeExtension}'`, `${specifierExtension}'`);
 				_error.stack = _error.stack.replace(message, _error.message);
 				error = _error;
 			}
