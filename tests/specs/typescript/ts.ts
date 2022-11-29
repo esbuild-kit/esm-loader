@@ -103,5 +103,29 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');
 			});
 		});
+
+		describe('empty directory should fallback to file', ({ test }) => {
+			const importPath = './lib/ts-ext-ts/index';
+
+			test('Load', async () => {
+				const nodeProcess = await node.load(importPath);
+				assertResults(nodeProcess.stdout);
+			});
+
+			test('Import', async () => {
+				const nodeProcess = await node.import(importPath);
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
+		});
+
+		describe('empty but explicit directory should not fallback to file', ({ test }) => {
+			const importPath = './lib/ts-ext-ts/index/';
+
+			test('Import', async () => {
+				const nodeProcess = await node.import(importPath);
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
+			});
+		});
 	});
 });
