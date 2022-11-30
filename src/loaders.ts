@@ -163,12 +163,21 @@ export const resolve: resolve = async function (
 			error instanceof Error
 			&& !recursiveCall
 		) {
-			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
-				return await tryDirectory(specifier, context, defaultResolve);
+			const { code } = error as any;
+			if (code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
+				try {
+					return await tryDirectory(specifier, context, defaultResolve);
+				} catch (error_) {
+					if ((error_ as any).code !== 'ERR_PACKAGE_IMPORT_NOT_DEFINED') {
+						throw error_;
+					}
+				}
 			}
 
-			if ((error as any).code === 'ERR_MODULE_NOT_FOUND') {
-				return await tryExtensions(specifier, context, defaultResolve);
+			if (code === 'ERR_MODULE_NOT_FOUND') {
+				try {
+					return await tryExtensions(specifier, context, defaultResolve);
+				} catch {}
 			}
 		}
 

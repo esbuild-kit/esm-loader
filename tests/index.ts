@@ -42,6 +42,10 @@ const nodeVersions = [
 					import('./specs/data'),
 					node,
 				);
+				runTestSuite(
+					import('./specs/import-map'),
+					node,
+				);
 			});
 
 			runTestSuite(
