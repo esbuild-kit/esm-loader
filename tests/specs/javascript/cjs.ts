@@ -2,6 +2,7 @@ import { testSuite, expect } from 'manten';
 import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
 import nodeSupports from '../../utils/node-supports';
+import { assertNotFound } from '../../utils/assertions';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('Load CJS', ({ describe }) => {
@@ -51,12 +52,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Load', async () => {
 					const nodeProcess = await node.load(importPath);
-					expect(nodeProcess.stderr).toMatch('Cannot find module');
+					assertNotFound(nodeProcess.stderr, importPath);
 				});
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
-					expect(nodeProcess.stderr).toMatch('Cannot find module');
+					assertNotFound(nodeProcess.stderr, importPath);
 				});
 			});
 
@@ -65,12 +66,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Load', async () => {
 					const nodeProcess = await node.load(importPath);
-					expect(nodeProcess.stderr).toMatch('Error');
+					assertNotFound(nodeProcess.stderr, importPath);
 				});
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
-					expect(nodeProcess.stderr).toMatch('Error');
+					assertNotFound(nodeProcess.stderr, importPath);
 				});
 			});
 		});

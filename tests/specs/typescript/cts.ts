@@ -1,7 +1,6 @@
 import { testSuite, expect } from 'manten';
 import type { NodeApis } from '../../utils/node-with-loader';
-
-const isWin = process.platform === 'win32';
+import { assertNotFound } from '../../utils/assertions';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.cts extension', ({ describe }) => {
@@ -30,7 +29,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load - should not work', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				assertNotFound(nodeProcess.stderr, importPath);
 			});
 
 			test('Import', async () => {
@@ -44,17 +43,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				assertNotFound(nodeProcess.stderr, importPath);
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
-				expect(nodeProcess.stderr).toMatch(
-					isWin
-						? '\\lib\\ts-ext-cts\\index\''
-						: '/lib/ts-ext-cts/index\'',
-				);
+				assertNotFound(nodeProcess.stderr, importPath);
 			});
 		});
 
@@ -63,17 +57,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				assertNotFound(nodeProcess.stderr, importPath);
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
-				expect(nodeProcess.stderr).toMatch(
-					isWin
-						? '\\lib\\ts-ext-cts\''
-						: '/lib/ts-ext-cts\'',
-				);
+				assertNotFound(nodeProcess.stderr, importPath);
 			});
 		});
 	});
