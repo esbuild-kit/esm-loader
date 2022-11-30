@@ -1,6 +1,6 @@
 import { testSuite, expect } from 'manten';
 import type { NodeApis } from '../utils/node-with-loader';
-import { assertNotFound } from '../utils/assertions';
+import { assertError, assertNotFound } from '../utils/assertions';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('Import map', ({ describe }) => {
@@ -53,8 +53,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		describe('Errors', ({ test }) => {
 			test('Directory', async () => {
 				const nodeProcess = await node.import('#directory');
-				expect(nodeProcess.stderr).toMatch('ERR_UNSUPPORTED_DIR_IMPORT');
-				expect(nodeProcess.stderr).toMatch('/lib/esm-ext-js\'');
+				assertError(
+					nodeProcess.stderr,
+					'ERR_UNSUPPORTED_DIR_IMPORT',
+					'/lib/esm-ext-js',
+				);
 			});
 
 			test('Non-existent', async () => {
