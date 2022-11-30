@@ -74,7 +74,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		});
 
 		describe('directory - should not work', ({ test }) => {
-			const importPath = './lib/ts-ext-mts/';
+			const importPath = './lib/ts-ext-mts';
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
