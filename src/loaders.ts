@@ -166,6 +166,7 @@ export const resolve: resolve = async function (
 			if ((error as any).code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
 				return await tryDirectory(specifier, context, defaultResolve);
 			}
+
 			if ((error as any).code === 'ERR_MODULE_NOT_FOUND') {
 				return await tryExtensions(specifier, context, defaultResolve);
 			}
