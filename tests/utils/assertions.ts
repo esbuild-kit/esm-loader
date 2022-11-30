@@ -8,12 +8,20 @@ const agnosticPath = (path: string) => (
 		: path
 );
 
+export const assertError = (
+	stderr: string,
+	error: string,
+	modulePath: string,
+) => {
+	expect(stderr).toMatch(error);
+
+	const nonRelativePath = modulePath.startsWith('.') ? modulePath.slice(1) : modulePath;
+	expect(stderr).toMatch(agnosticPath(`${nonRelativePath}'`));
+};
+
 export const assertNotFound = (
 	stderr: string,
 	modulePath: string,
 ) => {
-	expect(stderr).toMatch('ERR_MODULE_NOT_FOUND');
-
-	const nonRelativePath = modulePath.startsWith('.') ? modulePath.slice(1) : modulePath;
-	expect(stderr).toMatch(agnosticPath(`${nonRelativePath}'`));
+	assertError(stderr, 'ERR_MODULE_NOT_FOUND', modulePath);
 };
