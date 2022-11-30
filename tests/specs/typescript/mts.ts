@@ -62,7 +62,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const nodeProcess = await node.import(importPath);
 				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 				expect(nodeProcess.stderr).toMatch(
-					agnosticPath('/lib/ts-ext-mts/index\''),
+					agnosticPath(importPath.slice(1) + '\''),
 				);
 			});
 		});
@@ -79,7 +79,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const nodeProcess = await node.import(importPath);
 				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 				expect(nodeProcess.stderr).toMatch(
-					agnosticPath('/lib/ts-ext-mts/\''),
+					agnosticPath(importPath.slice(1) + '\''),
 				);
 			});
 		});
