@@ -2,6 +2,7 @@ import { testSuite, expect } from 'manten';
 import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
 import nodeSupports from '../../utils/node-supports';
+import { agnosticPath } from '../../utils/agnostic-path';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.ts extension', ({ describe }) => {
@@ -50,6 +51,9 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			test('Load - should not work', async () => {
 				const nodeProcess = await node.load(importPath);
 				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
+				expect(nodeProcess.stderr).toMatch(
+					agnosticPath(`${importPath.slice(1)}'`),
+				);
 			});
 
 			test('Import', async () => {
@@ -125,6 +129,9 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
 				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
+				expect(nodeProcess.stderr).toMatch(
+					agnosticPath(`${importPath.slice(1)}'`),
+				);
 			});
 		});
 	});

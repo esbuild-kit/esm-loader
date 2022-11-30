@@ -168,7 +168,7 @@ export const resolve: resolve = async function (
 			}
 			if ((error as any).code === 'ERR_MODULE_NOT_FOUND') {
 				// try {
-					return await tryExtensions(specifier, context, defaultResolve);
+				return await tryExtensions(specifier, context, defaultResolve);
 				// } catch (error2) {
 				// 	console.log({error2});
 				// }
