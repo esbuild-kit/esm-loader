@@ -1,7 +1,6 @@
 import { testSuite, expect } from 'manten';
 import type { NodeApis } from '../../utils/node-with-loader';
-
-const isWin = process.platform === 'win32';
+import { agnosticPath } from '../../utils/agnostic-path';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.cts extension', ({ describe }) => {
@@ -30,7 +29,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load - should not work', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 			});
 
 			test('Import', async () => {
@@ -44,16 +43,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 				expect(nodeProcess.stderr).toMatch(
-					isWin
-						? '\\lib\\ts-ext-cts\\index\''
-						: '/lib/ts-ext-cts/index\'',
+					agnosticPath('/lib/ts-ext-cts/index\''),
 				);
 			});
 		});
@@ -63,16 +60,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 				expect(nodeProcess.stderr).toMatch(
-					isWin
-						? '\\lib\\ts-ext-cts\''
-						: '/lib/ts-ext-cts\'',
+					agnosticPath('/lib/ts-ext-cts\''),
 				);
 			});
 		});

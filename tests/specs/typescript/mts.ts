@@ -2,8 +2,7 @@ import { testSuite, expect } from 'manten';
 import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
 import nodeSupports from '../../utils/node-supports';
-
-const isWin = process.platform === 'win32';
+import { agnosticPath } from '../../utils/agnostic-path';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.mts extension', ({ describe }) => {
@@ -41,7 +40,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load - should not work', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 			});
 
 			test('Import', async () => {
@@ -56,16 +55,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 				expect(nodeProcess.stderr).toMatch(
-					isWin
-						? '\\lib\\ts-ext-mts\\index\''
-						: '/lib/ts-ext-mts/index\'',
+					agnosticPath('/lib/ts-ext-mts/index\''),
 				);
 			});
 		});
@@ -75,16 +72,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stderr).toMatch('Cannot find module');
+				expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 				expect(nodeProcess.stderr).toMatch(
-					isWin
-						? '\\lib\\ts-ext-mts\\\''
-						: '/lib/ts-ext-mts/\'',
+					agnosticPath('/lib/ts-ext-mts/\''),
 				);
 			});
 		});

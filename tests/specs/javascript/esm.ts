@@ -47,12 +47,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Load', async () => {
 					const nodeProcess = await node.load(importPath);
-					expect(nodeProcess.stderr).toMatch('Cannot find module');
+					expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 				});
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
-					expect(nodeProcess.stderr).toMatch('Cannot find module');
+					expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
+					expect(nodeProcess.stderr).toMatch(importPath.slice(1) + '\'');
 				});
 			});
 
@@ -61,12 +62,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Load', async () => {
 					const nodeProcess = await node.load(importPath);
-					expect(nodeProcess.stderr).toMatch('Cannot find module');
+					expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 				});
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
-					expect(nodeProcess.stderr).toMatch('Cannot find module');
+					expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
+					expect(nodeProcess.stderr).toMatch(importPath.slice(1) + '\'');
 				});
 			});
 		});
