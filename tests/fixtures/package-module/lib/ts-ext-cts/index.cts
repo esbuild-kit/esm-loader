@@ -31,7 +31,7 @@ test(
 	'sourcemaps',
 	() => {
 		const stack = (new Error()).stack!;
-		const pathIndex = stack.indexOf(__filename + ':33:');
+		const pathIndex = stack.indexOf(`${__filename}:33:`);
 		const previousCharacter = stack[pathIndex - 1];
 		return pathIndex > -1 && previousCharacter !== ':';
 	},
