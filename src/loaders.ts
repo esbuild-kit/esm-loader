@@ -9,8 +9,8 @@ import {
 import type { TransformOptions } from 'esbuild';
 import {
 	applySourceMap,
-	tsconfigRaw,
 	tsconfigPathsMatcher,
+	fileMatcher,
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
@@ -242,7 +242,7 @@ export const load: load = async function (
 			code,
 			filePath,
 			{
-				tsconfigRaw: tsconfigRaw as TransformOptions['tsconfigRaw'],
+				tsconfigRaw: fileMatcher?.(filePath) as TransformOptions['tsconfigRaw'],
 			},
 		);
 

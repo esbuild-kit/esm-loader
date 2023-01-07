@@ -1,5 +1,6 @@
 {
 	"compilerOptions": {
+		"strict": true,
 		"jsx": "react",
 		"jsxFactory": "console.log",
 		"jsxFragmentFactory": "null",
@@ -9,5 +10,8 @@
 			"p/*": ["utils/*"],
 			"*/s": ["utils/*"]
 		},
-	}
+	},
+	"exclude": [
+		"src-excluded"
+	]
 }
