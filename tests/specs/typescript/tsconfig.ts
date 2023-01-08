@@ -40,7 +40,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const nodeProcess = await node.load('./src-excluded/tsx.tsx', {
 					cwd: './tsconfig',
 				});
-				expect(nodeProcess.stdout).toMatch('ReferenceError: React is not defined');
+				expect(nodeProcess.stderr).toMatch('ReferenceError: React is not defined');
 			});
 		});
 
