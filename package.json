@@ -43,6 +43,7 @@
 		"esbuild": "^0.15.10",
 		"eslint": "^8.24.0",
 		"execa": "^6.1.0",
+		"fs-fixture": "^1.2.0",
 		"get-node": "^13.2.0",
 		"manten": "^0.5.0",
 		"pkgroll": "^1.4.0",

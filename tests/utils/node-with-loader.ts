@@ -57,7 +57,7 @@ export async function createNode(
 				{
 					args: [filePath],
 					nodePath: node.path,
-					cwd: path.join(fixturePath, options?.cwd ?? ''),
+					cwd: path.resolve(fixturePath, options?.cwd ?? ''),
 					env: options?.env,
 					nodeOptions: options?.nodeOptions,
 				},

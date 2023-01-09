@@ -1,4 +1,5 @@
 import { testSuite, expect } from 'manten';
+import { createFixture } from 'fs-fixture';
 import type { NodeApis } from '../../utils/node-with-loader';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
@@ -11,36 +12,70 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		});
 
 		describe('scope', ({ test }) => {
-			test('applies strict mode', async () => {
-				const nodeProcess = await node.load('./src/strict-mode.ts', {
-					cwd: './tsconfig',
+			const checkJsx = 'export default (<div></div>)';
+
+			test('does not apply tsconfig to excluded', async () => {
+				const fixture = await createFixture({
+					'package.json': JSON.stringify({
+						type: 'module',
+					}),
+					'tsconfig.json': JSON.stringify({
+						compilerOptions: {
+							jsxFactory: 'console.log',
+						},
+						exclude: [
+							'excluded',
+						],
+					}),
+					included: {
+						'jsx.jsx': checkJsx,
+						'tsx.tsx': checkJsx,
+					},
+					excluded: {
+						'tsx.tsx': checkJsx,
+					},
 				});
-				expect(nodeProcess.stdout).toBe('strict mode');
+
+				// Strict mode is not tested because ESM is strict by default
+
+				const includedJsxTs = await node.load('./included/tsx.tsx', {
+					cwd: fixture.path,
+				});
+				expect(includedJsxTs.stdout).toBe('div null');
+
+				const includedJsxJs = await node.load('./included/jsx.jsx', {
+					cwd: fixture.path,
+				});
+				expect(includedJsxJs.stderr).toMatch('ReferenceError: React is not defined');
+
+				const excludedJsxTs = await node.load('./excluded/tsx.tsx', {
+					cwd: fixture.path,
+				});
+				expect(excludedJsxTs.stderr).toMatch('ReferenceError: React is not defined');
+
+				await fixture.rm();
 			});
 
-			test('doesnt apply strict mode', async () => {
-				const nodeProcess = await node.load('./src-excluded/strict-mode.ts', {
-					cwd: './tsconfig',
+			test('allowJs', async () => {
+				const fixture = await createFixture({
+					'package.json': JSON.stringify({
+						type: 'module',
+					}),
+					'tsconfig.json': JSON.stringify({
+						compilerOptions: {
+							allowJs: true,
+							jsxFactory: 'console.log',
+						},
+					}),
+					'src/jsx.jsx': checkJsx,
 				});
 
-				// ESM is strict by default
-				expect(nodeProcess.stdout).toBe('strict mode');
-			});
-
-			test('doesnt apply strict mode js', async () => {
-				const nodeProcess = await node.load('./src/strict-mode-js.js', {
-					cwd: './tsconfig',
+				const jsxJs = await node.load('./src/jsx.jsx', {
+					cwd: fixture.path,
 				});
+				expect(jsxJs.stdout).toBe('div null');
 
-				// ESM is strict by default
-				expect(nodeProcess.stdout).toBe('strict mode');
-			});
-
-			test('jsxFactory & jsxFragmentFactory not applied', async () => {
-				const nodeProcess = await node.load('./src-excluded/tsx.tsx', {
-					cwd: './tsconfig',
-				});
-				expect(nodeProcess.stderr).toMatch('ReferenceError: React is not defined');
+				await fixture.rm();
 			});
 		});
 
