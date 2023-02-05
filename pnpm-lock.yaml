@@ -21,7 +21,7 @@ specifiers:
 
 dependencies:
   '@esbuild-kit/core-utils': 3.0.0
-  get-tsconfig: github.com/privatenumber/get-tsconfig/2a9640126cbcea030c9d2e762f5b4411136b296d
+  get-tsconfig: github.com/privatenumber/get-tsconfig/2f179e1180ebc89a4a24eb8ce6526ef6b150a21b
 
 devDependencies:
   '@pvtnbr/eslint-config': 0.30.1_7ilbxdl5iguzcjriqqcg2m5cku
@@ -3891,8 +3891,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  github.com/privatenumber/get-tsconfig/2a9640126cbcea030c9d2e762f5b4411136b296d:
-    resolution: {tarball: https://codeload.github.com/privatenumber/get-tsconfig/tar.gz/2a9640126cbcea030c9d2e762f5b4411136b296d}
+  github.com/privatenumber/get-tsconfig/2f179e1180ebc89a4a24eb8ce6526ef6b150a21b:
+    resolution: {tarball: https://codeload.github.com/privatenumber/get-tsconfig/tar.gz/2f179e1180ebc89a4a24eb8ce6526ef6b150a21b}
     name: get-tsconfig
     version: 0.0.0-semantic-release
     dev: false
