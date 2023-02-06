@@ -31,8 +31,14 @@ node --loader @esbuild-kit/esm-loader ./file.ts
 
 ### TypeScript configuration
 The following properties are used from `tsconfig.json` in the working directory:
-- `jsxFactory`
-- `jsxFragmentFactory`
+- [`strict`](https://www.typescriptlang.org/tsconfig#strict): Whether to transform to strict mode
+- [`jsx`](https://esbuild.github.io/api/#jsx): Whether to transform JSX
+	> **Warning:** When set to `preserve`, the JSX syntax will remain untransformed. To prevent Node.js from throwing a syntax error, chain another Node.js loader that can transform JSX to JS.
+- [`jsxFactory`](https://esbuild.github.io/api/#jsx-factory): How to transform JSX
+- [`jsxFragmentFactory`](https://esbuild.github.io/api/#jsx-fragment): How to transform JSX Fragments
+- [`jsxImportSource`](https://www.typescriptlang.org/tsconfig#jsxImportSource): Where to import JSX functions from
+- [`allowJs`](https://www.typescriptlang.org/tsconfig#allowJs): Whether to apply the tsconfig to JS files
+- [`paths`](https://www.typescriptlang.org/tsconfig#paths): For resolving aliases
 
 #### Custom `tsconfig.json` path
 By default, `tsconfig.json` will be detected from the current working directory.
