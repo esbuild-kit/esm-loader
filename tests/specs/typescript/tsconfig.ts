@@ -1,4 +1,5 @@
 import { testSuite, expect } from 'manten';
+import { createFixture } from 'fs-fixture';
 import type { NodeApis } from '../../utils/node-with-loader';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
@@ -8,6 +9,74 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				cwd: './tsconfig',
 			});
 			expect(nodeProcess.stdout).toBe('div null hello world\nnull null goodbye world');
+		});
+
+		describe('scope', ({ test }) => {
+			const checkJsx = 'export default (<div></div>)';
+
+			test('does not apply tsconfig to excluded', async () => {
+				const fixture = await createFixture({
+					'package.json': JSON.stringify({
+						type: 'module',
+					}),
+					'tsconfig.json': JSON.stringify({
+						compilerOptions: {
+							jsxFactory: 'console.log',
+						},
+						exclude: [
+							'excluded',
+						],
+					}),
+					included: {
+						'jsx.jsx': checkJsx,
+						'tsx.tsx': checkJsx,
+					},
+					excluded: {
+						'tsx.tsx': checkJsx,
+					},
+				});
+
+				// Strict mode is not tested because ESM is strict by default
+
+				const includedJsxTs = await node.load('./included/tsx.tsx', {
+					cwd: fixture.path,
+				});
+				expect(includedJsxTs.stdout).toBe('div null');
+
+				const includedJsxJs = await node.load('./included/jsx.jsx', {
+					cwd: fixture.path,
+				});
+				expect(includedJsxJs.stderr).toMatch('ReferenceError: React is not defined');
+
+				const excludedJsxTs = await node.load('./excluded/tsx.tsx', {
+					cwd: fixture.path,
+				});
+				expect(excludedJsxTs.stderr).toMatch('ReferenceError: React is not defined');
+
+				await fixture.rm();
+			});
+
+			test('allowJs', async () => {
+				const fixture = await createFixture({
+					'package.json': JSON.stringify({
+						type: 'module',
+					}),
+					'tsconfig.json': JSON.stringify({
+						compilerOptions: {
+							allowJs: true,
+							jsxFactory: 'console.log',
+						},
+					}),
+					'src/jsx.jsx': checkJsx,
+				});
+
+				const jsxJs = await node.load('./src/jsx.jsx', {
+					cwd: fixture.path,
+				});
+				expect(jsxJs.stdout).toBe('div null');
+
+				await fixture.rm();
+			});
 		});
 
 		test('Custom tsconfig.json path', async () => {

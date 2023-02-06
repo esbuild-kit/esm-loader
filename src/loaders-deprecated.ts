@@ -12,7 +12,7 @@ import {
 import type { TransformOptions } from 'esbuild';
 import {
 	applySourceMap,
-	tsconfigRaw,
+	fileMatcher,
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
@@ -86,7 +86,7 @@ const _transformSource: transformSource = async function (
 			source.toString(),
 			filePath,
 			{
-				tsconfigRaw: tsconfigRaw as TransformOptions['tsconfigRaw'],
+				tsconfigRaw: fileMatcher?.(filePath) as TransformOptions['tsconfigRaw'],
 			},
 		);
 

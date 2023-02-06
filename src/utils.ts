@@ -4,6 +4,7 @@ import {
 	getTsconfig,
 	parseTsconfig,
 	createPathsMatcher,
+	createFilesMatcher,
 } from 'get-tsconfig';
 import { getPackageType } from './package-json';
 
@@ -12,13 +13,13 @@ export const applySourceMap = installSourceMapSupport();
 const tsconfig = (
 	process.env.ESBK_TSCONFIG_PATH
 		? {
-			path: process.env.ESBK_TSCONFIG_PATH,
+			path: path.resolve(process.env.ESBK_TSCONFIG_PATH),
 			config: parseTsconfig(process.env.ESBK_TSCONFIG_PATH),
 		}
 		: getTsconfig()
 );
 
-export const tsconfigRaw = tsconfig?.config;
+export const fileMatcher = tsconfig && createFilesMatcher(tsconfig);
 export const tsconfigPathsMatcher = tsconfig && createPathsMatcher(tsconfig);
 
 export const fileProtocol = 'file://';
