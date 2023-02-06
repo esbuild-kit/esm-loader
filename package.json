@@ -33,7 +33,7 @@
 	},
 	"dependencies": {
 		"@esbuild-kit/core-utils": "^3.0.0",
-		"get-tsconfig": "github:privatenumber/get-tsconfig#npm/file-matcher"
+		"get-tsconfig": "^4.4.0"
 	},
 	"devDependencies": {
 		"@pvtnbr/eslint-config": "^0.30.1",
