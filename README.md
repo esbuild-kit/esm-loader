@@ -40,7 +40,7 @@ By default, `tsconfig.json` will be detected from the current working directory.
 To set a custom path, use the `ESBK_TSCONFIG_PATH` environment variable:
 
 ```sh
-ESBK_TSCONFIG_PATH=./path/to/tsconfig.custom.json node --loader @esbuild/esm-loader ./file.ts
+ESBK_TSCONFIG_PATH=./path/to/tsconfig.custom.json node --loader @esbuild-kit/esm-loader ./file.ts
 ```
 
 ### Cache
