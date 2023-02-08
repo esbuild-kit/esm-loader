@@ -137,7 +137,18 @@ export const resolve: resolve = async function (
 	/**
 	 * Typescript gives .ts, .cts, or .mts priority over actual .js, .cjs, or .mjs extensions
 	 */
-	if (tsExtensionsPattern.test(context.parentURL!)) {
+	if (context.parentURL) {
+		const filePath = fileURLToPath(context.parentURL!);
+		console.log({
+			filePath,
+			matches: Boolean(fileMatcher?.(filePath)),
+			specifier,
+		});	
+	}
+	if (
+		context.parentURL
+		&& fileMatcher?.(fileURLToPath(context.parentURL))
+	) {
 		const tsPath = resolveTsPath(specifier);
 
 		if (tsPath) {
