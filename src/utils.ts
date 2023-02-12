@@ -16,7 +16,13 @@ const tsconfig = (
 			path: path.resolve(process.env.ESBK_TSCONFIG_PATH),
 			config: parseTsconfig(process.env.ESBK_TSCONFIG_PATH),
 		}
-		: getTsconfig()
+		: (
+			getTsconfig()
+			?? {
+				path: process.cwd(),
+				config: {},
+			}
+		)
 );
 
 export const fileMatcher = tsconfig && createFilesMatcher(tsconfig);

@@ -22,30 +22,30 @@ const nodeVersions = [
 			describe('Package: module', async ({ runTestSuite }) => {
 				const node = await createNode(nodeVersion, './tests/fixtures/package-module');
 
-				// runTestSuite(
-				// 	import('./specs/javascript'),
-				// 	node,
-				// );
+				runTestSuite(
+					import('./specs/javascript'),
+					node,
+				);
 				runTestSuite(
 					import('./specs/typescript'),
 					node,
 				);
-				// runTestSuite(
-				// 	import('./specs/json'),
-				// 	node,
-				// );
-				// runTestSuite(
-				// 	import('./specs/wasm'),
-				// 	node,
-				// );
-				// runTestSuite(
-				// 	import('./specs/data'),
-				// 	node,
-				// );
-				// runTestSuite(
-				// 	import('./specs/import-map'),
-				// 	node,
-				// );
+				runTestSuite(
+					import('./specs/json'),
+					node,
+				);
+				runTestSuite(
+					import('./specs/wasm'),
+					node,
+				);
+				runTestSuite(
+					import('./specs/data'),
+					node,
+				);
+				runTestSuite(
+					import('./specs/import-map'),
+					node,
+				);
 			});
 
 			runTestSuite(
