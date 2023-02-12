@@ -29,12 +29,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		});
 
 		describe('full path via .cjs', async ({ describe }) => {
-			const ctsFile = './tests/fixtures/package-module/lib/ts-ext-cts/index.cts';
+			const ctsFile = await fs.readFile('./tests/fixtures/package-module/lib/ts-ext-cts/index.cts', 'utf8');
 
 			describe('with allowJs', async ({ test }) => {
 				const fixture = await createFixture({
 					'index.mts': importAndLog('./file.cjs'),
-					'file.cts': await fs.readFile(ctsFile, 'utf8'),
+					'file.cts': ctsFile,
 					'tsconfig.json': JSON.stringify({
 						compilerOptions: {
 							allowJs: true,
@@ -60,7 +60,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			describe('without allowJs - empty tsconfig.json', async ({ test }) => {
 				const fixture = await createFixture({
 					'index.mts': importAndLog('./file.cjs'),
-					'file.cts': await fs.readFile(ctsFile, 'utf8'),
+					'file.cts': ctsFile,
 					'tsconfig.json': '{}',
 				});
 
@@ -82,7 +82,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			describe('without allowJs - no tsconfig.json', async ({ test }) => {
 				const fixture = await createFixture({
 					'index.mts': importAndLog('./file.cjs'),
-					'file.cts': await fs.readFile(ctsFile, 'utf8'),
+					'file.cts': ctsFile,
 				});
 
 				test('Load - should not work', async () => {

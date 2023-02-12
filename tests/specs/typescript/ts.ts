@@ -50,13 +50,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		});
 
 		describe('full path via .js', async ({ describe }) => {
-			const tsFile = './tests/fixtures/package-module/lib/ts-ext-ts/index.ts';
+			const tsFile = await fs.readFile('./tests/fixtures/package-module/lib/ts-ext-ts/index.ts', 'utf8');
 
 			describe('with allowJs', async ({ test }) => {
 				const fixture = await createFixture({
 					'package.json': JSON.stringify({ type: 'module' }),
 					'index.ts': importAndLog('./file.js'),
-					'file.ts': await fs.readFile(tsFile, 'utf8'),
+					'file.ts': tsFile,
 					'tsconfig.json': JSON.stringify({
 						compilerOptions: {
 							allowJs: true,
@@ -84,7 +84,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const fixture = await createFixture({
 					'package.json': JSON.stringify({ type: 'module' }),
 					'index.ts': importAndLog('./file.js'),
-					'file.ts': await fs.readFile(tsFile, 'utf8'),
+					'file.ts': tsFile,
 					'tsconfig.json': '{}',
 				});
 
@@ -108,7 +108,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const fixture = await createFixture({
 					'package.json': JSON.stringify({ type: 'module' }),
 					'index.ts': importAndLog('./file.js'),
-					'file.ts': await fs.readFile(tsFile, 'utf8'),
+					'file.ts': tsFile,
 				});
 
 				test('Load - should not work', async () => {

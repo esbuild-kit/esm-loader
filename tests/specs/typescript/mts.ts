@@ -40,13 +40,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		});
 
 		describe('full path via .mjs', async ({ describe }) => {
-			const mtsFile = './tests/fixtures/package-module/lib/ts-ext-mts/index.mts';
+			const mtsFile = await fs.readFile('./tests/fixtures/package-module/lib/ts-ext-mts/index.mts', 'utf8');
 
 			describe('From JavaScript file', ({ describe }) => {
 				describe('with allowJs', async ({ test }) => {
 					const fixture = await createFixture({
 						'index.mjs': importAndLog('./file.mjs'),
-						'file.mts': await fs.readFile(mtsFile, 'utf8'),
+						'file.mts': mtsFile,
 						'tsconfig.json': JSON.stringify({
 							compilerOptions: {
 								allowJs: true,
@@ -73,7 +73,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				describe('without allowJs - empty tsconfig.json', async ({ test }) => {
 					const fixture = await createFixture({
 						'index.mjs': importAndLog('./file.mjs'),
-						'file.mts': await fs.readFile(mtsFile, 'utf8'),
+						'file.mts': mtsFile,
 						'tsconfig.json': '{}',
 					});
 
@@ -95,7 +95,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				describe('without allowJs - no tsconfig.json', async ({ test }) => {
 					const fixture = await createFixture({
 						'index.mjs': importAndLog('./file.mjs'),
-						'file.mts': await fs.readFile(mtsFile, 'utf8'),
+						'file.mts': mtsFile,
 					});
 
 					test('Load - should not work', async () => {
