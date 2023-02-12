@@ -6,8 +6,7 @@ import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
 import nodeSupports from '../../utils/node-supports';
 import { assertNotFound } from '../../utils/assertions';
-
-const importAndLog = (specifier: string) => `import("${specifier}").then(m => console.log(JSON.stringify(m)))`;
+import { importAndLog } from '../../utils/fixtures';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.ts extension', ({ describe }) => {

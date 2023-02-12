@@ -6,6 +6,7 @@ import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
 import nodeSupports from '../../utils/node-supports';
 import { assertNotFound } from '../../utils/assertions';
+import { importAndLog } from '../../utils/fixtures';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.mts extension', ({ describe }) => {
@@ -43,7 +44,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			describe('with allowJs', async ({ test }) => {
 				const fixture = await createFixture({
-					'index.mts': 'import("./file.mjs").then(m => console.log(JSON.stringify(m)));',
+					'index.mts': importAndLog('./file.mjs'),
 					'file.mts': await fs.readFile(mtsFile, 'utf8'),
 					'tsconfig.json': JSON.stringify({
 						compilerOptions: {
@@ -69,7 +70,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			describe('without allowJs - empty tsconfig.json', async ({ test }) => {
 				const fixture = await createFixture({
-					'index.mts': 'import("./file.mjs").then(m => console.log(JSON.stringify(m)))',
+					'index.mts': importAndLog('./file.mjs'),
 					'file.mts': await fs.readFile(mtsFile, 'utf8'),
 					'tsconfig.json': '{}',
 				});
@@ -91,7 +92,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			describe('without allowJs - no tsconfig.json', async ({ test }) => {
 				const fixture = await createFixture({
-					'index.mts': 'import("./file.mjs").then(m => console.log(JSON.stringify(m)))',
+					'index.mts': importAndLog('./file.mjs'),
 					'file.mts': await fs.readFile(mtsFile, 'utf8'),
 				});
 

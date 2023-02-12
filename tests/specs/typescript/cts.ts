@@ -4,6 +4,7 @@ import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import type { NodeApis } from '../../utils/node-with-loader';
 import { assertNotFound } from '../../utils/assertions';
+import { importAndLog } from '../../utils/fixtures';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.cts extension', ({ describe }) => {
@@ -32,7 +33,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			describe('with allowJs', async ({ test }) => {
 				const fixture = await createFixture({
-					'index.mts': 'import "./file.cjs";',
+					'index.mts': importAndLog('./file.cjs'),
 					'file.cts': await fs.readFile(ctsFile, 'utf8'),
 					'tsconfig.json': JSON.stringify({
 						compilerOptions: {
@@ -57,7 +58,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			describe('without allowJs - empty tsconfig.json', async ({ test }) => {
 				const fixture = await createFixture({
-					'index.mts': 'import "./file.cjs";',
+					'index.mts': importAndLog('./file.cjs'),
 					'file.cts': await fs.readFile(ctsFile, 'utf8'),
 					'tsconfig.json': '{}',
 				});
@@ -78,7 +79,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			describe('without allowJs - no tsconfig.json', async ({ test }) => {
 				const fixture = await createFixture({
-					'index.mts': 'import "./file.cjs";',
+					'index.mts': importAndLog('./file.cjs'),
 					'file.cts': await fs.readFile(ctsFile, 'utf8'),
 				});
 
