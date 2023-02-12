@@ -65,9 +65,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				});
 
 				test('Load - should not work', async () => {
-					const importPath = path.join(fixture.path, 'file.js');
-					const nodeProcess = await node.load(importPath);
-					assertNotFound(nodeProcess.stderr, importPath);
+					const nodeProcess = await node.load('./file.js', {
+						cwd: fixture.path,
+					});
+					assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.js'));
 				});
 
 				test('Import', async () => {
@@ -88,9 +89,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				});
 
 				test('Load - should not work', async () => {
-					const importPath = path.join(fixture.path, 'file.js');
-					const nodeProcess = await node.load(importPath);
-					assertNotFound(nodeProcess.stderr, importPath);
+					const nodeProcess = await node.load('./file.js', {
+						cwd: fixture.path,
+					});
+					assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.js'));
 				});
 
 				test('Import', async () => {
@@ -110,9 +112,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				});
 
 				test('Load - should not work', async () => {
-					const importPath = path.join(fixture.path, 'file.js');
-					const nodeProcess = await node.load(importPath);
-					assertNotFound(nodeProcess.stderr, importPath);
+					const nodeProcess = await node.load('./file.js', {
+						cwd: fixture.path,
+					});
+					assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.js'));
 				});
 
 				test('Import', async () => {
