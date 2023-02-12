@@ -31,72 +31,145 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		describe('full path via .cjs', async ({ describe }) => {
 			const ctsFile = await fs.readFile('./tests/fixtures/package-module/lib/ts-ext-cts/index.cts', 'utf8');
 
-			describe('with allowJs', async ({ test }) => {
-				const fixture = await createFixture({
-					'index.mts': importAndLog('./file.cjs'),
-					'file.cts': ctsFile,
-					'tsconfig.json': JSON.stringify({
-						compilerOptions: {
-							allowJs: true,
-						},
-					}),
+			describe('From JavaScript file', ({ describe }) => {
+				describe('with allowJs', async ({ test }) => {
+					const fixture = await createFixture({
+						'import.mjs': importAndLog('./file.cjs'),
+						'file.cts': ctsFile,
+						'tsconfig.json': JSON.stringify({
+							compilerOptions: {
+								allowJs: true,
+							},
+						}),
+					});
+
+					test('Load - should not work', async () => {
+						const nodeProcess = await node.load('./file.cjs', {
+							cwd: fixture.path,
+						});
+						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
+					});
+
+					test('Import', async () => {
+						const nodeProcess = await node.load('import.mjs', {
+							cwd: fixture.path,
+						});
+						expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
+					});
 				});
 
-				test('Load - should not work', async () => {
-					const nodeProcess = await node.load('./file.cjs', {
-						cwd: fixture.path,
+				describe('without allowJs - empty tsconfig.json', async ({ test }) => {
+					const fixture = await createFixture({
+						'import.mjs': importAndLog('./file.cjs'),
+						'file.cts': ctsFile,
+						'tsconfig.json': '{}',
 					});
-					assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
+
+					test('Load - should not work', async () => {
+						const nodeProcess = await node.load('./file.cjs', {
+							cwd: fixture.path,
+						});
+						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
+					});
+
+					test('Import', async () => {
+						const nodeProcess = await node.load('import.mjs', {
+							cwd: fixture.path,
+						});
+						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
+					});
 				});
 
-				test('Import', async () => {
-					const nodeProcess = await node.load('index.mts', {
-						cwd: fixture.path,
+				describe('without allowJs - no tsconfig.json', async ({ test }) => {
+					const fixture = await createFixture({
+						'import.mjs': importAndLog('./file.cjs'),
+						'file.cts': ctsFile,
 					});
-					expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
+
+					test('Load - should not work', async () => {
+						const nodeProcess = await node.load('./file.cjs', {
+							cwd: fixture.path,
+						});
+						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
+					});
+
+					test('Import', async () => {
+						const nodeProcess = await node.load('import.mjs', {
+							cwd: fixture.path,
+						});
+						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
+					});
 				});
 			});
 
-			describe('without allowJs - empty tsconfig.json', async ({ test }) => {
-				const fixture = await createFixture({
-					'index.mts': importAndLog('./file.cjs'),
-					'file.cts': ctsFile,
-					'tsconfig.json': '{}',
-				});
-
-				test('Load - should not work', async () => {
-					const nodeProcess = await node.load('./file.cjs', {
-						cwd: fixture.path,
+			describe('From TypeScript file', ({ describe }) => {
+				describe('with allowJs', async ({ test }) => {
+					const fixture = await createFixture({
+						'import.mts': importAndLog('./file.cjs'),
+						'file.cts': ctsFile,
+						'tsconfig.json': JSON.stringify({
+							compilerOptions: {
+								allowJs: true,
+							},
+						}),
 					});
-					assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
-				});
 
-				test('Import', async () => {
-					const nodeProcess = await node.load('index.mts', {
-						cwd: fixture.path,
+					test('Load - should not work', async () => {
+						const nodeProcess = await node.load('./file.cjs', {
+							cwd: fixture.path,
+						});
+						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
 					});
-					expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
-				});
-			});
 
-			describe('without allowJs - no tsconfig.json', async ({ test }) => {
-				const fixture = await createFixture({
-					'index.mts': importAndLog('./file.cjs'),
-					'file.cts': ctsFile,
-				});
-
-				test('Load - should not work', async () => {
-					const nodeProcess = await node.load('./file.cjs', {
-						cwd: fixture.path,
+					test('Import', async () => {
+						const nodeProcess = await node.load('import.mts', {
+							cwd: fixture.path,
+						});
+						expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
 					});
-					assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
 				});
 
-				test('Import', async () => {
-					const nodeProcess = await node.load('index.mts', {
-						cwd: fixture.path,
+				describe('without allowJs - empty tsconfig.json', async ({ test }) => {
+					const fixture = await createFixture({
+						'import.mts': importAndLog('./file.cjs'),
+						'file.cts': ctsFile,
+						'tsconfig.json': '{}',
 					});
-					expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
+
+					test('Load - should not work', async () => {
+						const nodeProcess = await node.load('./file.cjs', {
+							cwd: fixture.path,
+						});
+						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
+					});
+
+					test('Import', async () => {
+						const nodeProcess = await node.load('import.mts', {
+							cwd: fixture.path,
+						});
+						expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
+					});
+				});
+
+				describe('without allowJs - no tsconfig.json', async ({ test }) => {
+					const fixture = await createFixture({
+						'import.mts': importAndLog('./file.cjs'),
+						'file.cts': ctsFile,
+					});
+
+					test('Load - should not work', async () => {
+						const nodeProcess = await node.load('./file.cjs', {
+							cwd: fixture.path,
+						});
+						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.cjs'));
+					});
+
+					test('Import', async () => {
+						const nodeProcess = await node.load('import.mts', {
+							cwd: fixture.path,
+						});
+						expect(nodeProcess.stderr).toMatch('SyntaxError: Unexpected token \':\'');
+					});
 				});
 			});
 		});

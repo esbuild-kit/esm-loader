@@ -45,7 +45,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			describe('From JavaScript file', ({ describe }) => {
 				describe('with allowJs', async ({ test }) => {
 					const fixture = await createFixture({
-						'index.mjs': importAndLog('./file.mjs'),
+						'import.mjs': importAndLog('./file.mjs'),
 						'file.mts': mtsFile,
 						'tsconfig.json': JSON.stringify({
 							compilerOptions: {
@@ -62,7 +62,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					});
 
 					test('Import', async () => {
-						const nodeProcess = await node.load('index.mjs', {
+						const nodeProcess = await node.load('import.mjs', {
 							cwd: fixture.path,
 						});
 						assertResults(nodeProcess.stdout);
@@ -72,7 +72,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				describe('without allowJs - empty tsconfig.json', async ({ test }) => {
 					const fixture = await createFixture({
-						'index.mjs': importAndLog('./file.mjs'),
+						'import.mjs': importAndLog('./file.mjs'),
 						'file.mts': mtsFile,
 						'tsconfig.json': '{}',
 					});
@@ -85,7 +85,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					});
 
 					test('Import - should not work', async () => {
-						const nodeProcess = await node.load('index.mjs', {
+						const nodeProcess = await node.load('import.mjs', {
 							cwd: fixture.path,
 						});
 						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.mjs'));
@@ -94,7 +94,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				describe('without allowJs - no tsconfig.json', async ({ test }) => {
 					const fixture = await createFixture({
-						'index.mjs': importAndLog('./file.mjs'),
+						'import.mjs': importAndLog('./file.mjs'),
 						'file.mts': mtsFile,
 					});
 
@@ -106,7 +106,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					});
 
 					test('Import - should not work', async () => {
-						const nodeProcess = await node.load('index.mjs', {
+						const nodeProcess = await node.load('import.mjs', {
 							cwd: fixture.path,
 						});
 						assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.mjs'));
@@ -117,8 +117,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			describe('From TypeScript file', ({ describe }) => {
 				describe('with allowJs', async ({ test }) => {
 					const fixture = await createFixture({
-						'index.mts': importAndLog('./file.mjs'),
-						'file.mts': await fs.readFile(mtsFile, 'utf8'),
+						'import.mts': importAndLog('./file.mjs'),
+						'file.mts': mtsFile,
 						'tsconfig.json': JSON.stringify({
 							compilerOptions: {
 								allowJs: true,
@@ -134,7 +134,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					});
 
 					test('Import', async () => {
-						const nodeProcess = await node.load('index.mts', {
+						const nodeProcess = await node.load('import.mts', {
 							cwd: fixture.path,
 						});
 						assertResults(nodeProcess.stdout);
@@ -144,8 +144,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				describe('without allowJs - empty tsconfig.json', async ({ test }) => {
 					const fixture = await createFixture({
-						'index.mts': importAndLog('./file.mjs'),
-						'file.mts': await fs.readFile(mtsFile, 'utf8'),
+						'import.mts': importAndLog('./file.mjs'),
+						'file.mts': mtsFile,
 						'tsconfig.json': '{}',
 					});
 
@@ -157,7 +157,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					});
 
 					test('Import', async () => {
-						const nodeProcess = await node.load('index.mts', {
+						const nodeProcess = await node.load('import.mts', {
 							cwd: fixture.path,
 						});
 						assertResults(nodeProcess.stdout);
@@ -167,8 +167,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				describe('without allowJs - no tsconfig.json', async ({ test }) => {
 					const fixture = await createFixture({
-						'index.mts': importAndLog('./file.mjs'),
-						'file.mts': await fs.readFile(mtsFile, 'utf8'),
+						'import.mts': importAndLog('./file.mjs'),
+						'file.mts': mtsFile,
 					});
 
 					test('Load - should not work', async () => {
@@ -179,7 +179,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					});
 
 					test('Import', async () => {
-						const nodeProcess = await node.load('index.mts', {
+						const nodeProcess = await node.load('import.mts', {
 							cwd: fixture.path,
 						});
 						assertResults(nodeProcess.stdout);
