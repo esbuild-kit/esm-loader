@@ -1,8 +1,13 @@
+import fs from 'fs/promises';
+import path from 'path';
 import { testSuite, expect } from 'manten';
+import { createFixture } from 'fs-fixture';
 import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
 import nodeSupports from '../../utils/node-supports';
 import { assertNotFound } from '../../utils/assertions';
+
+const importAndLog = (specifier: string) => `import("${specifier}").then(m => console.log(JSON.stringify(m)))`;
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.ts extension', ({ describe }) => {
@@ -45,18 +50,79 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			});
 		});
 
-		describe('full path via .js', ({ test }) => {
-			const importPath = './lib/ts-ext-ts/index.js';
+		describe('full path via .js', async ({ describe }) => {
+			const tsFile = './tests/fixtures/package-module/lib/ts-ext-ts/index.ts';
 
-			test('Load - should not work', async () => {
-				const nodeProcess = await node.load(importPath);
-				assertNotFound(nodeProcess.stderr, importPath);
+			describe('with allowJs', async ({ test }) => {
+				const fixture = await createFixture({
+					'package.json': JSON.stringify({ type: 'module' }),
+					'index.ts': importAndLog('./file.js'),
+					'file.ts': await fs.readFile(tsFile, 'utf8'),
+					'tsconfig.json': JSON.stringify({
+						compilerOptions: {
+							allowJs: true,
+						},
+					}),
+				});
+
+				test('Load - should not work', async () => {
+					const importPath = path.join(fixture.path, 'file.js');
+					const nodeProcess = await node.load(importPath);
+					assertNotFound(nodeProcess.stderr, importPath);
+				});
+
+				test('Import', async () => {
+					const nodeProcess = await node.load('index.ts', {
+						cwd: fixture.path,
+					});
+					assertResults(nodeProcess.stdout);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
 			});
 
-			test('Import', async () => {
-				const nodeProcess = await node.import(importPath, { typescript: true });
-				assertResults(nodeProcess.stdout);
-				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			describe('without allowJs - empty tsconfig.json', async ({ test }) => {
+				const fixture = await createFixture({
+					'package.json': JSON.stringify({ type: 'module' }),
+					'index.ts': importAndLog('./file.js'),
+					'file.ts': await fs.readFile(tsFile, 'utf8'),
+					'tsconfig.json': '{}',
+				});
+
+				test('Load - should not work', async () => {
+					const importPath = path.join(fixture.path, 'file.js');
+					const nodeProcess = await node.load(importPath);
+					assertNotFound(nodeProcess.stderr, importPath);
+				});
+
+				test('Import', async () => {
+					const nodeProcess = await node.load('index.ts', {
+						cwd: fixture.path,
+					});
+					assertResults(nodeProcess.stdout);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
+			});
+
+			describe('without allowJs - no tsconfig.json', async ({ test }) => {
+				const fixture = await createFixture({
+					'package.json': JSON.stringify({ type: 'module' }),
+					'index.ts': importAndLog('./file.js'),
+					'file.ts': await fs.readFile(tsFile, 'utf8'),
+				});
+
+				test('Load - should not work', async () => {
+					const importPath = path.join(fixture.path, 'file.js');
+					const nodeProcess = await node.load(importPath);
+					assertNotFound(nodeProcess.stderr, importPath);
+				});
+
+				test('Import', async () => {
+					const nodeProcess = await node.load('index.ts', {
+						cwd: fixture.path,
+					});
+					assertResults(nodeProcess.stdout);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
 			});
 		});
 
