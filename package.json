@@ -32,7 +32,7 @@
 		"prepack": "pnpm build && clean-pkg-json"
 	},
 	"dependencies": {
-		"@esbuild-kit/core-utils": "^3.0.0",
+		"@esbuild-kit/core-utils": "^3.1.0",
 		"get-tsconfig": "^4.4.0"
 	},
 	"devDependencies": {
