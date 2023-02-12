@@ -1,4 +1,7 @@
+import fs from 'fs/promises';
+import path from 'path';
 import { testSuite, expect } from 'manten';
+import { createFixture } from 'fs-fixture';
 import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader';
 import nodeSupports from '../../utils/node-supports';
@@ -35,18 +38,76 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			});
 		});
 
-		describe('full path via .mjs', ({ test }) => {
-			const importPath = './lib/ts-ext-mts/index.mjs';
+		describe('full path via .mjs', async ({ describe }) => {
+			const mtsFile = './tests/fixtures/package-module/lib/ts-ext-mts/index.mts';
 
-			test('Load - should not work', async () => {
-				const nodeProcess = await node.load(importPath);
-				assertNotFound(nodeProcess.stderr, importPath);
+			describe('with allowJs', async ({ test }) => {
+				const fixture = await createFixture({
+					'index.mts': 'import("./file.mjs").then(m => console.log(JSON.stringify(m)));',
+					'file.mts': await fs.readFile(mtsFile, 'utf8'),
+					'tsconfig.json': JSON.stringify({
+						compilerOptions: {
+							allowJs: true,
+						},
+					}),
+				});
+
+				test('Load - should not work', async () => {
+					const importPath = path.join(fixture.path, 'file.mjs');
+					const nodeProcess = await node.load(importPath);
+					assertNotFound(nodeProcess.stderr, importPath);
+				});
+
+				test('Import', async () => {
+					const nodeProcess = await node.load('index.mts', {
+						cwd: fixture.path,
+					});
+					assertResults(nodeProcess.stdout);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
 			});
 
-			test('Import', async () => {
-				const nodeProcess = await node.import(importPath, { typescript: true });
-				assertResults(nodeProcess.stdout);
-				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			describe('without allowJs - empty tsconfig.json', async ({ test }) => {
+				const fixture = await createFixture({
+					'index.mts': 'import("./file.mjs").then(m => console.log(JSON.stringify(m)))',
+					'file.mts': await fs.readFile(mtsFile, 'utf8'),
+					'tsconfig.json': '{}',
+				});
+
+				test('Load - should not work', async () => {
+					const importPath = path.join(fixture.path, 'file.mjs');
+					const nodeProcess = await node.load(importPath);
+					assertNotFound(nodeProcess.stderr, importPath);
+				});
+
+				test('Import', async () => {
+					const nodeProcess = await node.load('index.mts', {
+						cwd: fixture.path,
+					});
+					assertResults(nodeProcess.stdout);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
+			});
+
+			describe('without allowJs - no tsconfig.json', async ({ test }) => {
+				const fixture = await createFixture({
+					'index.mts': 'import("./file.mjs").then(m => console.log(JSON.stringify(m)))',
+					'file.mts': await fs.readFile(mtsFile, 'utf8'),
+				});
+
+				test('Load - should not work', async () => {
+					const importPath = path.join(fixture.path, 'file.mjs');
+					const nodeProcess = await node.load(importPath);
+					assertNotFound(nodeProcess.stderr, importPath);
+				});
+
+				test('Import', async () => {
+					const nodeProcess = await node.load('index.mts', {
+						cwd: fixture.path,
+					});
+					assertResults(nodeProcess.stdout);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
 			});
 		});
 
