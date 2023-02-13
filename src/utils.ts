@@ -6,7 +6,7 @@ import {
 	createPathsMatcher,
 	createFilesMatcher,
 } from 'get-tsconfig';
-import { getPackageType } from './package-json';
+import { getPackageType } from './package-json.js';
 
 export const applySourceMap = installSourceMapSupport();
 

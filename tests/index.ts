@@ -1,5 +1,5 @@
 import { describe } from 'manten';
-import { createNode } from './utils/node-with-loader';
+import { createNode } from './utils/node-with-loader.js';
 
 const nodeVersions = [
 	'12.20.0', // CJS named export detection added
@@ -23,33 +23,33 @@ const nodeVersions = [
 				const node = await createNode(nodeVersion, './tests/fixtures/package-module');
 
 				runTestSuite(
-					import('./specs/javascript'),
+					import('./specs/javascript/index.js'),
 					node,
 				);
 				runTestSuite(
-					import('./specs/typescript'),
+					import('./specs/typescript/index.js'),
 					node,
 				);
 				runTestSuite(
-					import('./specs/json'),
+					import('./specs/json.js'),
 					node,
 				);
 				runTestSuite(
-					import('./specs/wasm'),
+					import('./specs/wasm.js'),
 					node,
 				);
 				runTestSuite(
-					import('./specs/data'),
+					import('./specs/data.js'),
 					node,
 				);
 				runTestSuite(
-					import('./specs/import-map'),
+					import('./specs/import-map.js'),
 					node,
 				);
 			});
 
 			runTestSuite(
-				import('./specs/package-cjs'),
+				import('./specs/package-cjs.js'),
 				await createNode(nodeVersion, './tests/fixtures/package-commonjs'),
 			);
 		});

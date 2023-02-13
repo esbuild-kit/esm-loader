@@ -1,8 +1,8 @@
 import { testSuite, expect } from 'manten';
 import semver from 'semver';
-import type { NodeApis } from '../../utils/node-with-loader';
-import nodeSupports from '../../utils/node-supports';
-import { assertNotFound } from '../../utils/assertions';
+import type { NodeApis } from '../../utils/node-with-loader.js';
+import nodeSupports from '../../utils/node-supports.js';
+import { assertNotFound } from '../../utils/assertions.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.tsx extension', ({ describe }) => {
