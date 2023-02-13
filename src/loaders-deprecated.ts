@@ -18,7 +18,7 @@ import {
 	fileProtocol,
 	type ModuleFormat,
 	type MaybePromise,
-} from './utils';
+} from './utils.js';
 
 type getFormat = (
 	url: string,

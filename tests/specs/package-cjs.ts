@@ -1,5 +1,5 @@
 import { testSuite, expect } from 'manten';
-import type { NodeApis } from '../utils/node-with-loader';
+import type { NodeApis } from '../utils/node-with-loader.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('Package CJS', async ({ test }) => {

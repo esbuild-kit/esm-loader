@@ -16,7 +16,7 @@ import {
 	fileProtocol,
 	type ModuleFormat,
 	type MaybePromise,
-} from './utils';
+} from './utils.js';
 
 type Resolved = {
 	url: string;

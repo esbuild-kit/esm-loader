@@ -1,14 +1,14 @@
 import { testSuite } from 'manten';
-import type { NodeApis } from '../../utils/node-with-loader';
+import type { NodeApis } from '../../utils/node-with-loader.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('TypeScript', async ({ runTestSuite }) => {
-		runTestSuite(import('./ts'), node);
-		runTestSuite(import('./tsx'), node);
-		runTestSuite(import('./jsx'), node);
-		runTestSuite(import('./mts'), node);
-		runTestSuite(import('./cts'), node);
-		runTestSuite(import('./tsconfig'), node);
-		runTestSuite(import('./dependencies'), node);
+		runTestSuite(import('./ts.js'), node);
+		runTestSuite(import('./tsx.js'), node);
+		runTestSuite(import('./jsx.js'), node);
+		runTestSuite(import('./mts.js'), node);
+		runTestSuite(import('./cts.js'), node);
+		runTestSuite(import('./tsconfig.js'), node);
+		runTestSuite(import('./dependencies.js'), node);
 	});
 });

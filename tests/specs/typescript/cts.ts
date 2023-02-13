@@ -2,9 +2,9 @@ import fs from 'fs/promises';
 import path from 'path';
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
-import type { NodeApis } from '../../utils/node-with-loader';
-import { assertNotFound } from '../../utils/assertions';
-import { importAndLog } from '../../utils/fixtures';
+import type { NodeApis } from '../../utils/node-with-loader.js';
+import { assertNotFound } from '../../utils/assertions.js';
+import { importAndLog } from '../../utils/fixtures.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.cts extension', ({ describe }) => {

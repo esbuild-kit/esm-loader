@@ -3,10 +3,10 @@ import path from 'path';
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import semver from 'semver';
-import type { NodeApis } from '../../utils/node-with-loader';
-import nodeSupports from '../../utils/node-supports';
-import { assertNotFound } from '../../utils/assertions';
-import { importAndLog } from '../../utils/fixtures';
+import type { NodeApis } from '../../utils/node-with-loader.js';
+import nodeSupports from '../../utils/node-supports.js';
+import { assertNotFound } from '../../utils/assertions.js';
+import { importAndLog } from '../../utils/fixtures.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.mts extension', ({ describe }) => {

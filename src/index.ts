@@ -1,2 +1,2 @@
-export * from './loaders';
-export * from './loaders-deprecated';
+export * from './loaders.js';
+export * from './loaders-deprecated.js';

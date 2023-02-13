@@ -1,6 +1,6 @@
 import { testSuite, expect } from 'manten';
-import type { NodeApis } from '../utils/node-with-loader';
-import { assertError, assertNotFound } from '../utils/assertions';
+import type { NodeApis } from '../utils/node-with-loader.js';
+import { assertError, assertNotFound } from '../utils/assertions.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('Import map', ({ describe }) => {
