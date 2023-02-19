@@ -36,9 +36,7 @@ function getProjectsMap(tsconfigPath?: string, projectsMap?: Map<string, {
 		return projectsMap;
 	}
 
-	const packageName = JSON.parse(fs.readFileSync(path.join(path.dirname(tsconfig.path), 'package.json'), 'utf8')).name as string;
-
-	projectsMap.set(packageName, {
+	projectsMap.set(tsconfig.path, {
 		tsconfig,
 		tsconfigPathsMatcher: tsconfig && createPathsMatcher(tsconfig),
 		fileMatcher: tsconfig && createFilesMatcher(tsconfig),
