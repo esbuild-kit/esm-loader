@@ -9,8 +9,7 @@ import {
 import type { TransformOptions } from 'esbuild';
 import {
 	applySourceMap,
-	tsconfigPathsMatcher,
-	fileMatcher,
+	projectsMap,
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
@@ -78,7 +77,7 @@ async function tryDirectory(
 		if (!isExplicitDirectory) {
 			try {
 				return await tryExtensions(specifier, context, defaultResolve);
-			} catch {}
+			} catch { }
 		}
 
 		const { message } = error;
@@ -101,6 +100,7 @@ export const resolve: resolve = async function (
 	defaultResolve,
 	recursiveCall,
 ) {
+	console.log(`Resolve from ESM: ${specifier}`);
 	// Added in v12.20.0
 	// https://nodejs.org/api/esm.html#esm_node_imports
 	if (!supportsNodePrefix && specifier.startsWith('node:')) {
@@ -118,31 +118,39 @@ export const resolve: resolve = async function (
 	);
 
 	if (
-		tsconfigPathsMatcher
+		projectsMap.size > 0
 		&& !isPath // bare specifier
 		&& !context.parentURL?.includes('/node_modules/')
 	) {
-		const possiblePaths = tsconfigPathsMatcher(specifier);
+		const possiblePaths: string[] = [];
+		projectsMap.forEach((project) => {
+			if (project.tsconfigPathsMatcher) {
+				const possibleProjectPaths = project.tsconfigPathsMatcher(specifier);
+				if (possibleProjectPaths) {
+					possiblePaths.push(...possibleProjectPaths);
+				}
+			}
+		});
 		for (const possiblePath of possiblePaths) {
 			try {
-				return await resolve(
+				const resolved = await resolve(
 					pathToFileURL(possiblePath).toString(),
 					context,
 					defaultResolve,
 				);
-			} catch {}
+				return resolved;
+			} catch { }
 		}
 	}
 
 	/**
-	 * Typescript gives .ts, .cts, or .mts priority over actual .js, .cjs, or .mjs extensions
-	 */
+ * Typescript gives .ts, .cts, or .mts priority over actual .js, .cjs, or .mjs extensions
+ */
 	if (tsExtensionsPattern.test(context.parentURL!)) {
 		const tsPath = resolveTsPath(specifier);
-
 		if (tsPath) {
 			try {
-				return await resolve(tsPath, context, defaultResolve, true);
+				await resolve(tsPath, context, defaultResolve, true);
 			} catch (error) {
 				const { code } = error as any;
 				if (
@@ -176,8 +184,9 @@ export const resolve: resolve = async function (
 
 			if (code === 'ERR_MODULE_NOT_FOUND') {
 				try {
+					console.log(`Trying extensions for ${specifier}`);
 					return await tryExtensions(specifier, context, defaultResolve);
-				} catch {}
+				} catch { }
 			}
 		}
 
@@ -211,6 +220,7 @@ export const load: load = async function (
 	context,
 	defaultLoad,
 ) {
+	console.log(`Load from ESM: ${url}`);
 	if (process.send) {
 		process.send({
 			type: 'dependency',
@@ -238,11 +248,20 @@ export const load: load = async function (
 		loaded.format === 'json'
 		|| tsExtensionsPattern.test(url)
 	) {
+		let tsconfigRaw: TransformOptions['tsconfigRaw'];
+		for (const project of projectsMap.values()) {
+			tsconfigRaw = project.fileMatcher(filePath) as TransformOptions['tsconfigRaw'];
+			if (tsconfigRaw) {
+				console.log({ tsconfigRaw: JSON.stringify(tsconfigRaw) });
+				break;
+			}
+		}
+
 		const transformed = await transform(
 			code,
 			filePath,
 			{
-				tsconfigRaw: fileMatcher?.(filePath) as TransformOptions['tsconfigRaw'],
+				tsconfigRaw,
 			},
 		);
 

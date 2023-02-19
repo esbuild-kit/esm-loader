@@ -12,7 +12,7 @@ import {
 import type { TransformOptions } from 'esbuild';
 import {
 	applySourceMap,
-	fileMatcher,
+	projectsMap,
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
@@ -82,11 +82,18 @@ const _transformSource: transformSource = async function (
 		url.endsWith('.json')
 		|| tsExtensionsPattern.test(url)
 	) {
+		let tsconfigRaw: TransformOptions['tsconfigRaw'];
+		for (const project of projectsMap.values()) {
+			tsconfigRaw = project.fileMatcher(filePath) as TransformOptions['tsconfigRaw'];
+			if (tsconfigRaw) {
+				break;
+			}
+		}
 		const transformed = await transform(
 			source.toString(),
 			filePath,
 			{
-				tsconfigRaw: fileMatcher?.(filePath) as TransformOptions['tsconfigRaw'],
+				tsconfigRaw,
 			},
 		);
 
