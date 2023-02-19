@@ -250,7 +250,7 @@ export const load: load = async function (
 		for (const project of projectsMap.values()) {
 			tsconfigRaw = project.fileMatcher(filePath) as TransformOptions['tsconfigRaw'];
 			if (tsconfigRaw) {
-				console.log({ tsconfigRaw: JSON.stringify(tsconfigRaw) });
+				console.log({ tsconfigRaw: project.tsconfig?.path });
 				break;
 			}
 		}
