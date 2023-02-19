@@ -126,9 +126,7 @@ export const resolve: resolve = async function (
 		projectsMap.forEach((project) => {
 			if (project.tsconfigPathsMatcher) {
 				const possibleProjectPaths = project.tsconfigPathsMatcher(specifier);
-				if (possibleProjectPaths) {
-					possiblePaths.push(...possibleProjectPaths);
-				}
+				possiblePaths.push(...possibleProjectPaths);
 			}
 		});
 		for (const possiblePath of possiblePaths) {
@@ -138,6 +136,7 @@ export const resolve: resolve = async function (
 					context,
 					defaultResolve,
 				);
+				console.log(`Resolved from ESM: ${specifier} -> ${resolved.url}`);
 				return resolved;
 			} catch { }
 		}
@@ -184,7 +183,6 @@ export const resolve: resolve = async function (
 
 			if (code === 'ERR_MODULE_NOT_FOUND') {
 				try {
-					console.log(`Trying extensions for ${specifier}`);
 					return await tryExtensions(specifier, context, defaultResolve);
 				} catch { }
 			}
