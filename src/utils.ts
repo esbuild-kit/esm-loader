@@ -36,6 +36,10 @@ function getProjectsMap(tsconfigPath?: string, projectsMap?: Map<string, {
 		return projectsMap;
 	}
 
+	if (!projectsMap.has(tsconfig.path)) {
+		return projectsMap;
+	}
+
 	projectsMap.set(tsconfig.path, {
 		tsconfig,
 		tsconfigPathsMatcher: tsconfig && createPathsMatcher(tsconfig),
