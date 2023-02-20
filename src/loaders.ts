@@ -100,7 +100,6 @@ export const resolve: resolve = async function (
 	defaultResolve,
 	recursiveCall,
 ) {
-	console.log(`Resolve from ESM: ${specifier}`);
 	// Added in v12.20.0
 	// https://nodejs.org/api/esm.html#esm_node_imports
 	if (!supportsNodePrefix && specifier.startsWith('node:')) {
@@ -117,6 +116,7 @@ export const resolve: resolve = async function (
 		|| isPathPattern.test(specifier)
 	);
 
+	// Possibly a tsconfig path
 	if (
 		projectsMap.size > 0
 		&& !isPath // bare specifier
@@ -129,6 +129,7 @@ export const resolve: resolve = async function (
 				possiblePaths.push(...possibleProjectPaths);
 			}
 		});
+
 		for (const possiblePath of possiblePaths) {
 			try {
 				const resolved = await resolve(
@@ -136,7 +137,7 @@ export const resolve: resolve = async function (
 					context,
 					defaultResolve,
 				);
-				console.log(`Resolved from ESM: ${specifier} -> ${resolved.url}`);
+
 				return resolved;
 			} catch { }
 		}
@@ -149,7 +150,7 @@ export const resolve: resolve = async function (
 		const tsPath = resolveTsPath(specifier);
 		if (tsPath) {
 			try {
-				await resolve(tsPath, context, defaultResolve, true);
+				return await resolve(tsPath, context, defaultResolve, true);
 			} catch (error) {
 				const { code } = error as any;
 				if (
@@ -218,7 +219,6 @@ export const load: load = async function (
 	context,
 	defaultLoad,
 ) {
-	console.log(`Load from ESM: ${url}`);
 	if (process.send) {
 		process.send({
 			type: 'dependency',
@@ -250,7 +250,6 @@ export const load: load = async function (
 		for (const project of projectsMap.values()) {
 			tsconfigRaw = project.fileMatcher(filePath) as TransformOptions['tsconfigRaw'];
 			if (tsconfigRaw) {
-				console.log({ tsconfigRaw: project.tsconfig?.path });
 				break;
 			}
 		}
