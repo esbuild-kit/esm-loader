@@ -116,7 +116,6 @@ export const resolve: resolve = async function (
 		|| isPathPattern.test(specifier)
 	);
 
-	// Possibly a tsconfig path
 	if (
 		projectsMap.size > 0
 		&& !isPath // bare specifier
@@ -132,14 +131,12 @@ export const resolve: resolve = async function (
 
 		for (const possiblePath of possiblePaths) {
 			try {
-				const resolved = await resolve(
+				return await resolve(
 					pathToFileURL(possiblePath).toString(),
 					context,
 					defaultResolve,
 				);
-
-				return resolved;
-			} catch { }
+			} catch {}
 		}
 	}
 
@@ -185,7 +182,7 @@ export const resolve: resolve = async function (
 			if (code === 'ERR_MODULE_NOT_FOUND') {
 				try {
 					return await tryExtensions(specifier, context, defaultResolve);
-				} catch { }
+				} catch {}
 			}
 		}
 
