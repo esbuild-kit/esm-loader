@@ -147,6 +147,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					});
 					expect(nodeProcess.stdout).toBe('resolved');
 				});
+
+				test('should resolve project reference', async () => {
+					const nodeProcess = await node.load('./dependency-resolve-project-reference', {
+						cwd: './tsconfig',
+					});
+					expect(nodeProcess.stdout).toBe('resolved');
+				});
 			});
 		});
 	});

@@ -1,5 +1,4 @@
 import path from 'path';
-import fs from 'fs';
 import { installSourceMapSupport } from '@esbuild-kit/core-utils';
 import {
 	getTsconfig,
