@@ -10,9 +10,6 @@ import { getPackageType } from './package-json.js';
 
 export const applySourceMap = installSourceMapSupport();
 
-/* TODO: given a file url, return the project that will contain it:
- file:///Users/jgoux/Documents/code/dummy-trpc-types/packages/sdk/src/config/env.ts -> project file:///Users/jgoux/Documents/code/dummy-trpc-types/packages/sdk/tsconfig.json
-*/
 function getProjectsMap(tsconfigPath?: string, projectsMap?: Map<string, {
 	tsconfig: ReturnType<typeof getTsconfig>;
 	tsconfigPathsMatcher: ReturnType<typeof createPathsMatcher>;
