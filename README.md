@@ -16,6 +16,8 @@ Node.js `import` hook to instantaneously transform TypeScript to ESM on demand u
 >
 > Use this with [cjs-loader](https://github.com/esbuild-kit/cjs-loader) for CommonJS support. Alternatively, use [tsx](https://github.com/esbuild-kit/tsx) to handle them both automatically.
 
+<sub>Found this package useful? Show your support & appreciation by [sponsoring](https://github.com/sponsors/privatenumber)! ❤️</sub>
+
 ## Install
 
 ```sh
@@ -101,3 +103,10 @@ node --loader @esbuild-kit/esm-loader --experimental-specifier-resolution=node .
 - [tsx](https://github.com/esbuild-kit/tsx) - Node.js runtime powered by esbuild using [`@esbuild-kit/cjs-loader`](https://github.com/esbuild-kit/cjs-loader) and [`@esbuild-kit/esm-loader`](https://github.com/esbuild-kit/esm-loader).
 
 - [@esbuild-kit/cjs-loader](https://github.com/esbuild-kit/cjs-loader) - TypeScript & ESM to CJS transpiler using the Node.js loader API.
+
+## Sponsors
+<p align="center">
+	<a href="https://github.com/sponsors/privatenumber">
+		<img src="https://cdn.jsdelivr.net/gh/privatenumber/sponsors/sponsorkit/sponsors.svg">
+	</a>
+</p>
