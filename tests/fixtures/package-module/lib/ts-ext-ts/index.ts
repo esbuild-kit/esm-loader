@@ -39,19 +39,23 @@ test(
 		if (process.platform === 'win32') {
 			pathname = pathname.slice(1);
 		}
+		console.log('path', fileURLToPath(import.meta.url));
 		console.log('searching', pathname);
 
 		let pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+
 		if (pathIndex === -1) {
 			const a = `${pathname.toLowerCase()}${errorPosition}`;
 			console.log('searching 2', a);
 			pathIndex = stack.indexOf(a);
 		}
+
 		if (pathIndex === -1) {
-			const a = `${fileURLToPath(import.meta.url).toLowerCase()}${errorPosition}`;
+			const a = `${fileURLToPath(import.meta.url)}${errorPosition}`;
 			console.log('searching 3', a);
 			pathIndex = stack.indexOf(a);
 		}
+
 		const previousCharacter = stack[pathIndex - 1];
 		return pathIndex > -1 && previousCharacter !== ':';
 	},

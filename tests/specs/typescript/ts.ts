@@ -147,13 +147,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					// 	assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.js'));
 					// });
 
-					test('Import', async ({ onTestFail }) => {
+					test('Import', async () => {
 						const nodeProcess = await node.load('import.ts', {
 							cwd: fixture.path,
 						});
-						onTestFail(() => {
-							console.log(nodeProcess.stdout);
-						});
+						console.log(nodeProcess.stdout);
 						assertResults(nodeProcess.stdout);
 						expect(nodeProcess.stdout).toMatch('{"default":1234}');
 					});
