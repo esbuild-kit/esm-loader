@@ -33,12 +33,13 @@ test(
 	'sourcemaps',
 	() => {
 		const stack = (new Error()).stack!;
-		console.log(stack);
-		console.log(import.meta.url);
+		console.log(1, stack);
 		let { pathname } = new URL(import.meta.url);
 		if (process.platform === 'win32') {
 			pathname = pathname.slice(1);
 		}
+		console.log('searching', pathname);
+
 		let pathIndex = stack.indexOf(`${pathname}:35:`);
 		if (pathIndex === -1) {
 			pathIndex = stack.indexOf(`${pathname.toLowerCase()}:35:`);
