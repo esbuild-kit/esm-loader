@@ -33,6 +33,7 @@ test(
 	'sourcemaps',
 	() => {
 		const stack = (new Error()).stack!;
+		const errorPosition = ':35:';
 		console.log(1, stack);
 		let { pathname } = new URL(import.meta.url);
 		if (process.platform === 'win32') {
@@ -40,12 +41,16 @@ test(
 		}
 		console.log('searching', pathname);
 
-		let pathIndex = stack.indexOf(`${pathname}:35:`);
+		let pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
 		if (pathIndex === -1) {
-			pathIndex = stack.indexOf(`${pathname.toLowerCase()}:35:`);
+			const a = `${pathname.toLowerCase()}${errorPosition}`;
+			console.log('searching 2', a);
+			pathIndex = stack.indexOf(a);
 		}
 		if (pathIndex === -1) {
-			pathIndex = stack.indexOf(`${fileURLToPath(import.meta.url).toLowerCase()}:35:`);
+			const a = `${fileURLToPath(import.meta.url).toLowerCase()}${errorPosition}`;
+			console.log('searching 3', a);
+			pathIndex = stack.indexOf(a);
 		}
 		const previousCharacter = stack[pathIndex - 1];
 		return pathIndex > -1 && previousCharacter !== ':';
