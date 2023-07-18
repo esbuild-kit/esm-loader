@@ -1,3 +1,5 @@
+import { fileURLToPath } from 'node:url';
+
 async function test(description, testFunction) {
 	try {
 		const result = await testFunction();
@@ -31,16 +33,25 @@ test(
 	'sourcemaps',
 	() => {
 		const { stack } = new Error();
-		let { pathname } = new URL(import.meta.url);
-		if (process.platform === 'win32') {
-			pathname = pathname.slice(1);
+		const errorPosition = ':35:';
+		const isWindows = process.platform === 'win32';
+		let pathname = fileURLToPath(import.meta.url);
+		if (isWindows) {
+			// Remove drive letter
+			pathname = pathname.slice(2);
 		}
-		let pathIndex = stack.indexOf(pathname + ':33:');
-		if (pathIndex === -1) {
-			pathIndex = stack.indexOf(pathname.toLowerCase() + ':33:');
+
+		let pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+		if (
+			pathIndex === -1
+			&& isWindows
+		) {
+			// Convert backslash to slash
+			pathname = pathname.replace(/\\/g, '/');
+			pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
 		}
-		const previousCharacter = stack[pathIndex - 1];
-		return pathIndex > -1 && previousCharacter !== ':';
+
+		return pathIndex > -1;
 	},
 );
 

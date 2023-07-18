@@ -34,43 +34,24 @@ test(
 	() => {
 		const stack = (new Error()).stack!;
 		const errorPosition = ':35:';
-		console.log(1, stack);
-
 		const isWindows = process.platform === 'win32';
 		let pathname = fileURLToPath(import.meta.url);
 		if (isWindows) {
+			// Remove drive letter
 			pathname = pathname.slice(2);
 		}
 
-		const a = `${pathname}${errorPosition}`;
-		console.log('searching', a);
-
-		let pathIndex = stack.indexOf(a);
-
+		let pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
 		if (
 			pathIndex === -1
-			&& isWindows	
+			&& isWindows
 		) {
+			// Convert backslash to slash
 			pathname = pathname.replace(/\\/g, '/');
-			const a = `${pathname}${errorPosition}`;
-			console.log('searching 1', a);
-			pathIndex = stack.indexOf(a);
+			pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
 		}
 
-		if (pathIndex === -1) {
-			const a = `${pathname.toLowerCase()}${errorPosition}`;
-			console.log('searching 2', a);
-			pathIndex = stack.indexOf(a);
-		}
-
-		if (pathIndex === -1) {
-			const a = `${fileURLToPath(import.meta.url)}${errorPosition}`;
-			console.log('searching 3', a);
-			pathIndex = stack.indexOf(a);
-		}
-
-		const previousCharacter = stack[pathIndex - 1];
-		return pathIndex > -1;// && previousCharacter !== ':';
+		return pathIndex > -1;
 	},
 );
 
