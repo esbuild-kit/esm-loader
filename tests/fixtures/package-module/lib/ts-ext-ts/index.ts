@@ -62,7 +62,7 @@ test(
 		}
 
 		const previousCharacter = stack[pathIndex - 1];
-		return pathIndex > -1 && previousCharacter !== ':';
+		return pathIndex > -1;// && previousCharacter !== ':';
 	},
 );
 
