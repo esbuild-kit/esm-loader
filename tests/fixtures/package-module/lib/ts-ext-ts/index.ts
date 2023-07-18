@@ -35,14 +35,19 @@ test(
 		const stack = (new Error()).stack!;
 		const errorPosition = ':35:';
 		console.log(1, stack);
-		let { pathname } = new URL(import.meta.url);
+		let pathname = fileURLToPath(import.meta.url);
 		if (process.platform === 'win32') {
-			pathname = pathname.slice(1);
+			pathname = pathname.slice(2);
 		}
-		console.log('path', fileURLToPath(import.meta.url));
 		console.log('searching', pathname);
 
 		let pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+
+		if (pathIndex === -1) {
+			pathname = pathname.replace(/\\/g, '/');
+			console.log('searching', pathname);
+			pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+		}
 
 		if (pathIndex === -1) {
 			const a = `${pathname.toLowerCase()}${errorPosition}`;
