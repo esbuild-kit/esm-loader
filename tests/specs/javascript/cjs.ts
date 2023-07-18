@@ -34,20 +34,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					assertResults(nodeProcess.stdout);
 				});
 
-				test('Import', async ({ onTestFail }) => {
+				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
-					onTestFail(() => {
-						console.log(nodeProcess);
-					});
 					assertResults(nodeProcess.stdout);
 					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});
 
-				test('TypeScript Import', async ({ onTestFail }) => {
+				test('TypeScript Import', async () => {
 					const nodeProcess = await node.import(importPath, { typescript: true });
-					onTestFail(() => {
-						console.log(nodeProcess);
-					});
 					assertResults(nodeProcess.stdout);
 					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});
