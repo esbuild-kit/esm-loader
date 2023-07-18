@@ -6,7 +6,7 @@ import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader.js';
 import nodeSupports from '../../utils/node-supports.js';
 import { assertNotFound } from '../../utils/assertions.js';
-import { importAndLog } from '../../utils/fixtures.js';
+import { importAndLog, tsconfigJson } from '../../utils/fixtures.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.mts extension', ({ describe }) => {
@@ -47,7 +47,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					const fixture = await createFixture({
 						'import.mjs': importAndLog('./file.mjs'),
 						'file.mts': mtsFile,
-						'tsconfig.json': JSON.stringify({
+						'tsconfig.json': tsconfigJson({
 							compilerOptions: {
 								allowJs: true,
 							},
@@ -121,7 +121,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					const fixture = await createFixture({
 						'import.mts': importAndLog('./file.mjs'),
 						'file.mts': mtsFile,
-						'tsconfig.json': JSON.stringify({
+						'tsconfig.json': tsconfigJson({
 							compilerOptions: {
 								allowJs: true,
 							},

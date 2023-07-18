@@ -6,7 +6,7 @@ import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader.js';
 import nodeSupports from '../../utils/node-supports.js';
 import { assertNotFound } from '../../utils/assertions.js';
-import { importAndLog } from '../../utils/fixtures.js';
+import { importAndLog, packageJson, tsconfigJson } from '../../utils/fixtures.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.ts extension', ({ describe }) => {
@@ -55,10 +55,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			describe('From JavaScript file', ({ describe }) => {
 				describe('with allowJs', async ({ test }) => {
 					const fixture = await createFixture({
-						'package.json': JSON.stringify({ type: 'module' }),
+						'package.json': packageJson({ type: 'module' }),
 						'import.js': importAndLog('./file.js'),
 						'file.ts': tsFile,
-						'tsconfig.json': JSON.stringify({
+						'tsconfig.json': tsconfigJson({
 							compilerOptions: {
 								allowJs: true,
 							},
@@ -84,10 +84,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				describe('without allowJs', ({ describe }) => {
 					describe('empty tsconfig.json', async ({ test }) => {
 						const fixture = await createFixture({
-							'package.json': JSON.stringify({ type: 'module' }),
+							'package.json': packageJson({ type: 'module' }),
 							'import.js': importAndLog('./file.js'),
 							'file.ts': tsFile,
-							'tsconfig.json': '{}',
+							'tsconfig.json': tsconfigJson({}),
 						});
 
 						test('Load - should not work', async () => {
@@ -107,7 +107,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 					describe('no tsconfig.json', async ({ test }) => {
 						const fixture = await createFixture({
-							'package.json': JSON.stringify({ type: 'module' }),
+							'package.json': packageJson({ type: 'module' }),
 							'import.js': importAndLog('./file.js'),
 							'file.ts': tsFile,
 						});
@@ -132,10 +132,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			describe('From TypeScript file', ({ describe }) => {
 				describe('with allowJs', async ({ test }) => {
 					const fixture = await createFixture({
-						'package.json': JSON.stringify({ type: 'module' }),
+						'package.json': packageJson({ type: 'module' }),
 						'import.ts': importAndLog('./file.js'),
 						'file.ts': tsFile,
-						'tsconfig.json': JSON.stringify({
+						'tsconfig.json': tsconfigJson({
 							compilerOptions: {
 								allowJs: true,
 							},
@@ -168,10 +168,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 						 * and not just pick one in cwd
 						 */
 						const fixture = await createFixture({
-							'package.json': JSON.stringify({ type: 'module' }),
+							'package.json': packageJson({ type: 'module' }),
 							'import.ts': importAndLog('./file.js'),
 							'file.ts': tsFile,
-							'tsconfig.json': JSON.stringify({
+							'tsconfig.json': tsconfigJson({
 								compilerOptions: {
 									// TODO: add some configs that shouldnt get applied
 								},
@@ -197,10 +197,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 					describe('empty tsconfig.json', async ({ test }) => {
 						const fixture = await createFixture({
-							'package.json': JSON.stringify({ type: 'module' }),
+							'package.json': packageJson({ type: 'module' }),
 							'import.ts': importAndLog('./file.js'),
 							'file.ts': tsFile,
-							'tsconfig.json': '{}',
+							'tsconfig.json': tsconfigJson({}),
 						});
 
 						test('Load - should not work', async () => {
@@ -221,7 +221,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 					describe('no tsconfig.json', async ({ test }) => {
 						const fixture = await createFixture({
-							'package.json': JSON.stringify({ type: 'module' }),
+							'package.json': packageJson({ type: 'module' }),
 							'import.ts': importAndLog('./file.js'),
 							'file.ts': tsFile,
 						});
