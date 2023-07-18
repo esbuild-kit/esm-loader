@@ -139,7 +139,11 @@ export const resolve: resolve = async function (
 	 */
 	if (
 		context.parentURL
-		&& fileMatcher?.(fileURLToPath(context.parentURL))
+		&& (
+			// TODO: should not include jsx
+			tsExtensionsPattern.test(context.parentURL)
+			|| fileMatcher?.(fileURLToPath(context.parentURL))
+		)
 	) {
 		const tsPath = resolveTsPath(specifier);
 
@@ -239,6 +243,7 @@ export const load: load = async function (
 
 	if (
 		loaded.format === 'json'
+		|| url.endsWith('.jsx')
 		|| tsExtensionsPattern.test(url)
 	) {
 		const transformed = await transform(

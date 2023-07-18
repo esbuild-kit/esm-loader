@@ -159,6 +159,42 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				});
 
 				describe('without allowJs', ({ describe }) => {
+					describe('excluded by tsconfig.json', async ({ test }) => {
+						/**
+						 * file.ts is technically excluded from tsconfig.json, but it should work
+						 * becaue it's clearly from a TypeScript file
+						 *
+						 * In the future, we'll probably want to lookup a matching tsconfig for each file
+						 * and not just pick one in cwd
+						 */
+						const fixture = await createFixture({
+							'package.json': JSON.stringify({ type: 'module' }),
+							'import.ts': importAndLog('./file.js'),
+							'file.ts': tsFile,
+							'tsconfig.json': JSON.stringify({
+								compilerOptions: {
+									// TODO: add some configs that shouldnt get applied
+								},
+								exclude: ['*.ts'],
+							}),
+						});
+
+						test('Load - should not work', async () => {
+							const nodeProcess = await node.load('./file.js', {
+								cwd: fixture.path,
+							});
+							assertNotFound(nodeProcess.stderr, path.join(fixture.path, 'file.js'));
+						});
+
+						test('Import', async () => {
+							const nodeProcess = await node.load('import.ts', {
+								cwd: fixture.path,
+							});
+							assertResults(nodeProcess.stdout);
+							expect(nodeProcess.stdout).toMatch('{"default":1234}');
+						});
+					});
+
 					describe('empty tsconfig.json', async ({ test }) => {
 						const fixture = await createFixture({
 							'package.json': JSON.stringify({ type: 'module' }),

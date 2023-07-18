@@ -80,6 +80,7 @@ const _transformSource: transformSource = async function (
 
 	if (
 		url.endsWith('.json')
+		|| url.endsWith('.jsx')
 		|| tsExtensionsPattern.test(url)
 	) {
 		const transformed = await transform(

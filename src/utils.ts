@@ -30,7 +30,7 @@ export const tsconfigPathsMatcher = tsconfig && createPathsMatcher(tsconfig);
 
 export const fileProtocol = 'file://';
 
-export const tsExtensionsPattern = /\.([cm]?ts|[tj]sx)$/;
+export const tsExtensionsPattern = /\.([cm]?ts|tsx)$/;
 
 const getFormatFromExtension = (fileUrl: string): ModuleFormat | undefined => {
 	const extension = path.extname(fileUrl);
@@ -48,6 +48,8 @@ const getFormatFromExtension = (fileUrl: string): ModuleFormat | undefined => {
 	}
 };
 
+export const knownExtensions = /\.[tj]sx?$/;
+
 export const getFormatFromFileUrl = (fileUrl: string) => {
 	const format = getFormatFromExtension(fileUrl);
 
@@ -55,8 +57,12 @@ export const getFormatFromFileUrl = (fileUrl: string) => {
 		return format;
 	}
 
-	// ts, tsx, jsx
-	if (tsExtensionsPattern.test(fileUrl)) {
+	/**
+	 * Since this is only called when Node.js can't figure
+	 * out the type, we only need to implement it for the
+	 * extensions it can't handle (e.g. ts, tsx, jsx)
+	 */
+	if (knownExtensions.test(fileUrl)) {
 		return getPackageType(fileUrl);
 	}
 };
