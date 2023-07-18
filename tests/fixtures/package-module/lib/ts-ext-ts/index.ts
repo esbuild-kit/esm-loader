@@ -41,9 +41,11 @@ test(
 		if (isWindows) {
 			pathname = pathname.slice(2);
 		}
-		console.log('searching', pathname);
 
-		let pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+		const a = `${pathname}${errorPosition}`;
+		console.log('searching', a);
+
+		let pathIndex = stack.indexOf(a);
 
 		if (
 			pathIndex === -1
