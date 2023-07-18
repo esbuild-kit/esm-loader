@@ -140,7 +140,6 @@ export const resolve: resolve = async function (
 	if (
 		context.parentURL
 		&& (
-			// TODO: should not include jsx
 			tsExtensionsPattern.test(context.parentURL)
 			|| fileMatcher?.(fileURLToPath(context.parentURL))
 		)
