@@ -35,18 +35,24 @@ test(
 		const stack = (new Error()).stack!;
 		const errorPosition = ':35:';
 		console.log(1, stack);
+
+		const isWindows = process.platform === 'win32';
 		let pathname = fileURLToPath(import.meta.url);
-		if (process.platform === 'win32') {
+		if (isWindows) {
 			pathname = pathname.slice(2);
 		}
 		console.log('searching', pathname);
 
 		let pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
 
-		if (pathIndex === -1) {
+		if (
+			pathIndex === -1
+			&& isWindows	
+		) {
 			pathname = pathname.replace(/\\/g, '/');
-			console.log('searching', pathname);
-			pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+			const a = `${pathname}${errorPosition}`;
+			console.log('searching 1', a);
+			pathIndex = stack.indexOf(a);
 		}
 
 		if (pathIndex === -1) {
