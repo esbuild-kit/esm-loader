@@ -194,6 +194,19 @@ export const resolve: resolve = async function (
 	return resolved;
 };
 
+let messagePort: MessagePort | undefined;
+export function globalPreload({ port }: {port: MessagePort}) {
+	messagePort = port;
+	return `\
+	  	port.onmessage = (evt) => {
+			const command = evt.data?.command;
+			if (command === 'BYPASS_PROCESS_SEND') {
+				process.send(...evt.data.args)
+			}
+	  	};
+	`;
+}
+
 type load = (
 	url: string,
 	context: {
@@ -215,6 +228,14 @@ export const load: load = async function (
 		process.send({
 			type: 'dependency',
 			path: url,
+		});
+	} else if (messagePort) {
+		messagePort.postMessage({
+			command: 'BYPASS_PROCESS_SEND',
+			args: [{
+				type: 'dependency',
+				path: url,
+			}],
 		});
 	}
 
