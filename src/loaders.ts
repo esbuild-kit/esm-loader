@@ -201,7 +201,7 @@ export function globalPreload({ port }: {port: MessagePort}) {
 	  	port.onmessage = (evt) => {
 			const command = evt.data?.command;
 			if (command === 'BYPASS_PROCESS_SEND') {
-				process.send(...evt.data.args)
+				process.send(...evt.data.args);
 			}
 	  	};
 	`;
