@@ -16,7 +16,7 @@ const tsconfig = (
 	process.env.ESBK_TSCONFIG_PATH
 		? {
 			path: path.resolve(process.env.ESBK_TSCONFIG_PATH),
-			config: parseTsconfig(process.env.ESBK_TSCONFIG_PATH),
+			config: parseTsconfig(process.env.ESBK_TSCONFIG_PATH, tsconfigCache),
 		}
 		: getTsconfig(undefined, undefined, tsconfigCache)
 );
