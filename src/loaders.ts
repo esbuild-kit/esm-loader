@@ -198,12 +198,12 @@ let messagePort: MessagePort | undefined;
 export function globalPreload({ port }: {port: MessagePort}) {
 	messagePort = port;
 	return `\
-	  	port.onmessage = (evt) => {
+		port.addEventListener('message', (evt) => {
 			const command = evt.data?.command;
 			if (command === 'BYPASS_PROCESS_SEND') {
-				process.send(...evt.data.args);
+				process.send?.(...evt.data.args);
 			}
-	  	};
+	  	});
 	`;
 }
 
