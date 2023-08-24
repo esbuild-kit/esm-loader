@@ -1,4 +1,5 @@
 import path from 'path';
+import { ModuleFormat } from 'module';
 import { installSourceMapSupport } from '@esbuild-kit/core-utils';
 import {
 	getTsconfig,
@@ -55,12 +56,6 @@ export const getFormatFromFileUrl = (fileUrl: string) => {
 	}
 };
 
-export type ModuleFormat =
-	| 'builtin'
-	| 'dynamic'
-	| 'commonjs'
-	| 'json'
-	| 'module'
-	| 'wasm';
+export type DeprecatedModuleFormat = ModuleFormat | 'dynamic';
 
 export type MaybePromise<T> = T | Promise<T>;

@@ -16,7 +16,7 @@ import {
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
-	type ModuleFormat,
+	type DeprecatedModuleFormat,
 	type MaybePromise,
 } from './utils.js';
 
@@ -24,7 +24,7 @@ type getFormat = (
 	url: string,
 	context: Record<string, unknown>,
 	defaultGetFormat: getFormat,
-) => MaybePromise<{ format: ModuleFormat }>;
+) => MaybePromise<{ format: DeprecatedModuleFormat }>;
 
 const _getFormat: getFormat = async function (
 	url,
@@ -58,7 +58,7 @@ type transformSource = (
 	source: Source,
 	context: {
 		url: string;
-		format: ModuleFormat;
+		format: DeprecatedModuleFormat;
 	},
 	defaultTransformSource: transformSource,
 ) => MaybePromise<{ source: Source }>
