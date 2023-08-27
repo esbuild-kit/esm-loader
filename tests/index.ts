@@ -3,14 +3,14 @@ import { createNode } from './utils/node-with-loader.js';
 
 const nodeVersions = [
 	'12.20.0', // CJS named export detection added
-	'12.22.11',
+	'12',
 	...(
 		process.env.CI
 			? [
-				'14.21.1',
-				'16.18.1',
-				'17.9.1',
-				'18.12.1',
+				'14',
+				'16',
+				'17',
+				'18',
 			]
 			: []
 	),
