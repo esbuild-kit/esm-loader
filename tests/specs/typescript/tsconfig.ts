@@ -1,6 +1,7 @@
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import type { NodeApis } from '../../utils/node-with-loader.js';
+import { packageJson, tsconfigJson } from '../../utils/fixtures.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('tsconfig', ({ test, describe }) => {
@@ -16,10 +17,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('does not apply tsconfig to excluded', async () => {
 				const fixture = await createFixture({
-					'package.json': JSON.stringify({
+					'package.json': packageJson({
 						type: 'module',
 					}),
-					'tsconfig.json': JSON.stringify({
+					'tsconfig.json': tsconfigJson({
 						compilerOptions: {
 							jsxFactory: 'console.log',
 						},
@@ -58,10 +59,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('allowJs', async () => {
 				const fixture = await createFixture({
-					'package.json': JSON.stringify({
+					'package.json': packageJson({
 						type: 'module',
 					}),
-					'tsconfig.json': JSON.stringify({
+					'tsconfig.json': tsconfigJson({
 						compilerOptions: {
 							allowJs: true,
 							jsxFactory: 'console.log',
