@@ -15,7 +15,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		describe('scope', ({ test }) => {
 			const checkJsx = 'export default (<div></div>)';
 
-			test('does not apply tsconfig to excluded', async () => {
+			test('does not apply tsconfig to excluded', async ({ onTestFinish }) => {
 				const fixture = await createFixture({
 					'package.json': packageJson({
 						type: 'module',
@@ -37,6 +37,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					},
 				});
 
+				onTestFinish(async () => await fixture.rm());
+
 				// Strict mode is not tested because ESM is strict by default
 
 				const includedJsxTs = await node.load('./included/tsx.tsx', {
@@ -53,11 +55,9 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					cwd: fixture.path,
 				});
 				expect(excludedJsxTs.stderr).toMatch('ReferenceError: React is not defined');
-
-				await fixture.rm();
 			});
 
-			test('allowJs', async () => {
+			test('allowJs', async ({ onTestFinish }) => {
 				const fixture = await createFixture({
 					'package.json': packageJson({
 						type: 'module',
@@ -71,12 +71,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					'src/jsx.jsx': checkJsx,
 				});
 
+				onTestFinish(async () => await fixture.rm());
+
 				const jsxJs = await node.load('./src/jsx.jsx', {
 					cwd: fixture.path,
 				});
 				expect(jsxJs.stdout).toBe('div null');
-
-				await fixture.rm();
 			});
 		});
 
