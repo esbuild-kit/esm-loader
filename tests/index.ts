@@ -2,9 +2,8 @@ import { describe } from 'manten';
 import { createNode } from './utils/node-with-loader.js';
 
 const nodeVersions = [
-	// '12.20.0', // CJS named export detection added
-	// '12',
-	'18',
+	'12.20.0', // CJS named export detection added
+	'12',
 	...(
 		process.env.CI
 			? [
