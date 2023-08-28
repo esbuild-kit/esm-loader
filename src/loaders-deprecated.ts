@@ -4,6 +4,7 @@
  * https://nodejs.org/docs/latest-v14.x/api/esm.html#esm_hooks
  */
 import { fileURLToPath } from 'url';
+import type { ModuleFormat } from 'module';
 import {
 	transform,
 	transformDynamicImport,
@@ -16,7 +17,6 @@ import {
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
-	type DeprecatedModuleFormat,
 	type MaybePromise,
 } from './utils.js';
 
@@ -24,7 +24,7 @@ type getFormat = (
 	url: string,
 	context: Record<string, unknown>,
 	defaultGetFormat: getFormat,
-) => MaybePromise<{ format: DeprecatedModuleFormat }>;
+) => MaybePromise<{ format: ModuleFormat }>;
 
 const _getFormat: getFormat = async function (
 	url,
@@ -58,7 +58,7 @@ type transformSource = (
 	source: Source,
 	context: {
 		url: string;
-		format: DeprecatedModuleFormat;
+		format: ModuleFormat;
 	},
 	defaultTransformSource: transformSource,
 ) => MaybePromise<{ source: Source }>
