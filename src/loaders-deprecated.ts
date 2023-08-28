@@ -4,6 +4,7 @@
  * https://nodejs.org/docs/latest-v14.x/api/esm.html#esm_hooks
  */
 import { fileURLToPath } from 'url';
+import type { ModuleFormat } from 'module';
 import {
 	transform,
 	transformDynamicImport,
@@ -16,7 +17,6 @@ import {
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
-	type ModuleFormat,
 	type MaybePromise,
 } from './utils.js';
 

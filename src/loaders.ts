@@ -1,5 +1,6 @@
 import path from 'path';
 import { pathToFileURL, fileURLToPath } from 'url';
+import type { ResolveFnOutput, ResolveHookContext, LoadHook } from 'module';
 import {
 	transform,
 	transformDynamicImport,
@@ -14,33 +15,27 @@ import {
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
-	type ModuleFormat,
 	type MaybePromise,
 } from './utils.js';
 
-type Resolved = {
-	url: string;
-	format: ModuleFormat | undefined;
-};
-
-type Context = {
-	conditions: string[];
-	parentURL: string | undefined;
-};
+type NextResolve = (
+	specifier: string,
+	context?: ResolveHookContext,
+) => MaybePromise<ResolveFnOutput>;
 
 type resolve = (
 	specifier: string,
-	context: Context,
-	defaultResolve: resolve,
+	context: ResolveHookContext,
+	nextResolve: NextResolve,
 	recursiveCall?: boolean,
-) => MaybePromise<Resolved>;
+) => MaybePromise<ResolveFnOutput>;
 
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
 
 async function tryExtensions(
 	specifier: string,
-	context: Context,
-	defaultResolve: resolve,
+	context: ResolveHookContext,
+	defaultResolve: NextResolve,
 ) {
 	let error;
 	for (const extension of extensions) {
@@ -66,8 +61,8 @@ async function tryExtensions(
 
 async function tryDirectory(
 	specifier: string,
-	context: Context,
-	defaultResolve: resolve,
+	context: ResolveHookContext,
+	defaultResolve: NextResolve,
 ) {
 	const isExplicitDirectory = specifier.endsWith('/');
 	const appendIndex = isExplicitDirectory ? 'index' : '/index';
@@ -161,9 +156,9 @@ export const resolve: resolve = async function (
 		}
 	}
 
-	let resolved: Resolved;
+	let resolved: ResolveFnOutput;
 	try {
-		resolved = await defaultResolve(specifier, context, defaultResolve);
+		resolved = await defaultResolve(specifier, context);
 	} catch (error) {
 		if (
 			error instanceof Error
@@ -200,19 +195,7 @@ export const resolve: resolve = async function (
 	return resolved;
 };
 
-type load = (
-	url: string,
-	context: {
-		format: string;
-		importAssertions: Record<string, string>;
-	},
-	defaultLoad: load,
-) => MaybePromise<{
-	format: string;
-	source: string | ArrayBuffer | SharedArrayBuffer | Uint8Array;
-}>;
-
-export const load: load = async function (
+export const load: LoadHook = async function (
 	url,
 	context,
 	defaultLoad,
@@ -231,7 +214,7 @@ export const load: load = async function (
 		context.importAssertions.type = 'json';
 	}
 
-	const loaded = await defaultLoad(url, context, defaultLoad);
+	const loaded = await defaultLoad(url, context);
 
 	if (!loaded.source) {
 		return loaded;
