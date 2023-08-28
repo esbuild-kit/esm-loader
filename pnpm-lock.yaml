@@ -17,8 +17,8 @@ devDependencies:
     specifier: ^0.33.0
     version: 0.33.0(eslint@8.34.0)(typescript@4.9.5)
   '@types/node':
-    specifier: ^18.13.0
-    version: 18.13.0
+    specifier: ^18.17.11
+    version: 18.17.11
   '@types/semver':
     specifier: ^7.3.13
     version: 7.3.13
@@ -348,7 +348,7 @@ packages:
       '@jest/schemas': 29.6.3
       '@types/istanbul-lib-coverage': 2.0.4
       '@types/istanbul-reports': 3.0.1
-      '@types/node': 18.13.0
+      '@types/node': 18.17.11
       '@types/yargs': 17.0.24
       chalk: 4.1.2
     dev: true
@@ -578,8 +578,8 @@ packages:
       '@types/unist': 2.0.6
     dev: true
 
-  /@types/node@18.13.0:
-    resolution: {integrity: sha512-gC3TazRzGoOnoKAhUx+Q0t8S9Tzs74z7m0ipwGpSqQrleP14hKxP4/JUeEQcD3W1/aIpnWl8pHowI7WokuZpXg==}
+  /@types/node@18.17.11:
+    resolution: {integrity: sha512-r3hjHPBu+3LzbGBa8DHnr/KAeTEEOrahkcL+cZc4MaBMTM+mk8LtXR+zw+nqfjuDZZzYTYgTcpHuP+BEQk069g==}
     dev: true
 
   /@types/normalize-package-data@2.4.1:
@@ -2435,7 +2435,7 @@ packages:
     engines: {node: ^14.15.0 || ^16.10.0 || >=18.0.0}
     dependencies:
       '@jest/types': 29.6.3
-      '@types/node': 18.13.0
+      '@types/node': 18.17.11
       chalk: 4.1.2
       ci-info: 3.8.0
       graceful-fs: 4.2.11
