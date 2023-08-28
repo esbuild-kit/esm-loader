@@ -41,7 +41,7 @@
 		"@types/semver": "^7.5.0",
 		"@types/source-map-support": "^0.5.7",
 		"clean-pkg-json": "^1.2.0",
-		"esbuild": "^0.19.2",
+		"esbuild": "~0.18.20",
 		"eslint": "^8.48.0",
 		"execa": "^8.0.1",
 		"fs-fixture": "^1.2.0",
