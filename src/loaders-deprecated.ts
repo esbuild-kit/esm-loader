@@ -18,6 +18,7 @@ import {
 	getFormatFromFileUrl,
 	fileProtocol,
 	type MaybePromise,
+	type NodeError,
 } from './utils.js';
 
 type getFormat = (
@@ -39,7 +40,7 @@ const _getFormat: getFormat = async function (
 		return await defaultGetFormat(url, context, defaultGetFormat);
 	} catch (error) {
 		if (
-			(error as any).code === 'ERR_UNKNOWN_FILE_EXTENSION'
+			(error as NodeError).code === 'ERR_UNKNOWN_FILE_EXTENSION'
 			&& url.startsWith(fileProtocol)
 		) {
 			const format = await getFormatFromFileUrl(url);

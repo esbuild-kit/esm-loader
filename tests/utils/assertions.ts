@@ -4,7 +4,7 @@ const isWindows = process.platform === 'win32';
 
 const agnosticPath = (path: string) => (
 	isWindows
-		? path.replace(/\//g, '\\')
+		? path.replaceAll('/', '\\')
 		: path
 );
 

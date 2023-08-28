@@ -16,6 +16,7 @@ import {
 	getFormatFromFileUrl,
 	fileProtocol,
 	type MaybePromise,
+	type NodeError,
 } from './utils.js';
 
 type NextResolve = (
@@ -37,7 +38,7 @@ async function tryExtensions(
 	context: ResolveHookContext,
 	defaultResolve: NextResolve,
 ) {
-	let error;
+	let throwError: Error | undefined;
 	for (const extension of extensions) {
 		try {
 			return await resolve(
@@ -46,17 +47,20 @@ async function tryExtensions(
 				defaultResolve,
 				true,
 			);
-		} catch (_error: any) {
-			if (error === undefined) {
+		} catch (_error) {
+			if (
+				throwError === undefined
+				&& _error instanceof Error
+			) {
 				const { message } = _error;
 				_error.message = _error.message.replace(`${extension}'`, "'");
-				_error.stack = _error.stack.replace(message, _error.message);
-				error = _error;
+				_error.stack = _error.stack!.replace(message, _error.message);
+				throwError = _error;
 			}
 		}
 	}
 
-	throw error;
+	throw throwError;
 }
 
 async function tryDirectory(
@@ -69,16 +73,17 @@ async function tryDirectory(
 
 	try {
 		return await tryExtensions(specifier + appendIndex, context, defaultResolve);
-	} catch (error: any) {
+	} catch (_error) {
 		if (!isExplicitDirectory) {
 			try {
 				return await tryExtensions(specifier, context, defaultResolve);
 			} catch {}
 		}
 
+		const error = _error as Error;
 		const { message } = error;
 		error.message = error.message.replace(`${appendIndex.replace('/', path.sep)}'`, "'");
-		error.stack = error.stack.replace(message, error.message);
+		error.stack = error.stack!.replace(message, error.message);
 		throw error;
 	}
 }
@@ -139,7 +144,7 @@ export const resolve: resolve = async function (
 			try {
 				return await resolve(tsPath, context, defaultResolve, true);
 			} catch (error) {
-				const { code } = error as any;
+				const { code } = error as NodeError;
 				if (
 					code !== 'ERR_MODULE_NOT_FOUND'
 					&& code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED'
@@ -158,12 +163,12 @@ export const resolve: resolve = async function (
 			error instanceof Error
 			&& !recursiveCall
 		) {
-			const { code } = error as any;
+			const { code } = error as NodeError;
 			if (code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
 				try {
 					return await tryDirectory(specifier, context, defaultResolve);
 				} catch (error_) {
-					if ((error_ as any).code !== 'ERR_PACKAGE_IMPORT_NOT_DEFINED') {
+					if ((error_ as NodeError).code !== 'ERR_PACKAGE_IMPORT_NOT_DEFINED') {
 						throw error_;
 					}
 				}
