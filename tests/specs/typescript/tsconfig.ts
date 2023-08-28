@@ -1,6 +1,7 @@
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import type { NodeApis } from '../../utils/node-with-loader.js';
+import { packageJson, tsconfigJson } from '../../utils/fixtures.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('tsconfig', ({ test, describe }) => {
@@ -14,12 +15,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		describe('scope', ({ test }) => {
 			const checkJsx = 'export default (<div></div>)';
 
-			test('does not apply tsconfig to excluded', async () => {
+			test('does not apply tsconfig to excluded', async ({ onTestFinish }) => {
 				const fixture = await createFixture({
-					'package.json': JSON.stringify({
+					'package.json': packageJson({
 						type: 'module',
 					}),
-					'tsconfig.json': JSON.stringify({
+					'tsconfig.json': tsconfigJson({
 						compilerOptions: {
 							jsxFactory: 'console.log',
 						},
@@ -35,6 +36,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 						'tsx.tsx': checkJsx,
 					},
 				});
+
+				onTestFinish(async () => await fixture.rm());
 
 				// Strict mode is not tested because ESM is strict by default
 
@@ -52,16 +55,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					cwd: fixture.path,
 				});
 				expect(excludedJsxTs.stderr).toMatch('ReferenceError: React is not defined');
-
-				await fixture.rm();
 			});
 
-			test('allowJs', async () => {
+			test('allowJs', async ({ onTestFinish }) => {
 				const fixture = await createFixture({
-					'package.json': JSON.stringify({
+					'package.json': packageJson({
 						type: 'module',
 					}),
-					'tsconfig.json': JSON.stringify({
+					'tsconfig.json': tsconfigJson({
 						compilerOptions: {
 							allowJs: true,
 							jsxFactory: 'console.log',
@@ -70,12 +71,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					'src/jsx.jsx': checkJsx,
 				});
 
+				onTestFinish(async () => await fixture.rm());
+
 				const jsxJs = await node.load('./src/jsx.jsx', {
 					cwd: fixture.path,
 				});
 				expect(jsxJs.stdout).toBe('div null');
-
-				await fixture.rm();
 			});
 		});
 

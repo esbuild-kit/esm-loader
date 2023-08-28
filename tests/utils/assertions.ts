@@ -1,10 +1,10 @@
 import { expect } from 'manten';
 
-const isWin = process.platform === 'win32';
+const isWindows = process.platform === 'win32';
 
 const agnosticPath = (path: string) => (
-	isWin
-		? path.replace(/\//g, '\\')
+	isWindows
+		? path.replaceAll('/', '\\')
 		: path
 );
 

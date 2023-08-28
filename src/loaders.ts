@@ -1,5 +1,6 @@
 import path from 'path';
 import { pathToFileURL, fileURLToPath } from 'url';
+import type { ResolveFnOutput, ResolveHookContext, LoadHook } from 'module';
 import {
 	transform,
 	transformDynamicImport,
@@ -14,35 +15,30 @@ import {
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
-	type ModuleFormat,
 	type MaybePromise,
+	type NodeError,
 } from './utils.js';
 
-type Resolved = {
-	url: string;
-	format: ModuleFormat | undefined;
-};
-
-type Context = {
-	conditions: string[];
-	parentURL: string | undefined;
-};
+type NextResolve = (
+	specifier: string,
+	context?: ResolveHookContext,
+) => MaybePromise<ResolveFnOutput>;
 
 type resolve = (
 	specifier: string,
-	context: Context,
-	defaultResolve: resolve,
+	context: ResolveHookContext,
+	nextResolve: NextResolve,
 	recursiveCall?: boolean,
-) => MaybePromise<Resolved>;
+) => MaybePromise<ResolveFnOutput>;
 
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
 
 async function tryExtensions(
 	specifier: string,
-	context: Context,
-	defaultResolve: resolve,
+	context: ResolveHookContext,
+	defaultResolve: NextResolve,
 ) {
-	let error;
+	let throwError: Error | undefined;
 	for (const extension of extensions) {
 		try {
 			return await resolve(
@@ -51,39 +47,43 @@ async function tryExtensions(
 				defaultResolve,
 				true,
 			);
-		} catch (_error: any) {
-			if (error === undefined) {
+		} catch (_error) {
+			if (
+				throwError === undefined
+				&& _error instanceof Error
+			) {
 				const { message } = _error;
 				_error.message = _error.message.replace(`${extension}'`, "'");
-				_error.stack = _error.stack.replace(message, _error.message);
-				error = _error;
+				_error.stack = _error.stack!.replace(message, _error.message);
+				throwError = _error;
 			}
 		}
 	}
 
-	throw error;
+	throw throwError;
 }
 
 async function tryDirectory(
 	specifier: string,
-	context: Context,
-	defaultResolve: resolve,
+	context: ResolveHookContext,
+	defaultResolve: NextResolve,
 ) {
 	const isExplicitDirectory = specifier.endsWith('/');
 	const appendIndex = isExplicitDirectory ? 'index' : '/index';
 
 	try {
 		return await tryExtensions(specifier + appendIndex, context, defaultResolve);
-	} catch (error: any) {
+	} catch (_error) {
 		if (!isExplicitDirectory) {
 			try {
 				return await tryExtensions(specifier, context, defaultResolve);
 			} catch {}
 		}
 
+		const error = _error as Error;
 		const { message } = error;
 		error.message = error.message.replace(`${appendIndex.replace('/', path.sep)}'`, "'");
-		error.stack = error.stack.replace(message, error.message);
+		error.stack = error.stack!.replace(message, error.message);
 		throw error;
 	}
 }
@@ -144,7 +144,7 @@ export const resolve: resolve = async function (
 			try {
 				return await resolve(tsPath, context, defaultResolve, true);
 			} catch (error) {
-				const { code } = error as any;
+				const { code } = error as NodeError;
 				if (
 					code !== 'ERR_MODULE_NOT_FOUND'
 					&& code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED'
@@ -155,20 +155,20 @@ export const resolve: resolve = async function (
 		}
 	}
 
-	let resolved: Resolved;
+	let resolved: ResolveFnOutput;
 	try {
-		resolved = await defaultResolve(specifier, context, defaultResolve);
+		resolved = await defaultResolve(specifier, context);
 	} catch (error) {
 		if (
 			error instanceof Error
 			&& !recursiveCall
 		) {
-			const { code } = error as any;
+			const { code } = error as NodeError;
 			if (code === 'ERR_UNSUPPORTED_DIR_IMPORT') {
 				try {
 					return await tryDirectory(specifier, context, defaultResolve);
 				} catch (error_) {
-					if ((error_ as any).code !== 'ERR_PACKAGE_IMPORT_NOT_DEFINED') {
+					if ((error_ as NodeError).code !== 'ERR_PACKAGE_IMPORT_NOT_DEFINED') {
 						throw error_;
 					}
 				}
@@ -194,19 +194,7 @@ export const resolve: resolve = async function (
 	return resolved;
 };
 
-type load = (
-	url: string,
-	context: {
-		format: string;
-		importAssertions: Record<string, string>;
-	},
-	defaultLoad: load,
-) => MaybePromise<{
-	format: string;
-	source: string | ArrayBuffer | SharedArrayBuffer | Uint8Array;
-}>;
-
-export const load: load = async function (
+export const load: LoadHook = async function (
 	url,
 	context,
 	defaultLoad,
@@ -225,7 +213,7 @@ export const load: load = async function (
 		context.importAssertions.type = 'json';
 	}
 
-	const loaded = await defaultLoad(url, context, defaultLoad);
+	const loaded = await defaultLoad(url, context);
 
 	if (!loaded.source) {
 		return loaded;
