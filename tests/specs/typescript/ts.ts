@@ -53,7 +53,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			const tsFile = await fs.readFile('./tests/fixtures/package-module/lib/ts-ext-ts/index.ts', 'utf8');
 
 			describe('From JavaScript file', ({ describe }) => {
-				describe('with allowJs', async ({ test }) => {
+				describe('with allowJs', async ({ test, onFinish }) => {
 					const fixture = await createFixture({
 						'package.json': packageJson({ type: 'module' }),
 						'import.js': importAndLog('./file.js'),
@@ -64,6 +64,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 							},
 						}),
 					});
+
+					onFinish(async () => await fixture.rm());
 
 					test('Load - should not work', async () => {
 						const nodeProcess = await node.load('./file.js', {
@@ -82,13 +84,15 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				});
 
 				describe('without allowJs', ({ describe }) => {
-					describe('empty tsconfig.json', async ({ test }) => {
+					describe('empty tsconfig.json', async ({ test, onFinish }) => {
 						const fixture = await createFixture({
 							'package.json': packageJson({ type: 'module' }),
 							'import.js': importAndLog('./file.js'),
 							'file.ts': tsFile,
 							'tsconfig.json': tsconfigJson({}),
 						});
+
+						onFinish(async () => await fixture.rm());
 
 						test('Load - should not work', async () => {
 							const nodeProcess = await node.load('./file.js', {
@@ -105,12 +109,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 						});
 					});
 
-					describe('no tsconfig.json', async ({ test }) => {
+					describe('no tsconfig.json', async ({ test, onFinish }) => {
 						const fixture = await createFixture({
 							'package.json': packageJson({ type: 'module' }),
 							'import.js': importAndLog('./file.js'),
 							'file.ts': tsFile,
 						});
+
+						onFinish(async () => await fixture.rm());
 
 						test('Load - should not work', async () => {
 							const nodeProcess = await node.load('./file.js', {
@@ -130,7 +136,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			});
 
 			describe('From TypeScript file', ({ describe }) => {
-				describe('with allowJs', async ({ test }) => {
+				describe('with allowJs', async ({ test, onFinish }) => {
 					const fixture = await createFixture({
 						'package.json': packageJson({ type: 'module' }),
 						'import.ts': importAndLog('./file.js'),
@@ -141,6 +147,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 							},
 						}),
 					});
+
+					onFinish(async () => await fixture.rm());
 
 					test('Load - should not work', async () => {
 						const nodeProcess = await node.load('./file.js', {
@@ -159,7 +167,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				});
 
 				describe('without allowJs', ({ describe }) => {
-					describe('excluded by tsconfig.json', async ({ test }) => {
+					describe('excluded by tsconfig.json', async ({ test, onFinish }) => {
 						/**
 						 * file.ts is technically excluded from tsconfig.json, but it should work
 						 * becaue it's clearly from a TypeScript file
@@ -179,6 +187,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 							}),
 						});
 
+						onFinish(async () => await fixture.rm());
+
 						test('Load - should not work', async () => {
 							const nodeProcess = await node.load('./file.js', {
 								cwd: fixture.path,
@@ -195,7 +205,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 						});
 					});
 
-					describe('empty tsconfig.json', async ({ test }) => {
+					describe('empty tsconfig.json', async ({ test, onFinish }) => {
 						const fixture = await createFixture({
 							'package.json': packageJson({ type: 'module' }),
 							'import.ts': importAndLog('./file.js'),
@@ -203,6 +213,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 							'tsconfig.json': tsconfigJson({}),
 						});
 
+						onFinish(async () => await fixture.rm());
+
 						test('Load - should not work', async () => {
 							const nodeProcess = await node.load('./file.js', {
 								cwd: fixture.path,
@@ -219,12 +231,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 						});
 					});
 
-					describe('no tsconfig.json', async ({ test }) => {
+					describe('no tsconfig.json', async ({ test, onFinish }) => {
 						const fixture = await createFixture({
 							'package.json': packageJson({ type: 'module' }),
 							'import.ts': importAndLog('./file.js'),
 							'file.ts': tsFile,
 						});
+
+						onFinish(async () => await fixture.rm());
 
 						test('Load - should not work', async () => {
 							const nodeProcess = await node.load('./file.js', {

@@ -32,7 +32,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			const ctsFile = await fs.readFile('./tests/fixtures/package-module/lib/ts-ext-cts/index.cts', 'utf8');
 
 			describe('From JavaScript file', ({ describe }) => {
-				describe('with allowJs', async ({ test }) => {
+				describe('with allowJs', async ({ test, onFinish }) => {
 					const fixture = await createFixture({
 						'import.mjs': importAndLog('./file.cjs'),
 						'file.cts': ctsFile,
@@ -42,6 +42,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 							},
 						}),
 					});
+
+					onFinish(async () => await fixture.rm());
 
 					test('Load - should not work', async () => {
 						const nodeProcess = await node.load('./file.cjs', {
@@ -59,12 +61,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				});
 
 				describe('without allowJs', ({ describe }) => {
-					describe('empty tsconfig.json', async ({ test }) => {
+					describe('empty tsconfig.json', async ({ test, onFinish }) => {
 						const fixture = await createFixture({
 							'import.mjs': importAndLog('./file.cjs'),
 							'file.cts': ctsFile,
 							'tsconfig.json': '{}',
 						});
+
+						onFinish(async () => await fixture.rm());
 
 						test('Load - should not work', async () => {
 							const nodeProcess = await node.load('./file.cjs', {
@@ -81,11 +85,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 						});
 					});
 
-					describe('no tsconfig.json', async ({ test }) => {
+					describe('no tsconfig.json', async ({ test, onFinish }) => {
 						const fixture = await createFixture({
 							'import.mjs': importAndLog('./file.cjs'),
 							'file.cts': ctsFile,
 						});
+
+						onFinish(async () => await fixture.rm());
 
 						test('Load - should not work', async () => {
 							const nodeProcess = await node.load('./file.cjs', {
@@ -105,7 +111,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			});
 
 			describe('From TypeScript file', ({ describe }) => {
-				describe('with allowJs', async ({ test }) => {
+				describe('with allowJs', async ({ test, onFinish }) => {
 					const fixture = await createFixture({
 						'import.mts': importAndLog('./file.cjs'),
 						'file.cts': ctsFile,
@@ -115,6 +121,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 							},
 						}),
 					});
+
+					onFinish(async () => await fixture.rm());
 
 					test('Load - should not work', async () => {
 						const nodeProcess = await node.load('./file.cjs', {
@@ -132,12 +140,14 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				});
 
 				describe('without allowJs', ({ describe }) => {
-					describe('empty tsconfig.json', async ({ test }) => {
+					describe('empty tsconfig.json', async ({ test, onFinish }) => {
 						const fixture = await createFixture({
 							'import.mts': importAndLog('./file.cjs'),
 							'file.cts': ctsFile,
 							'tsconfig.json': '{}',
 						});
+
+						onFinish(async () => await fixture.rm());
 
 						test('Load - should not work', async () => {
 							const nodeProcess = await node.load('./file.cjs', {
@@ -154,11 +164,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 						});
 					});
 
-					describe('no tsconfig.json', async ({ test }) => {
+					describe('no tsconfig.json', async ({ test, onFinish }) => {
 						const fixture = await createFixture({
 							'import.mts': importAndLog('./file.cjs'),
 							'file.cts': ctsFile,
 						});
+
+						onFinish(async () => await fixture.rm());
 
 						test('Load - should not work', async () => {
 							const nodeProcess = await node.load('./file.cjs', {
