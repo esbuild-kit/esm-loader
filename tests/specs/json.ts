@@ -27,8 +27,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stdout).toBe('');
 			});
 
-			test('Import', async () => {
+			test('Import', async ({ onTestFail }) => {
 				const nodeProcess = await node.import(importPath);
+				onTestFail(() => {
+					console.log(nodeProcess);
+				});
 				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
 			});
 		});
@@ -36,8 +39,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		describe('directory', ({ test }) => {
 			const importPath = './lib/json';
 
-			test('Load', async () => {
+			test('Load', async ({ onTestFail }) => {
 				const nodeProcess = await node.load(importPath);
+				onTestFail(() => {
+					console.log(nodeProcess);
+				});
 				expect(nodeProcess.exitCode).toBe(0);
 				expect(nodeProcess.stdout).toBe('');
 			});
