@@ -42,7 +42,7 @@ let mainThreadPort: MessagePort | undefined;
 export const globalPreload: GlobalPreloadHook = ({ port }) => {
 	mainThreadPort = port;
 	return `
-	const require = getBuiltin('module').createRequire(getBuiltin('process').cwd() + '/<preload>');
+	const require = getBuiltin('module').createRequire(${JSON.stringify(import.meta.url)});
 	require('@esbuild-kit/core-utils').installSourceMapSupport(port);
 	port.unref(); // Allows process to exit without waiting for port to close
 	`;
