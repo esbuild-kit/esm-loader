@@ -44,7 +44,7 @@ export const globalPreload: GlobalPreloadHook = ({ port }) => {
 	return `
 	const require = getBuiltin('module').createRequire(getBuiltin('process').cwd() + '/<preload>');
 	require('@esbuild-kit/core-utils').installSourceMapSupport(port);
-	port.unref();
+	port.unref(); // Allows process to exit without waiting for port to close
 	`;
 };
 
