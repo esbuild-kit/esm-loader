@@ -223,6 +223,7 @@ export const load: LoadHook = async function (
 	const code = loaded.source.toString();
 
 	if (
+		// Support named imports in JSON modules
 		loaded.format === 'json'
 		|| tsExtensionsPattern.test(url)
 	) {
