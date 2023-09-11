@@ -1,6 +1,7 @@
+import type { MessagePort } from 'node:worker_threads';
 import path from 'path';
 import { pathToFileURL, fileURLToPath } from 'url';
-import type { ResolveFnOutput, ResolveHookContext, LoadHook } from 'module';
+import type { ResolveFnOutput, ResolveHookContext, LoadHook, GlobalPreloadHook } from 'module';
 import {
 	transform,
 	transformDynamicImport,
@@ -30,6 +31,16 @@ type resolve = (
 	nextResolve: NextResolve,
 	recursiveCall?: boolean,
 ) => MaybePromise<ResolveFnOutput>;
+
+let mainThreadPort: MessagePort | undefined;
+export const globalPreload: GlobalPreloadHook = (_context) => {
+	mainThreadPort = _context.port;
+	return `
+	const require = getBuiltin('module').createRequire(getBuiltin('process').cwd() + '/<preload>');
+	require('@esbuild-kit/core-utils').installSourceMapSupport(port);
+	port.unref();
+	`;
+};
 
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
 
@@ -237,7 +248,7 @@ export const load: LoadHook = async function (
 
 		return {
 			format: 'module',
-			source: applySourceMap(transformed, url),
+			source: applySourceMap(transformed, url, mainThreadPort),
 		};
 	}
 
@@ -247,6 +258,7 @@ export const load: LoadHook = async function (
 			loaded.source = applySourceMap(
 				dynamicImportTransformed,
 				url,
+				mainThreadPort,
 			);
 		}
 	}
