@@ -34,9 +34,13 @@ type resolve = (
 	recursiveCall?: boolean,
 ) => MaybePromise<ResolveFnOutput>;
 
+/**
+ * Technically globalPreload is deprecated so it should be in loaders-deprecated
+ * but it shares a closure with the new load hook
+ */
 let mainThreadPort: MessagePort | undefined;
-export const globalPreload: GlobalPreloadHook = (_context) => {
-	mainThreadPort = _context.port;
+export const globalPreload: GlobalPreloadHook = ({ port }) => {
+	mainThreadPort = port;
 	return `
 	const require = getBuiltin('module').createRequire(getBuiltin('process').cwd() + '/<preload>');
 	require('@esbuild-kit/core-utils').installSourceMapSupport(port);
