@@ -1,6 +1,9 @@
+import type { MessagePort } from 'node:worker_threads';
 import path from 'path';
 import { pathToFileURL, fileURLToPath } from 'url';
-import type { ResolveFnOutput, ResolveHookContext, LoadHook } from 'module';
+import type {
+	ResolveFnOutput, ResolveHookContext, LoadHook, GlobalPreloadHook,
+} from 'module';
 import {
 	transform,
 	transformDynamicImport,
@@ -30,6 +33,20 @@ type resolve = (
 	nextResolve: NextResolve,
 	recursiveCall?: boolean,
 ) => MaybePromise<ResolveFnOutput>;
+
+/**
+ * Technically globalPreload is deprecated so it should be in loaders-deprecated
+ * but it shares a closure with the new load hook
+ */
+let mainThreadPort: MessagePort | undefined;
+export const globalPreload: GlobalPreloadHook = ({ port }) => {
+	mainThreadPort = port;
+	return `
+	const require = getBuiltin('module').createRequire(getBuiltin('process').cwd() + '/<preload>');
+	require('@esbuild-kit/core-utils').installSourceMapSupport(port);
+	port.unref(); // Allows process to exit without waiting for port to close
+	`;
+};
 
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
 
@@ -223,6 +240,7 @@ export const load: LoadHook = async function (
 	const code = loaded.source.toString();
 
 	if (
+		// Support named imports in JSON modules
 		loaded.format === 'json'
 		|| tsExtensionsPattern.test(url)
 	) {
@@ -236,7 +254,7 @@ export const load: LoadHook = async function (
 
 		return {
 			format: 'module',
-			source: applySourceMap(transformed, url),
+			source: applySourceMap(transformed, url, mainThreadPort),
 		};
 	}
 
@@ -246,6 +264,7 @@ export const load: LoadHook = async function (
 			loaded.source = applySourceMap(
 				dynamicImportTransformed,
 				url,
+				mainThreadPort,
 			);
 		}
 	}
