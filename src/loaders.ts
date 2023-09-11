@@ -1,7 +1,9 @@
 import type { MessagePort } from 'node:worker_threads';
 import path from 'path';
 import { pathToFileURL, fileURLToPath } from 'url';
-import type { ResolveFnOutput, ResolveHookContext, LoadHook, GlobalPreloadHook } from 'module';
+import type {
+	ResolveFnOutput, ResolveHookContext, LoadHook, GlobalPreloadHook,
+} from 'module';
 import {
 	transform,
 	transformDynamicImport,
