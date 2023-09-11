@@ -7,7 +7,7 @@ settings:
 dependencies:
   '@esbuild-kit/core-utils':
     specifier: github:esbuild-kit/core-utils#npm/node-20-globalPreload
-    version: github.com/esbuild-kit/core-utils/0c174fad0234e948e2e8060e7fac7c78c1ae9886
+    version: github.com/esbuild-kit/core-utils/7470903f9e00cde294e379f48eaf914bfb86bb5f
   get-tsconfig:
     specifier: ^4.7.0
     version: 4.7.0
@@ -3786,8 +3786,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  github.com/esbuild-kit/core-utils/0c174fad0234e948e2e8060e7fac7c78c1ae9886:
-    resolution: {tarball: https://codeload.github.com/esbuild-kit/core-utils/tar.gz/0c174fad0234e948e2e8060e7fac7c78c1ae9886}
+  github.com/esbuild-kit/core-utils/7470903f9e00cde294e379f48eaf914bfb86bb5f:
+    resolution: {tarball: https://codeload.github.com/esbuild-kit/core-utils/tar.gz/7470903f9e00cde294e379f48eaf914bfb86bb5f}
     name: '@esbuild-kit/core-utils'
     version: 0.0.0-semantic-release
     dependencies:
