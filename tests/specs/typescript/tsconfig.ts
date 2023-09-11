@@ -1,3 +1,5 @@
+import path from 'path';
+import fs from 'fs/promises';
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import type { NodeApis } from '../../utils/node-with-loader.js';
@@ -37,6 +39,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					},
 				});
 
+				await fs.symlink(
+					path.resolve('node_modules'),
+					path.join(fixture.path, 'node_modules'),
+					'dir',
+				);
+
 				onTestFinish(async () => await fixture.rm());
 
 				// Strict mode is not tested because ESM is strict by default
@@ -70,6 +78,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 					}),
 					'src/jsx.jsx': checkJsx,
 				});
+
+				await fs.symlink(
+					path.resolve('node_modules'),
+					path.join(fixture.path, 'node_modules'),
+					'dir',
+				);
 
 				onTestFinish(async () => await fixture.rm());
 
