@@ -2,7 +2,7 @@ import type { MessagePort } from 'node:worker_threads';
 import path from 'path';
 import { pathToFileURL, fileURLToPath } from 'url';
 import type {
-	ResolveFnOutput, ResolveHookContext, LoadHook, GlobalPreloadHook,
+	ResolveFnOutput, ResolveHookContext, LoadHook, GlobalPreloadHook, InitializeHook,
 } from 'module';
 import {
 	transform,
@@ -46,6 +46,17 @@ export const globalPreload: GlobalPreloadHook = ({ port }) => {
 	require('@esbuild-kit/core-utils').installSourceMapSupport(port);
 	port.unref(); // Allows process to exit without waiting for port to close
 	`;
+};
+
+/**
+ * From Node.js v20.6.0, `globalPreload` is deprecarated in favor of `initialize`
+ * However, it requires the loader to be loaded via `--import` that registers
+ * the loader instead of directly loading the loader via `--loader`
+ *
+ * https://nodejs.org/api/esm.html#initialize
+ */
+export const initialize: InitializeHook = () => {
+	console.log('initialize');
 };
 
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
