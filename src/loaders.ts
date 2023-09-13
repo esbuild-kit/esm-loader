@@ -41,7 +41,7 @@ const isolatedLoader = compareNodeVersion([20, 0, 0]) >= 0;
  * but it shares a closure with the new load hook
  */
 let mainThreadPort: MessagePort | undefined;
-const _globalPreload: GlobalPreloadHook  = ({ port }) => {
+const _globalPreload: GlobalPreloadHook = ({ port }) => {
 	mainThreadPort = port;
 	return `
 	const require = getBuiltin('module').createRequire("${import.meta.url}");
