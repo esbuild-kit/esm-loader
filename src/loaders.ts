@@ -36,6 +36,13 @@ type resolve = (
 
 const isolatedLoader = compareNodeVersion([20, 0, 0]) >= 0;
 
+type SendToParent = (data: {
+	type: 'dependency';
+	path: string;
+}) => void;
+
+let sendToParent: SendToParent | undefined = process.send ? process.send.bind(process) : undefined;
+
 /**
  * Technically globalPreload is deprecated so it should be in loaders-deprecated
  * but it shares a closure with the new load hook
@@ -43,9 +50,18 @@ const isolatedLoader = compareNodeVersion([20, 0, 0]) >= 0;
 let mainThreadPort: MessagePort | undefined;
 const _globalPreload: GlobalPreloadHook = ({ port }) => {
 	mainThreadPort = port;
+	sendToParent = port.postMessage.bind(port);
+
 	return `
 	const require = getBuiltin('module').createRequire("${import.meta.url}");
 	require('@esbuild-kit/core-utils').installSourceMapSupport(port);
+	if (process.send) {
+		port.addListener('message', (message) => {
+			if (message.type === 'dependency') {
+				process.send(message);
+			}
+		});
+	}
 	port.unref(); // Allows process to exit without waiting for port to close
 	`;
 };
@@ -220,8 +236,8 @@ export const load: LoadHook = async function (
 	context,
 	defaultLoad,
 ) {
-	if (process.send) {
-		process.send({
+	if (sendToParent) {
+		sendToParent({
 			type: 'dependency',
 			path: url,
 		});
