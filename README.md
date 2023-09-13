@@ -1,6 +1,6 @@
 # esm-loader
 
-[Node.js loader](https://nodejs.org/api/esm.html#loaders) for loading TypeScript using [esbuild](https://esbuild.github.io/).
+[Node.js loader](https://nodejs.org/api/esm.html#loaders) for loading TypeScript files on-demand.
 
 ### Features
 - Transforms TypeScript to ESM on demand
@@ -10,11 +10,13 @@
 - Handles `node:` import prefixes
 - Resolves `tsconfig.json` [`paths`](https://www.typescriptlang.org/tsconfig#paths)
 
-> **Tip:**
+> **Protip: use with _cjs-loader_ or _tsx_**
 >
-> _esm-loader_ doesn't hook into `require()` calls or transform CommonJS files (`.js` in commonjs package, `.cjs`, `.cts`).
+> _esm-loader_ only transforms ES modules (`.mjs`/`.mts` extensions or `.js` files in `module` type packages).
 >
-> Use this with [cjs-loader](https://github.com/esbuild-kit/cjs-loader) for CommonJS support. Alternatively, use [tsx](https://github.com/esbuild-kit/tsx) to handle them both automatically.
+> To transform CommonJS files (`.cjs`/`.cts` extensions or `.js` files in `commonjs` type packages), use this with [_cjs-loader_](https://github.com/esbuild-kit/cjs-loader).
+>
+> Alternatively, use [tsx](https://github.com/esbuild-kit/tsx) to handle them both automatically.
 
 <br>
 
