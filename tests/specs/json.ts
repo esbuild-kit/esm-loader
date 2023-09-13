@@ -3,13 +3,18 @@ import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import type { NodeApis } from '../utils/node-with-loader.js';
 
+const jsonFixture = {
+	'package.json': JSON.stringify({
+		type: 'module',
+	}),
+	'index.json': JSON.stringify({
+		loaded: 'json',
+	}),
+};
+
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('JSON', async ({ describe, onFinish }) => {
-		const fixture = await createFixture({
-			'index.json': JSON.stringify({
-				loaded: 'json',
-			}),
-		});
+		const fixture = await createFixture(jsonFixture);
 
 		onFinish(async () => await fixture.rm());
 
@@ -66,9 +71,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 		describe('ambiguous path', async ({ describe, onFinish }) => {
 			const fixture = await createFixture({
-				'index.json': JSON.stringify({
-					loaded: 'json',
-				}),
+				...jsonFixture,
 				index: {
 					file: '',
 				},
