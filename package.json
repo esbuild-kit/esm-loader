@@ -1,62 +1,31 @@
 {
-	"name": "@esbuild-kit/esm-loader",
-	"version": "0.0.0-semantic-release",
-	"publishConfig": {
-		"access": "public"
-	},
-	"description": "Node.js loader for compiling TypeScript modules to ESM",
-	"keywords": [
-		"esbuild",
-		"loader",
-		"node",
-		"esm",
-		"typescript"
-	],
-	"license": "MIT",
-	"repository": "esbuild-kit/esm-loader",
-	"author": {
-		"name": "Hiroki Osame",
-		"email": "hiroki.osame@gmail.com"
-	},
-	"type": "module",
-	"files": [
-		"dist"
-	],
-	"main": "./dist/index.js",
-	"exports": "./dist/index.js",
-	"scripts": {
-		"build": "pkgroll --target=node12.19 --minify",
-		"lint": "eslint .",
-		"type-check": "tsc --noEmit",
-		"test": "pnpm build && node --loader @esbuild-kit/esm-loader tests",
-		"prepack": "pnpm build && clean-pkg-json"
-	},
-	"dependencies": {
-		"@esbuild-kit/core-utils": "^3.3.0",
-		"get-tsconfig": "^4.7.0"
-	},
-	"devDependencies": {
-		"@pvtnbr/eslint-config": "^0.36.0",
-		"@types/node": "^20.6.0",
-		"@types/semver": "^7.5.1",
-		"@types/source-map-support": "^0.5.7",
-		"clean-pkg-json": "^1.2.0",
-		"esbuild": "~0.18.20",
-		"eslint": "^8.49.0",
-		"execa": "^8.0.1",
-		"fs-fixture": "^1.2.0",
-		"get-node": "^14.2.1",
-		"manten": "^1.1.0",
-		"pkgroll": "^1.11.0",
-		"semver": "^7.5.4",
-		"source-map-support": "^0.5.21",
-		"type-fest": "^4.3.1",
-		"typescript": "^5.2.2"
-	},
-	"eslintConfig": {
-		"extends": "@pvtnbr",
-		"ignorePatterns": [
-			"tests/fixtures"
-		]
-	}
+  "name": "@esbuild-kit/esm-loader",
+  "version": "0.0.0-semantic-release",
+  "publishConfig": {
+    "access": "public"
+  },
+  "description": "Node.js loader for compiling TypeScript modules to ESM",
+  "keywords": [
+    "esbuild",
+    "loader",
+    "node",
+    "esm",
+    "typescript"
+  ],
+  "license": "MIT",
+  "repository": "esbuild-kit/esm-loader",
+  "author": {
+    "name": "Hiroki Osame",
+    "email": "hiroki.osame@gmail.com"
+  },
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "main": "./dist/index.js",
+  "exports": "./dist/index.js",
+  "dependencies": {
+    "@esbuild-kit/core-utils": "^3.3.0",
+    "get-tsconfig": "^4.7.0"
+  }
 }
