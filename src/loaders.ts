@@ -34,12 +34,14 @@ type resolve = (
 	recursiveCall?: boolean,
 ) => MaybePromise<ResolveFnOutput>;
 
+const isolatedLoader = compareNodeVersion([20, 0, 0]) >= 0;
+
 /**
  * Technically globalPreload is deprecated so it should be in loaders-deprecated
  * but it shares a closure with the new load hook
  */
 let mainThreadPort: MessagePort | undefined;
-export const globalPreload: GlobalPreloadHook = ({ port }) => {
+const _globalPreload: GlobalPreloadHook = ({ port }) => {
 	mainThreadPort = port;
 	return `
 	const require = getBuiltin('module').createRequire("${import.meta.url}");
@@ -47,6 +49,8 @@ export const globalPreload: GlobalPreloadHook = ({ port }) => {
 	port.unref(); // Allows process to exit without waiting for port to close
 	`;
 };
+
+export const globalPreload = isolatedLoader ? _globalPreload : undefined;
 
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
 
