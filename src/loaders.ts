@@ -174,7 +174,13 @@ export const resolve: resolve = async function (
 	/**
 	 * Typescript gives .ts, .cts, or .mts priority over actual .js, .cjs, or .mjs extensions
 	 */
-	if (tsExtensionsPattern.test(context.parentURL!)) {
+	if (
+		context.parentURL
+		&& (
+			tsExtensionsPattern.test(context.parentURL)
+			|| fileMatcher?.(fileURLToPath(context.parentURL))
+		)
+	) {
 		const tsPath = resolveTsPath(specifier);
 
 		if (tsPath) {
@@ -262,6 +268,7 @@ export const load: LoadHook = async function (
 	if (
 		// Support named imports in JSON modules
 		loaded.format === 'json'
+		|| url.endsWith('.jsx')
 		|| tsExtensionsPattern.test(url)
 	) {
 		const transformed = await transform(

@@ -1,3 +1,5 @@
+const { fileURLToPath } = require('node:url');
+
 async function test(description: string, testFunction: () => any | Promise<any>) {
 	try {
 		const result = await testFunction();
@@ -31,9 +33,25 @@ test(
 	'sourcemaps',
 	() => {
 		const stack = (new Error()).stack!;
-		const pathIndex = stack.indexOf(`${__filename}:33:`);
-		const previousCharacter = stack[pathIndex - 1];
-		return pathIndex > -1 && previousCharacter !== ':';
+		const errorPosition = ':35:';
+		const isWindows = process.platform === 'win32';
+		let pathname = fileURLToPath(import.meta.url);
+		if (isWindows) {
+			// Remove drive letter
+			pathname = pathname.slice(2);
+		}
+
+		let pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+		if (
+			pathIndex === -1
+			&& isWindows
+		) {
+			// Convert backslash to slash
+			pathname = pathname.replace(/\\/g, '/');
+			pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+		}
+
+		return pathIndex > -1;
 	},
 );
 

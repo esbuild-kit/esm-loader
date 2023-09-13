@@ -31,9 +31,25 @@ test(
 	'sourcemaps',
 	() => {
 		const { stack } = new Error();
-		const pathIndex = stack.indexOf(__filename + ':33:');
-		const previousCharacter = stack[pathIndex - 1];
-		return pathIndex > -1 && previousCharacter !== ':';
+		const errorPosition = ':33:';
+		const isWindows = process.platform === 'win32';
+		let pathname = __filename;
+		if (isWindows) {
+			// Remove drive letter
+			pathname = pathname.slice(2);
+		}
+
+		let pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+		if (
+			pathIndex === -1
+			&& isWindows
+		) {
+			// Convert backslash to slash
+			pathname = pathname.replace(/\\/g, '/');
+			pathIndex = stack.indexOf(`${pathname}${errorPosition}`);
+		}
+
+		return pathIndex > -1;
 	},
 );
 
