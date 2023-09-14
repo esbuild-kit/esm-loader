@@ -47,7 +47,6 @@
 		"fs-fixture": "^1.2.0",
 		"get-node": "^14.2.1",
 		"manten": "^1.1.0",
-		"outdent": "^0.8.0",
 		"pkgroll": "^1.11.0",
 		"semver": "^7.5.4",
 		"source-map-support": "^0.5.21",

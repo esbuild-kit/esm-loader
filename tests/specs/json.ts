@@ -1,6 +1,5 @@
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
-import { outdent } from 'outdent';
 import type { NodeApis } from '../utils/node-with-loader.js';
 
 const jsonFixture = {
@@ -27,13 +26,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.importFile(fixture.path, './index.json');
-				expect(nodeProcess.stdout).toMatch(
-					outdent`
-					[Module: null prototype] {
-					  default: { loaded: 'json' },
-					  loaded: 'json'
-					}`,
-				);
+				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
 		});
 
@@ -46,13 +39,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.importFile(fixture.path, './index');
-				expect(nodeProcess.stdout).toMatch(
-					outdent`
-					[Module: null prototype] {
-					  default: { loaded: 'json' },
-					  loaded: 'json'
-					}`,
-				);
+				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
 		});
 
@@ -68,13 +55,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.importFile(fixture.path, '.');
-				expect(nodeProcess.stdout).toMatch(
-					outdent`
-					[Module: null prototype] {
-					  default: { loaded: 'json' },
-					  loaded: 'json'
-					}`,
-				);
+				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
 		});
 
@@ -97,13 +78,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Import', async () => {
 					const nodeProcess = await node.importFile(fixture.path, './index');
-					expect(nodeProcess.stdout).toMatch(
-						outdent`
-						[Module: null prototype] {
-						  default: { loaded: 'json' },
-						  loaded: 'json'
-						}`,
-					);
+					expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 				});
 			});
 

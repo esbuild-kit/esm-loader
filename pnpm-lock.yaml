@@ -46,9 +46,6 @@ devDependencies:
   manten:
     specifier: ^1.1.0
     version: 1.1.0
-  outdent:
-    specifier: ^0.8.0
-    version: 0.8.0
   pkgroll:
     specifier: ^1.11.0
     version: 1.11.0(typescript@5.2.2)
@@ -2943,10 +2940,6 @@ packages:
       levn: 0.4.1
       prelude-ls: 1.2.1
       type-check: 0.4.0
-    dev: true
-
-  /outdent@0.8.0:
-    resolution: {integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==}
     dev: true
 
   /p-cancelable@3.0.0:
