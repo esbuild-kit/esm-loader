@@ -159,7 +159,6 @@ export const resolve: resolve = async function (
 		&& !isPath // bare specifier
 		&& !context.parentURL?.includes('/node_modules/')
 	) {
-		// console.log('tsconfigPathsMatcher', {specifier});
 		const possiblePaths = tsconfigPathsMatcher(specifier);
 		for (const possiblePath of possiblePaths) {
 			try {
