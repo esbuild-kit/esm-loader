@@ -21,6 +21,7 @@ export const nodeWithLoader = (
 	{
 		env: {
 			ESBK_DISABLE_CACHE: '1',
+			TEST: '1',
 			...options.env,
 		},
 		nodeOptions: [
