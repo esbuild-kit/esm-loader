@@ -125,7 +125,7 @@ async function tryDirectory(
 	}
 }
 
-const isPathPattern = /^\.{0,2}\//;
+const isRelativePathPattern = /^\.{1,2}\//;
 
 const supportsNodePrefix = (
 	compareNodeVersion([14, 13, 1]) >= 0
@@ -149,11 +149,17 @@ export const resolve: resolve = async function (
 		return await tryDirectory(specifier, context, defaultResolve);
 	}
 
+	const isPath = (
+		specifier.startsWith(fileProtocol)
+		|| isRelativePathPattern.test(specifier)
+	);
+
 	if (
 		tsconfigPathsMatcher
-		&& !specifier.startsWith(fileProtocol)
+		&& !isPath // bare specifier
 		&& !context.parentURL?.includes('/node_modules/')
 	) {
+		// console.log('tsconfigPathsMatcher', {specifier});
 		const possiblePaths = tsconfigPathsMatcher(specifier);
 		for (const possiblePath of possiblePaths) {
 			try {
