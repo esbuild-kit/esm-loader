@@ -21,17 +21,16 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 		describe('full path', ({ test }) => {
 			const importPath = pathToFileURL(path.join(fixture.path, 'index.json')).toString();
-
+			console.log({ importPath });
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
+				console.log(nodeProcess);
 				expect(nodeProcess.exitCode).toBe(0);
 				expect(nodeProcess.stdout).toBe('');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
-				console.log(nodeProcess.stderr);
-				console.log(nodeProcess);
 				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
 			});
 		});
