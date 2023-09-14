@@ -1,7 +1,6 @@
-import path from 'path';
-import { pathToFileURL } from 'url';
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
+import { outdent } from 'outdent';
 import type { NodeApis } from '../utils/node-with-loader.js';
 
 const jsonFixture = {
@@ -20,42 +19,46 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		onFinish(async () => await fixture.rm());
 
 		describe('full path', ({ test }) => {
-			const importPath = path.join(fixture.path, 'index.json');
 			test('Load', async () => {
-				const nodeProcess = await node.load(importPath);
+				const nodeProcess = await node.loadFile(fixture.path, './index.json');
 				expect(nodeProcess.exitCode).toBe(0);
 				expect(nodeProcess.stdout).toBe('');
 			});
 
-			const importUrl = pathToFileURL(importPath).toString();
 			test('Import', async () => {
-				const nodeProcess = await node.import(importUrl);
-				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
+				const nodeProcess = await node.importFile(fixture.path, './index.json');
+				expect(nodeProcess.stdout).toMatch(
+					outdent`
+					[Module: null prototype] {
+					  default: { loaded: 'json' },
+					  loaded: 'json'
+					}`,
+				);
 			});
 		});
 
 		describe('extensionless', ({ test }) => {
-			const importPath = path.join(fixture.path, 'index');
 			test('Load', async () => {
-				const nodeProcess = await node.load(importPath);
+				const nodeProcess = await node.loadFile(fixture.path, './index');
 				expect(nodeProcess.exitCode).toBe(0);
 				expect(nodeProcess.stdout).toBe('');
 			});
 
-			const importUrl = pathToFileURL(importPath).toString();
-			test('Import', async ({ onTestFail }) => {
-				const nodeProcess = await node.import(importUrl);
-				onTestFail(() => {
-					console.log(nodeProcess);
-				});
-				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
+			test('Import', async () => {
+				const nodeProcess = await node.importFile(fixture.path, './index');
+				expect(nodeProcess.stdout).toMatch(
+					outdent`
+					[Module: null prototype] {
+					  default: { loaded: 'json' },
+					  loaded: 'json'
+					}`,
+				);
 			});
 		});
 
 		describe('directory', ({ test }) => {
-			const importPath = fixture.path;
 			test('Load', async ({ onTestFail }) => {
-				const nodeProcess = await node.load(importPath);
+				const nodeProcess = await node.loadFile(fixture.path, '.');
 				onTestFail(() => {
 					console.log(nodeProcess);
 				});
@@ -63,10 +66,15 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stdout).toBe('');
 			});
 
-			const importUrl = pathToFileURL(importPath).toString();
 			test('Import', async () => {
-				const nodeProcess = await node.import(importUrl);
-				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
+				const nodeProcess = await node.importFile(fixture.path, '.');
+				expect(nodeProcess.stdout).toMatch(
+					outdent`
+					[Module: null prototype] {
+					  default: { loaded: 'json' },
+					  loaded: 'json'
+					}`,
+				);
 			});
 		});
 
@@ -81,25 +89,27 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			onFinish(async () => await fixture.rm());
 
 			describe('ambiguous path to directory should fallback to file', async ({ test }) => {
-				const importPath = path.join(fixture.path, 'index');
 				test('Load', async () => {
-					const nodeProcess = await node.load(importPath);
+					const nodeProcess = await node.loadFile(fixture.path, './index');
 					expect(nodeProcess.exitCode).toBe(0);
 					expect(nodeProcess.stdout).toBe('');
 				});
 
-				const importUrl = pathToFileURL(importPath).toString();
 				test('Import', async () => {
-					const nodeProcess = await node.import(importUrl);
-					expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
+					const nodeProcess = await node.importFile(fixture.path, './index');
+					expect(nodeProcess.stdout).toMatch(
+						outdent`
+						[Module: null prototype] {
+						  default: { loaded: 'json' },
+						  loaded: 'json'
+						}`,
+					);
 				});
 			});
 
 			describe('explicit directory should not fallback to file', ({ test }) => {
-				const importUrl = pathToFileURL(path.join(fixture.path, 'index/')).toString();
-
 				test('Import', async () => {
-					const nodeProcess = await node.import(importUrl);
+					const nodeProcess = await node.importFile(fixture.path, './index/');
 					expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
 				});
 			});

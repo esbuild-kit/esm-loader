@@ -1,4 +1,5 @@
 import path from 'path';
+import fs from 'fs/promises';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { execaNode } from 'execa';
 import getNode from 'get-node';
@@ -64,6 +65,7 @@ export async function createNode(
 				},
 			);
 		},
+
 		import(
 			filePath: string,
 			options?: {
@@ -78,6 +80,40 @@ export async function createNode(
 				nodePath: node.path,
 				cwd: fixturePath,
 			});
+		},
+
+		loadFile(
+			cwd: string,
+			filePath: string,
+			options?: {
+				env?: typeof process.env;
+				nodeOptions?: string[];
+			},
+		) {
+			return nodeWithLoader(
+				{
+					args: [filePath],
+					nodePath: node.path,
+					cwd,
+					env: options?.env,
+					nodeOptions: options?.nodeOptions,
+				},
+			);
+		},
+
+		async importFile(
+			cwd: string,
+			importFrom: string,
+			fileExtension = '.js',
+		) {
+			const fileName = `_${Math.random().toString(36).slice(2)}${fileExtension}`;
+			const filePath = path.resolve(cwd, fileName);
+			await fs.writeFile(filePath, `import * as _ from '${importFrom}';console.log(_)`);
+			try {
+				return await this.loadFile(cwd, filePath);
+			} finally {
+				await fs.rm(filePath);
+			}
 		},
 	};
 }
