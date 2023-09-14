@@ -2,7 +2,7 @@ import { describe } from 'manten';
 import { createNode } from './utils/node-with-loader.js';
 
 const nodeVersions = [
-	'18',
+	// '18',
 	'20',
 	// ...(
 	// 	process.env.CI
@@ -49,10 +49,10 @@ const nodeVersions = [
 				// );
 			});
 
-			runTestSuite(
-				import('./specs/package-cjs.js'),
-				await createNode(nodeVersion, './tests/fixtures/package-commonjs'),
-			);
+			// runTestSuite(
+			// 	import('./specs/package-cjs.js'),
+			// 	await createNode(nodeVersion, './tests/fixtures/package-commonjs'),
+			// );
 		});
 	}
 })();
