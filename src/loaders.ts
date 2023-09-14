@@ -125,7 +125,7 @@ async function tryDirectory(
 	}
 }
 
-const isPathPattern = /^\.{0,2}\//;
+const isRelativePathPattern = /^\.{1,2}\//;
 
 const supportsNodePrefix = (
 	compareNodeVersion([14, 13, 1]) >= 0
@@ -151,7 +151,7 @@ export const resolve: resolve = async function (
 
 	const isPath = (
 		specifier.startsWith(fileProtocol)
-		|| isPathPattern.test(specifier)
+		|| isRelativePathPattern.test(specifier)
 	);
 
 	if (
