@@ -113,7 +113,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stdout).toBe('nested-resolve-target');
 			});
 
-			test('resolves paths prefix', async () => {
+			test('resolves paths slash prefix', async () => {
 				const nodeProcess = await node.load('./src/paths-slash-match.ts', {
 					cwd: './tsconfig',
 				});
