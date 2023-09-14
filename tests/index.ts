@@ -4,7 +4,10 @@ import { createNode } from './utils/node-with-loader.js';
 const nodeVersions = [
 	'20',
 	...(
-		process.env.CI
+		(
+			process.env.CI
+			&& process.platform !== 'win32'
+		)
 			? [
 				'12.20.0', // CJS named export detection added
 				'12',
