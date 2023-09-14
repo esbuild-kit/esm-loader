@@ -13,8 +13,7 @@ import {
 import type { TransformOptions } from 'esbuild';
 import {
 	applySourceMap,
-	tsconfigPathsMatcher,
-	fileMatcher,
+	projectsMap,
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
@@ -114,7 +113,7 @@ async function tryDirectory(
 		if (!isExplicitDirectory) {
 			try {
 				return await tryExtensions(specifier, context, defaultResolve);
-			} catch {}
+			} catch { }
 		}
 
 		const error = _error as Error;
@@ -155,11 +154,18 @@ export const resolve: resolve = async function (
 	);
 
 	if (
-		tsconfigPathsMatcher
+		projectsMap.size > 0
 		&& !isPath // bare specifier
 		&& !context.parentURL?.includes('/node_modules/')
 	) {
-		const possiblePaths = tsconfigPathsMatcher(specifier);
+		const possiblePaths: string[] = [];
+		projectsMap.forEach((project) => {
+			if (project.tsconfigPathsMatcher) {
+				const possibleProjectPaths = project.tsconfigPathsMatcher(specifier);
+				possiblePaths.push(...possibleProjectPaths);
+			}
+		});
+
 		for (const possiblePath of possiblePaths) {
 			try {
 				return await resolve(
@@ -172,11 +178,10 @@ export const resolve: resolve = async function (
 	}
 
 	/**
-	 * Typescript gives .ts, .cts, or .mts priority over actual .js, .cjs, or .mjs extensions
-	 */
+ * Typescript gives .ts, .cts, or .mts priority over actual .js, .cjs, or .mjs extensions
+ */
 	if (tsExtensionsPattern.test(context.parentURL!)) {
 		const tsPath = resolveTsPath(specifier);
-
 		if (tsPath) {
 			try {
 				return await resolve(tsPath, context, defaultResolve, true);
@@ -264,11 +269,19 @@ export const load: LoadHook = async function (
 		loaded.format === 'json'
 		|| tsExtensionsPattern.test(url)
 	) {
+		let tsconfigRaw: TransformOptions['tsconfigRaw'];
+		for (const project of projectsMap.values()) {
+			tsconfigRaw = project.fileMatcher(filePath) as TransformOptions['tsconfigRaw'];
+			if (tsconfigRaw) {
+				break;
+			}
+		}
+
 		const transformed = await transform(
 			code,
 			filePath,
 			{
-				tsconfigRaw: fileMatcher?.(filePath) as TransformOptions['tsconfigRaw'],
+				tsconfigRaw,
 			},
 		);
 

@@ -5,9 +5,23 @@
 		"jsxFragmentFactory": "null",
 		"baseUrl": "./src",
 		"paths": {
-			"paths-exact-match": ["resolve-target"],
-			"p/*": ["utils/*"],
-			"*/s": ["utils/*"]
+			"paths-exact-match": [
+				"resolve-target"
+			],
+			"p/*": [
+				"utils/*"
+			],
+			"*/s": [
+				"utils/*"
+			],
+			"resolve-project-reference": [
+				"../resolve-project-reference/src/index.ts"
+			]
 		},
 	},
+	"references": [
+		{
+			"path": "./resolve-project-reference"
+		}
+	]
 }

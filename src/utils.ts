@@ -11,17 +11,47 @@ import { getPackageType } from './package-json.js';
 
 export const applySourceMap = installSourceMapSupport();
 
-const tsconfig = (
-	process.env.ESBK_TSCONFIG_PATH
-		? {
-			path: path.resolve(process.env.ESBK_TSCONFIG_PATH),
-			config: parseTsconfig(process.env.ESBK_TSCONFIG_PATH),
-		}
-		: getTsconfig()
-);
+function getProjectsMap(tsconfigPath?: string, projectsMap?: Map<string, {
+	tsconfig: ReturnType<typeof getTsconfig>;
+	tsconfigPathsMatcher: ReturnType<typeof createPathsMatcher>;
+	fileMatcher: ReturnType<typeof createFilesMatcher>;
+}>) {
+	if (!projectsMap) {
+		projectsMap = new Map();
+	}
 
-export const fileMatcher = tsconfig && createFilesMatcher(tsconfig);
-export const tsconfigPathsMatcher = tsconfig && createPathsMatcher(tsconfig);
+	const tsconfig = (
+		tsconfigPath
+			? {
+				path: path.resolve(tsconfigPath),
+				config: parseTsconfig(tsconfigPath),
+			}
+			: getTsconfig()
+	);
+
+	if (!tsconfig) {
+		return projectsMap;
+	}
+
+	if (projectsMap.has(tsconfig.path)) {
+		return projectsMap;
+	}
+
+	projectsMap.set(tsconfig.path, {
+		tsconfig,
+		tsconfigPathsMatcher: tsconfig && createPathsMatcher(tsconfig),
+		fileMatcher: tsconfig && createFilesMatcher(tsconfig),
+	});
+
+	tsconfig?.config?.references?.forEach((reference) => {
+		const referencedTsconfigPath = reference.path.endsWith('.json') ? reference.path : path.join(reference.path, 'tsconfig.json');
+		projectsMap = getProjectsMap(referencedTsconfigPath, projectsMap);
+	});
+
+	return projectsMap;
+}
+
+export const projectsMap = getProjectsMap(process.env.ESBK_TSCONFIG_PATH);
 
 export const fileProtocol = 'file://';
 
