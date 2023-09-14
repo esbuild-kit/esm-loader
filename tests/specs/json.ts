@@ -20,91 +20,89 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		onFinish(async () => await fixture.rm());
 
 		describe('full path', ({ test }) => {
-			const importPath = pathToFileURL(path.join(fixture.path, 'index.json')).toString();
-			console.log({ importPath });
+			const importPath = path.join(fixture.path, 'index.json');
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				console.log(nodeProcess);
 				expect(nodeProcess.exitCode).toBe(0);
 				expect(nodeProcess.stdout).toBe('');
 			});
 
-			// test('Import', async () => {
-			// 	const nodeProcess = await node.import(importPath);
-			// 	expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
-			// });
+			const importUrl = pathToFileURL(importPath).toString();
+			test('Import', async () => {
+				const nodeProcess = await node.import(importUrl);
+				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
+			});
 		});
 
-		// describe('extensionless', ({ test }) => {
-		// 	const importPath = path.join(fixture.path, 'index');
+		describe('extensionless', ({ test }) => {
+			const importPath = path.join(fixture.path, 'index');
+			test('Load', async () => {
+				const nodeProcess = await node.load(importPath);
+				expect(nodeProcess.exitCode).toBe(0);
+				expect(nodeProcess.stdout).toBe('');
+			});
 
-		// 	test('Load', async () => {
-		// 		const nodeProcess = await node.load(importPath);
-		// 		expect(nodeProcess.exitCode).toBe(0);
-		// 		expect(nodeProcess.stdout).toBe('');
-		// 	});
+			const importUrl = pathToFileURL(importPath).toString();
+			test('Import', async ({ onTestFail }) => {
+				const nodeProcess = await node.import(importUrl);
+				onTestFail(() => {
+					console.log(nodeProcess);
+				});
+				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
+			});
+		});
 
-		// 	test('Import', async ({ onTestFail }) => {
-		// 		const nodeProcess = await node.import(importPath);
-		// 		onTestFail(() => {
-		// 			console.log(nodeProcess);
-		// 		});
-		// 		expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
-		// 	});
-		// });
+		describe('directory', ({ test }) => {
+			const importPath = fixture.path;
+			test('Load', async ({ onTestFail }) => {
+				const nodeProcess = await node.load(importPath);
+				onTestFail(() => {
+					console.log(nodeProcess);
+				});
+				expect(nodeProcess.exitCode).toBe(0);
+				expect(nodeProcess.stdout).toBe('');
+			});
 
-		// describe('directory', ({ test }) => {
-		// 	const importPath = fixture.path;
+			const importUrl = pathToFileURL(importPath).toString();
+			test('Import', async () => {
+				const nodeProcess = await node.import(importUrl);
+				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
+			});
+		});
 
-		// 	test('Load', async ({ onTestFail }) => {
-		// 		const nodeProcess = await node.load(importPath);
-		// 		onTestFail(() => {
-		// 			console.log(nodeProcess);
-		// 		});
-		// 		expect(nodeProcess.exitCode).toBe(0);
-		// 		expect(nodeProcess.stdout).toBe('');
-		// 	});
+		describe('ambiguous path', async ({ describe, onFinish }) => {
+			const fixture = await createFixture({
+				...jsonFixture,
+				index: {
+					file: '',
+				},
+			});
 
-		// 	test('Import', async () => {
-		// 		const nodeProcess = await node.import(importPath);
-		// 		expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
-		// 		console.log(nodeProcess.stderr);
-		// 	});
-		// });
+			onFinish(async () => await fixture.rm());
 
-		// describe('ambiguous path', async ({ describe, onFinish }) => {
-		// 	const fixture = await createFixture({
-		// 		...jsonFixture,
-		// 		index: {
-		// 			file: '',
-		// 		},
-		// 	});
+			describe('ambiguous path to directory should fallback to file', async ({ test }) => {
+				const importPath = path.join(fixture.path, 'index');
+				test('Load', async () => {
+					const nodeProcess = await node.load(importPath);
+					expect(nodeProcess.exitCode).toBe(0);
+					expect(nodeProcess.stdout).toBe('');
+				});
 
-		// 	onFinish(async () => await fixture.rm());
+				const importUrl = pathToFileURL(importPath).toString();
+				test('Import', async () => {
+					const nodeProcess = await node.import(importUrl);
+					expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
+				});
+			});
 
-		// 	describe('ambiguous path to directory should fallback to file', async ({ test }) => {
-		// 		const importPath = path.join(fixture.path, 'index');
+			describe('explicit directory should not fallback to file', ({ test }) => {
+				const importUrl = pathToFileURL(path.join(fixture.path, 'index/')).toString();
 
-		// 		test('Load', async () => {
-		// 			const nodeProcess = await node.load(importPath);
-		// 			expect(nodeProcess.exitCode).toBe(0);
-		// 			expect(nodeProcess.stdout).toBe('');
-		// 		});
-
-		// 		test('Import', async () => {
-		// 			const nodeProcess = await node.import(importPath);
-		// 			expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
-		// 		});
-		// 	});
-
-		// 	describe('explicit directory should not fallback to file', ({ test }) => {
-		// 		const importPath = path.join(fixture.path, 'index/');
-
-		// 		test('Import', async () => {
-		// 			const nodeProcess = await node.import(importPath);
-		// 			expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
-		// 		});
-		// 	});
-		// });
+				test('Import', async () => {
+					const nodeProcess = await node.import(importUrl);
+					expect(nodeProcess.stderr).toMatch('ERR_MODULE_NOT_FOUND');
+				});
+			});
+		});
 	});
 });
