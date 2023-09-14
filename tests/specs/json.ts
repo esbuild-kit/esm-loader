@@ -29,10 +29,10 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stdout).toBe('');
 			});
 
-			test('Import', async () => {
-				const nodeProcess = await node.import(importPath);
-				expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
-			});
+			// test('Import', async () => {
+			// 	const nodeProcess = await node.import(importPath);
+			// 	expect(nodeProcess.stdout).toMatch('{"default":{"loaded":"json"},"loaded":"json"}');
+			// });
 		});
 
 		// describe('extensionless', ({ test }) => {

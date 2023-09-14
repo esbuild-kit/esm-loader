@@ -138,6 +138,11 @@ export const resolve: resolve = async function (
 	defaultResolve,
 	recursiveCall,
 ) {
+	console.log('resolve', {
+		specifier,
+		context,
+	});
+
 	// Added in v12.20.0
 	// https://nodejs.org/api/esm.html#esm_node_imports
 	if (!supportsNodePrefix && specifier.startsWith('node:')) {
