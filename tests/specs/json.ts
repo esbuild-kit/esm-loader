@@ -1,4 +1,5 @@
 import path from 'path';
+import { pathToFileURL } from 'url';
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import type { NodeApis } from '../utils/node-with-loader.js';
@@ -19,7 +20,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 		onFinish(async () => await fixture.rm());
 
 		describe('full path', ({ test }) => {
-			const importPath = path.join(fixture.path, 'index.json');
+			const importPath = pathToFileURL(path.join(fixture.path, 'index.json')).toString();
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
