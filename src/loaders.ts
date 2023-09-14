@@ -149,14 +149,9 @@ export const resolve: resolve = async function (
 		return await tryDirectory(specifier, context, defaultResolve);
 	}
 
-	const isPath = (
-		specifier.startsWith(fileProtocol)
-		|| isPathPattern.test(specifier)
-	);
-
 	if (
 		tsconfigPathsMatcher
-		&& !isPath // bare specifier
+		&& !specifier.startsWith(fileProtocol)
 		&& !context.parentURL?.includes('/node_modules/')
 	) {
 		const possiblePaths = tsconfigPathsMatcher(specifier);
