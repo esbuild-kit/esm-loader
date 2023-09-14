@@ -1,6 +1,6 @@
 # esm-loader
 
-[Node.js loader](https://nodejs.org/api/esm.html#loaders) for loading TypeScript files on-demand.
+[Node.js loader](https://nodejs.org/api/esm.html#loaders) for loading TypeScript files.
 
 ### Features
 - Transforms TypeScript to ESM on demand
