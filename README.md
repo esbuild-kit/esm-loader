@@ -9,6 +9,7 @@
 - Supports Node.js v12.20.0+
 - Handles `node:` import prefixes
 - Resolves `tsconfig.json` [`paths`](https://www.typescriptlang.org/tsconfig#paths)
+- Named imports from JSON modules
 
 > **Protip: use with _cjs-loader_ or _tsx_**
 >
