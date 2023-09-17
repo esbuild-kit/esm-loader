@@ -31,7 +31,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			});
 
 			test('Import with query', async () => {
-				const nodeProcess = await node.importFile(fixture.path, './index.json' + query);
+				const nodeProcess = await node.importFile(fixture.path, `./index.json${query}`);
 				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
 		});
@@ -49,13 +49,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			});
 
 			test('Import with query', async () => {
-				const nodeProcess = await node.importFile(fixture.path, './index' + query);
+				const nodeProcess = await node.importFile(fixture.path, `./index${query}`);
 				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
 		});
 
 		describe('directory', ({ test }) => {
-			test('Load', async ({ onTestFail }) => {
+			test('Load', async () => {
 				const nodeProcess = await node.loadFile(fixture.path, '.');
 				expect(nodeProcess.exitCode).toBe(0);
 				expect(nodeProcess.stdout).toBe('');
@@ -66,8 +66,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
 
-			test('Import with query', async ({ onTestFail }) => {
-				const nodeProcess = await node.importFile(fixture.path, './' + query);
+			test('Import with query', async () => {
+				const nodeProcess = await node.importFile(fixture.path, `./${query}`);
 				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
 		});

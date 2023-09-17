@@ -29,7 +29,7 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				assertResults(nodeProcess.stdout);
 			});
 
-			test('Import', async ({ onTestFail }) => {
+			test('Import', async () => {
 				const nodeProcess = await node.import(importPath + query);
 				assertResults(nodeProcess.stdout);
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');

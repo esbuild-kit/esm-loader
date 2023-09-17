@@ -22,8 +22,8 @@ import {
 	type NodeError,
 } from './utils.js';
 
-const isJsonPattern = /\.json($|\?)/;
-const isDirectoryPattern = /\/($|\?)/; // Not sure if queries are allowed in directories
+const isJsonPattern = /\.json(?:$|\?)/;
+const isDirectoryPattern = /\/(?:$|\?)/;
 
 type NextResolve = (
 	specifier: string,
@@ -109,7 +109,7 @@ async function tryDirectory(
 	context: ResolveHookContext,
 	defaultResolve: NextResolve,
 ) {
-	const isExplicitDirectory = isDirectoryPattern.test(specifier);//.endsWith('/');
+	const isExplicitDirectory = isDirectoryPattern.test(specifier);
 	const appendIndex = isExplicitDirectory ? 'index' : '/index';
 	const [specifierWithoutQuery, query] = specifier.split('?');
 
