@@ -88,7 +88,6 @@ const resolveExplicitPath = async (
 	return resolved;
 };
 
-
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
 
 async function tryExtensions(
