@@ -3,6 +3,7 @@ import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader.js';
 import nodeSupports from '../../utils/node-supports.js';
 import { assertNotFound } from '../../utils/assertions.js';
+import { query } from '../../utils/query.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.ts extension', ({ describe }) => {

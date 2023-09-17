@@ -25,7 +25,7 @@ export const tsconfigPathsMatcher = tsconfig && createPathsMatcher(tsconfig);
 
 export const fileProtocol = 'file://';
 
-export const tsExtensionsPattern = /\.([cm]?ts|[tj]sx)$/;
+export const tsExtensionsPattern = /\.([cm]?ts|[tj]sx)($|\?)/;
 
 const getFormatFromExtension = (fileUrl: string): ModuleFormat | undefined => {
 	const extension = path.extname(fileUrl);

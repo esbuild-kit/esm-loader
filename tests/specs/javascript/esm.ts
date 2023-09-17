@@ -4,6 +4,8 @@ import type { NodeApis } from '../../utils/node-with-loader.js';
 import nodeSupports from '../../utils/node-supports.js';
 import { assertNotFound } from '../../utils/assertions.js';
 
+const query = '?query=123';
+
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('Load ESM', ({ describe }) => {
 		describe('.mjs extension', ({ describe }) => {
@@ -32,6 +34,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
+
+				test('Import with query', async () => {
+					const nodeProcess = await node.import(importPath + query);
 					assertResults(nodeProcess);
 					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});
@@ -98,6 +106,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 				test('Import', async () => {
 					const nodeProcess = await node.import(importPath);
+					assertResults(nodeProcess);
+					expect(nodeProcess.stdout).toMatch('{"default":1234}');
+				});
+
+				test('Import with query', async () => {
+					const nodeProcess = await node.import(importPath + query);
 					assertResults(nodeProcess);
 					expect(nodeProcess.stdout).toMatch('{"default":1234}');
 				});

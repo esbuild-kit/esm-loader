@@ -22,6 +22,9 @@ import {
 	type NodeError,
 } from './utils.js';
 
+const isJsonPattern = /\.json($|\?)/;
+const isDirectoryPattern = /\/($|\?)/; // Not sure if queries are allowed in directories
+
 type NextResolve = (
 	specifier: string,
 	context?: ResolveHookContext,
@@ -75,11 +78,12 @@ async function tryExtensions(
 	context: ResolveHookContext,
 	defaultResolve: NextResolve,
 ) {
+	const [specifierWithoutQuery, query] = specifier.split('?');
 	let throwError: Error | undefined;
 	for (const extension of extensions) {
 		try {
 			return await resolve(
-				specifier + extension,
+				specifierWithoutQuery + extension + (query ? `?${query}` : ''),
 				context,
 				defaultResolve,
 				true,
@@ -105,11 +109,12 @@ async function tryDirectory(
 	context: ResolveHookContext,
 	defaultResolve: NextResolve,
 ) {
-	const isExplicitDirectory = specifier.endsWith('/');
+	const isExplicitDirectory = isDirectoryPattern.test(specifier);//.endsWith('/');
 	const appendIndex = isExplicitDirectory ? 'index' : '/index';
+	const [specifierWithoutQuery, query] = specifier.split('?');
 
 	try {
-		return await tryExtensions(specifier + appendIndex, context, defaultResolve);
+		return await tryExtensions(specifierWithoutQuery + appendIndex + (query ? `?${query}` : ''), context, defaultResolve);
 	} catch (_error) {
 		if (!isExplicitDirectory) {
 			try {
@@ -145,7 +150,7 @@ export const resolve: resolve = async function (
 	}
 
 	// If directory, can be index.js, index.ts, etc.
-	if (specifier.endsWith('/')) {
+	if (isDirectoryPattern.test(specifier)) {
 		return await tryDirectory(specifier, context, defaultResolve);
 	}
 
@@ -243,7 +248,7 @@ export const load: LoadHook = async function (
 		});
 	}
 
-	if (url.endsWith('.json')) {
+	if (isJsonPattern.test(url)) {
 		if (!context.importAssertions) {
 			context.importAssertions = {};
 		}

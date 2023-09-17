@@ -3,6 +3,7 @@ import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader.js';
 import nodeSupports from '../../utils/node-supports.js';
 import { assertNotFound } from '../../utils/assertions.js';
+import { query } from '../../utils/query.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.mts extension', ({ describe }) => {
@@ -28,8 +29,8 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				assertResults(nodeProcess.stdout);
 			});
 
-			test('Import', async () => {
-				const nodeProcess = await node.import(importPath);
+			test('Import', async ({ onTestFail }) => {
+				const nodeProcess = await node.import(importPath + query);
 				assertResults(nodeProcess.stdout);
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');
 			});

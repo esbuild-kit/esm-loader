@@ -1,6 +1,7 @@
 import { testSuite, expect } from 'manten';
 import { createFixture } from 'fs-fixture';
 import type { NodeApis } from '../utils/node-with-loader.js';
+import { query } from '../utils/query.js';
 
 const jsonFixture = {
 	'package.json': JSON.stringify({
@@ -28,6 +29,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const nodeProcess = await node.importFile(fixture.path, './index.json');
 				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.importFile(fixture.path, './index.json' + query);
+				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
+			});
 		});
 
 		describe('extensionless', ({ test }) => {
@@ -41,20 +47,27 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const nodeProcess = await node.importFile(fixture.path, './index');
 				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.importFile(fixture.path, './index' + query);
+				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
+			});
 		});
 
 		describe('directory', ({ test }) => {
 			test('Load', async ({ onTestFail }) => {
 				const nodeProcess = await node.loadFile(fixture.path, '.');
-				onTestFail(() => {
-					console.log(nodeProcess);
-				});
 				expect(nodeProcess.exitCode).toBe(0);
 				expect(nodeProcess.stdout).toBe('');
 			});
 
 			test('Import', async () => {
 				const nodeProcess = await node.importFile(fixture.path, '.');
+				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
+			});
+
+			test('Import with query', async ({ onTestFail }) => {
+				const nodeProcess = await node.importFile(fixture.path, './' + query);
 				expect(nodeProcess.stdout).toMatch('default: { loaded: \'json\' }');
 			});
 		});
