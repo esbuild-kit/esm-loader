@@ -17,6 +17,7 @@ import {
 	tsExtensionsPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
+	isJsonPattern,
 	type MaybePromise,
 	type NodeError,
 } from './utils.js';
@@ -32,7 +33,7 @@ const _getFormat: getFormat = async function (
 	context,
 	defaultGetFormat,
 ) {
-	if (url.endsWith('.json')) {
+	if (isJsonPattern.test(url)) {
 		return { format: 'module' };
 	}
 
@@ -80,7 +81,7 @@ const _transformSource: transformSource = async function (
 	}
 
 	if (
-		url.endsWith('.json')
+		isJsonPattern.test(url)
 		|| tsExtensionsPattern.test(url)
 	) {
 		const transformed = await transform(

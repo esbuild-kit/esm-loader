@@ -16,13 +16,13 @@ import {
 	tsconfigPathsMatcher,
 	fileMatcher,
 	tsExtensionsPattern,
+	isJsonPattern,
 	getFormatFromFileUrl,
 	fileProtocol,
 	type MaybePromise,
 	type NodeError,
 } from './utils.js';
 
-const isJsonPattern = /\.json(?:$|\?)/;
 const isDirectoryPattern = /\/(?:$|\?)/;
 
 type NextResolve = (
