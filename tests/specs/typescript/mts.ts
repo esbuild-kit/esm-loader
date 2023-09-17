@@ -3,6 +3,7 @@ import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader.js';
 import nodeSupports from '../../utils/node-supports.js';
 import { assertNotFound } from '../../utils/assertions.js';
+import { query } from '../../utils/query.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.mts extension', ({ describe }) => {
@@ -33,6 +34,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				assertResults(nodeProcess.stdout);
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');
 			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query);
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
 		});
 
 		describe('full path via .mjs', ({ test }) => {
@@ -45,6 +52,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath, { typescript: true });
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query, { typescript: true });
 				assertResults(nodeProcess.stdout);
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');
 			});
@@ -62,6 +75,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				const nodeProcess = await node.import(importPath);
 				assertNotFound(nodeProcess.stderr, importPath);
 			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query);
+				assertNotFound(nodeProcess.stderr, importPath);
+			});
 		});
 
 		describe('directory - should not work', ({ test }) => {
@@ -74,6 +92,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
+				assertNotFound(nodeProcess.stderr, importPath);
+			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query);
 				assertNotFound(nodeProcess.stderr, importPath);
 			});
 		});

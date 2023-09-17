@@ -3,6 +3,7 @@ import semver from 'semver';
 import type { NodeApis } from '../../utils/node-with-loader.js';
 import nodeSupports from '../../utils/node-supports.js';
 import { assertNotFound } from '../../utils/assertions.js';
+import { query } from '../../utils/query.js';
 
 export default testSuite(async ({ describe }, node: NodeApis) => {
 	describe('.ts extension', ({ describe }) => {
@@ -58,6 +59,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				assertResults(nodeProcess.stdout);
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');
 			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query, { typescript: true });
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
 		});
 
 		describe('extensionless', ({ test }) => {
@@ -70,6 +77,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query, { typescript: true });
 				assertResults(nodeProcess.stdout);
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');
 			});
@@ -88,6 +101,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				assertResults(nodeProcess.stdout, 'ts-ext-ts/index.tsx.ts');
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');
 			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query);
+				assertResults(nodeProcess.stdout, 'ts-ext-ts/index.tsx.ts');
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
 		});
 
 		describe('directory', ({ test }) => {
@@ -100,6 +119,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query);
 				assertResults(nodeProcess.stdout);
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');
 			});
@@ -118,6 +143,12 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 				assertResults(nodeProcess.stdout);
 				expect(nodeProcess.stdout).toMatch('{"default":1234}');
 			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query);
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
 		});
 
 		describe('empty but explicit directory should not fallback to file', ({ test }) => {
@@ -125,6 +156,11 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Import', async () => {
 				const nodeProcess = await node.import(importPath);
+				assertNotFound(nodeProcess.stderr, importPath);
+			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query);
 				assertNotFound(nodeProcess.stderr, importPath);
 			});
 		});

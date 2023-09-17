@@ -36,6 +36,7 @@ export const nodeWithLoader = (
 		nodePath: options.nodePath,
 		cwd: options.cwd,
 		reject: false,
+		all: true,
 	},
 );
 
