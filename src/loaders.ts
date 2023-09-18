@@ -71,6 +71,23 @@ const _globalPreload: GlobalPreloadHook = ({ port }) => {
 
 export const globalPreload = isolatedLoader ? _globalPreload : undefined;
 
+const resolveExplicitPath = async (
+	defaultResolve: NextResolve,
+	specifier: string,
+	context: ResolveHookContext,
+) => {
+	const resolved = await defaultResolve(specifier, context);
+
+	if (
+		!resolved.format
+		&& resolved.url.startsWith(fileProtocol)
+	) {
+		resolved.format = await getFormatFromFileUrl(resolved.url);
+	}
+
+	return resolved;
+};
+
 const extensions = ['.js', '.json', '.ts', '.tsx', '.jsx'] as const;
 
 async function tryExtensions(
@@ -82,11 +99,10 @@ async function tryExtensions(
 	let throwError: Error | undefined;
 	for (const extension of extensions) {
 		try {
-			return await resolve(
+			return await resolveExplicitPath(
+				defaultResolve,
 				specifierWithoutQuery + extension + (query ? `?${query}` : ''),
 				context,
-				defaultResolve,
-				true,
 			);
 		} catch (_error) {
 			if (
@@ -114,7 +130,11 @@ async function tryDirectory(
 	const [specifierWithoutQuery, query] = specifier.split('?');
 
 	try {
-		return await tryExtensions(specifierWithoutQuery + appendIndex + (query ? `?${query}` : ''), context, defaultResolve);
+		return await tryExtensions(
+			specifierWithoutQuery + appendIndex + (query ? `?${query}` : ''),
+			context,
+			defaultResolve,
+		);
 	} catch (_error) {
 		if (!isExplicitDirectory) {
 			try {
@@ -184,7 +204,7 @@ export const resolve: resolve = async function (
 
 		if (tsPath) {
 			try {
-				return await resolve(tsPath, context, defaultResolve, true);
+				return await resolveExplicitPath(defaultResolve, tsPath, context);
 			} catch (error) {
 				const { code } = error as NodeError;
 				if (
@@ -197,9 +217,8 @@ export const resolve: resolve = async function (
 		}
 	}
 
-	let resolved: ResolveFnOutput;
 	try {
-		resolved = await defaultResolve(specifier, context);
+		return await resolveExplicitPath(defaultResolve, specifier, context);
 	} catch (error) {
 		if (
 			error instanceof Error
@@ -225,15 +244,6 @@ export const resolve: resolve = async function (
 
 		throw error;
 	}
-
-	if (
-		!resolved.format
-		&& resolved.url.startsWith(fileProtocol)
-	) {
-		resolved.format = await getFormatFromFileUrl(resolved.url);
-	}
-
-	return resolved;
 };
 
 export const load: LoadHook = async function (
