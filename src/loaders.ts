@@ -23,8 +23,6 @@ import {
 	type NodeError,
 } from './utils.js';
 
-
-
 const tsExtensions: Record<string, string[]> = Object.create(null);
 tsExtensions['.js'] = ['.ts', '.tsx', '.js', '.jsx'];
 tsExtensions['.jsx'] = ['.tsx', '.ts', '.js', '.js'];
@@ -41,15 +39,14 @@ const resolveTsPath = (
 	if (tsExtension) {
 		const extensionlessPath = filePath.slice(0, -extension.length);
 		return tsExtension.map(
-			(tsExtension) => (
+			tsExtension => (
 				extensionlessPath
 				+ tsExtension
 				+ (query ? `?${query}` : '')
-			)
+			),
 		);
 	}
 };
-
 
 const isDirectoryPattern = /\/(?:$|\?)/;
 
