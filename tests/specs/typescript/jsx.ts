@@ -43,11 +43,13 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 
 			test('Load', async () => {
 				const nodeProcess = await node.load(importPath);
-				assertResults(nodeProcess.stdout);
+				assertNotFound(nodeProcess.stderr, importPath);
 			});
 
 			test('Import', async () => {
-				const nodeProcess = await node.import(importPath);
+				const nodeProcess = await node.import(importPath, {
+					typescript: true,
+				});
 				assertResults(nodeProcess.stdout);
 				expect(nodeProcess.stdout).toMatch('{"default":["div",null,"hello world"]}');
 			});

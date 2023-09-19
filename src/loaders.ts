@@ -25,7 +25,7 @@ import {
 
 const tsExtensions: Record<string, string[]> = Object.create(null);
 tsExtensions['.js'] = ['.ts', '.tsx', '.js', '.jsx'];
-tsExtensions['.jsx'] = ['.tsx', '.ts', '.js', '.js'];
+tsExtensions['.jsx'] = ['.tsx', '.ts', '.jsx', '.js'];
 tsExtensions['.cjs'] = ['.cts'];
 tsExtensions['.mjs'] = ['.mts'];
 
