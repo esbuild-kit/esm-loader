@@ -7,7 +7,7 @@ import type {
 import {
 	transform,
 	transformDynamicImport,
-	// resolveTsPath,
+	resolveTsPath,
 	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
 import type { TransformOptions } from 'esbuild';
@@ -22,31 +22,6 @@ import {
 	type MaybePromise,
 	type NodeError,
 } from './utils.js';
-
-const tsExtensions: Record<string, string[]> = Object.create(null);
-tsExtensions['.js'] = ['.ts', '.tsx', '.js', '.jsx'];
-tsExtensions['.jsx'] = ['.tsx', '.ts', '.jsx', '.js'];
-tsExtensions['.cjs'] = ['.cts'];
-tsExtensions['.mjs'] = ['.mts'];
-
-const resolveTsPath = (
-	filePath: string,
-) => {
-	const extension = path.extname(filePath);
-	const [extensionNoQuery, query] = path.extname(filePath).split('?');
-	const tsExtension = tsExtensions[extensionNoQuery];
-
-	if (tsExtension) {
-		const extensionlessPath = filePath.slice(0, -extension.length);
-		return tsExtension.map(
-			tsExtension => (
-				extensionlessPath
-				+ tsExtension
-				+ (query ? `?${query}` : '')
-			),
-		);
-	}
-};
 
 const isDirectoryPattern = /\/(?:$|\?)/;
 
