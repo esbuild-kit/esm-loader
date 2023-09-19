@@ -35,22 +35,23 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			});
 		});
 
-		// Does .js resolve .jsx?
+		/**
+		 * tsc seems to resolve js -> jsx even with allowJs: false
+		 */
+		describe('full path via .js', ({ test }) => {
+			const importPath = './lib/ts-ext-jsx/index.js';
 
-		// describe('full path via .js', ({ test }) => {
-		// 	const importPath = './lib/ts-ext-jsx/index.js';
+			test('Load', async () => {
+				const nodeProcess = await node.load(importPath);
+				assertResults(nodeProcess.stdout);
+			});
 
-		// 	test('Load', async () => {
-		// 		const nodeProcess = await node.load(importPath);
-		// 		assertResults(nodeProcess.stdout);
-		// 	});
-
-		// 	test('Import', async () => {
-		// 		const nodeProcess = await node.import(importPath);
-		// 		assertResults(nodeProcess.stdout);
-		// 		expect(nodeProcess.stdout).toMatch('{"default":["div",null,"hello world"]}');
-		// 	});
-		// });
+			test('Import', async () => {
+				const nodeProcess = await node.import(importPath);
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":["div",null,"hello world"]}');
+			});
+		});
 
 		describe('extensionless', ({ test }) => {
 			const importPath = './lib/ts-ext-jsx/index';
