@@ -7,7 +7,7 @@ import type {
 import {
 	transform,
 	transformDynamicImport,
-	resolveTsPath,
+	// resolveTsPath,
 	compareNodeVersion,
 } from '@esbuild-kit/core-utils';
 import type { TransformOptions } from 'esbuild';
@@ -22,6 +22,34 @@ import {
 	type MaybePromise,
 	type NodeError,
 } from './utils.js';
+
+
+
+const tsExtensions: Record<string, string[]> = Object.create(null);
+tsExtensions['.js'] = ['.ts', '.tsx', '.js', '.jsx'];
+tsExtensions['.jsx'] = ['.tsx', '.ts', '.js', '.js'];
+tsExtensions['.cjs'] = ['.cts'];
+tsExtensions['.mjs'] = ['.mts'];
+
+const resolveTsPath = (
+	filePath: string,
+) => {
+	const extension = path.extname(filePath);
+	const [extensionNoQuery, query] = path.extname(filePath).split('?');
+	const tsExtension = tsExtensions[extensionNoQuery];
+
+	if (tsExtension) {
+		const extensionlessPath = filePath.slice(0, -extension.length);
+		return tsExtension.map(
+			(tsExtension) => (
+				extensionlessPath
+				+ tsExtension
+				+ (query ? `?${query}` : '')
+			)
+		);
+	}
+};
+
 
 const isDirectoryPattern = /\/(?:$|\?)/;
 
@@ -199,19 +227,24 @@ export const resolve: resolve = async function (
 	/**
 	 * Typescript gives .ts, .cts, or .mts priority over actual .js, .cjs, or .mjs extensions
 	 */
-	if (tsExtensionsPattern.test(context.parentURL!)) {
-		const tsPath = resolveTsPath(specifier);
-
-		if (tsPath) {
-			try {
-				return await resolveExplicitPath(defaultResolve, tsPath, context);
-			} catch (error) {
-				const { code } = error as NodeError;
-				if (
-					code !== 'ERR_MODULE_NOT_FOUND'
-					&& code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED'
-				) {
-					throw error;
+	if (
+		// !recursiveCall &&
+		tsExtensionsPattern.test(context.parentURL!)
+	) {
+		const tsPaths = resolveTsPath(specifier);
+		if (tsPaths) {
+			for (const tsPath of tsPaths) {
+				try {
+					return await resolveExplicitPath(defaultResolve, tsPath, context);
+					// return await resolve(tsPath, context, defaultResolve, true);
+				} catch (error) {
+					const { code } = error as NodeError;
+					if (
+						code !== 'ERR_MODULE_NOT_FOUND'
+						&& code !== 'ERR_PACKAGE_PATH_NOT_EXPORTED'
+					) {
+						throw error;
+					}
 				}
 			}
 		}
