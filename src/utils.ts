@@ -6,18 +6,20 @@ import {
 	parseTsconfig,
 	createPathsMatcher,
 	createFilesMatcher,
+	TsConfigResult,
 } from 'get-tsconfig';
 import { getPackageType } from './package-json.js';
 
 export const applySourceMap = installSourceMapSupport();
 
+const tsconfigCache = new Map<string, TsConfigResult>();
 const tsconfig = (
 	process.env.ESBK_TSCONFIG_PATH
 		? {
 			path: path.resolve(process.env.ESBK_TSCONFIG_PATH),
-			config: parseTsconfig(process.env.ESBK_TSCONFIG_PATH),
+			config: parseTsconfig(process.env.ESBK_TSCONFIG_PATH, tsconfigCache),
 		}
-		: getTsconfig()
+		: getTsconfig(undefined, undefined, tsconfigCache)
 );
 
 export const fileMatcher = tsconfig && createFilesMatcher(tsconfig);
