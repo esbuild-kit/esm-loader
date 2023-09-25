@@ -1,3 +1,13 @@
+---
+
+> ## ⚠️ Project moved. Repository unmaintained.
+>
+> This project has been merged with [tsx](https://github.com/esbuild-kit/tsx) and this repository is no longer maintained.
+> 
+> Use tsx instead: `node --loader tsx/esm ./file.ts`
+
+---
+
 # esm-loader
 
 [Node.js loader](https://nodejs.org/api/esm.html#loaders) for loading TypeScript files.
