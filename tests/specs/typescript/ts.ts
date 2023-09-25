@@ -67,6 +67,27 @@ export default testSuite(async ({ describe }, node: NodeApis) => {
 			});
 		});
 
+		describe('full path via .jsx', ({ test }) => {
+			const importPath = './lib/ts-ext-ts/index.jsx';
+
+			test('Load - should not work', async () => {
+				const nodeProcess = await node.load(importPath);
+				assertNotFound(nodeProcess.stderr, importPath);
+			});
+
+			test('Import', async () => {
+				const nodeProcess = await node.import(importPath, { typescript: true });
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
+
+			test('Import with query', async () => {
+				const nodeProcess = await node.import(importPath + query, { typescript: true });
+				assertResults(nodeProcess.stdout);
+				expect(nodeProcess.stdout).toMatch('{"default":1234}');
+			});
+		});
+
 		describe('extensionless', ({ test }) => {
 			const importPath = './lib/ts-ext-ts/index';
 
