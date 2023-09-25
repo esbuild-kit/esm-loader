@@ -96,12 +96,17 @@ async function tryExtensions(
 	defaultResolve: NextResolve,
 ) {
 	const [specifierWithoutQuery, query] = specifier.split('?');
+	let specifierWithoutExtension = specifierWithoutQuery;
+	const fileExtension = path.extname(specifierWithoutQuery);
+	if (extensions.find(e => e === fileExtension)) {
+	  specifierWithoutExtension = specifierWithoutQuery.slice(0, fileExtension.length * -1);
+	}
 	let throwError: Error | undefined;
 	for (const extension of extensions) {
 		try {
 			return await resolveExplicitPath(
 				defaultResolve,
-				specifierWithoutQuery + extension + (query ? `?${query}` : ''),
+				specifierWithoutExtension + extension + (query ? `?${query}` : ''),
 				context,
 			);
 		} catch (_error) {
